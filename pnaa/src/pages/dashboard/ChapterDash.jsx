@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../../firebase-config';
+import { auth } from '../../config/firebase-config';
 
 const Home = () => {
 

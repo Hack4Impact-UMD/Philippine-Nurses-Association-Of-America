@@ -1,5 +1,7 @@
 # Philippine-Nurses-Association-Of-America
 
-To run local development: 
+To run local development:
 npm install
 npm start
+
+Neel Jay

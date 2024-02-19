@@ -66,7 +66,7 @@ import {
   export function createUser(newEmail: string, newRole: string): Promise<void> {
     return new Promise((resolve, reject) => {
       /* If role isn't one of the expected ones, reject it.*/
-      if (newRole != 'TEACHER' && newRole != 'ADMIN') {
+      if (newRole != 'chapter' && newRole != 'national') {
         reject();
       }
       const createUserCloudFunction = httpsCallable(functions, 'createUser');
@@ -94,7 +94,7 @@ import {
   export function setUserRole(auth_id: string, newRole: string): Promise<void> {
     return new Promise((resolve, reject) => {
       /* If roles are not one of the expected ones, reject it*/
-      if (newRole != 'TEACHER' && newRole != 'ADMIN') {
+      if (newRole != 'chapter' && newRole != 'national') {
         reject('Role must be TEACHER or ADMIN');
       }
       const setUserCloudFunction = httpsCallable(functions, 'setUserRole');

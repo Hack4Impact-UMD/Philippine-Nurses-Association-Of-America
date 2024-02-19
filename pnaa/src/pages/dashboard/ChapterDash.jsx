@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate, Outlet } from 'react-router-dom';
-import { auth } from '../../config/firebase-config';
+import { auth } from '../../config/firebase';
 import { useUser } from '../../config/UserContext';
 
 import styles from './ChapterDashboard.module.css';

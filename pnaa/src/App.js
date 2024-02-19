@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { UserProvider } from './config/UserContext';
-import SignUp from './backend/auth/SignUp';
-import SignIn from './backend/auth/SignIn';
+import SignUp from './auth/SignUp';
+import SignIn from './auth/SignIn';
 import NationalDash from './pages/dashboard/NationalDash';
 import ChapterDash from './pages/dashboard/ChapterDash';
 import About from './pages/about/About';

@@ -3,5 +3,3 @@
 To run local development:
 npm install
 npm start
-
-Neel Jay

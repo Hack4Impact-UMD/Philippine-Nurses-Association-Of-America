@@ -3,6 +3,7 @@ import { useUser } from '../../config/UserContext';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
+import './MemberManagement.css';
 
 const MemberManagement = () => {
   const { currentUser, loading: userLoading } = useUser();

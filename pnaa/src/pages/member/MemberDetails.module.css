@@ -32,3 +32,39 @@
   display: flex;
   gap: 10px;
 }
+
+.member-detail-information-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0; 
+}
+
+.member-detail-information-container-left{
+  border: solid black 1px;
+  width: 509px;
+  padding: 16px 36px;
+}
+
+.membership-card {
+  border: solid black 1px;
+  height: 134px;
+  width: 234px;
+}
+
+.member-detail-table {
+  width: 100%;
+}
+
+.membership-card-label-header {
+  font-family: "Source Serif 4", serif;
+  font-weight: 600;
+  color: #464f60;
+  font-size: 16px;
+  margin: 0; 
+}
+
+.member-detail-information-container-right{
+  border: solid black 1px;
+  width: 671px;
+  padding: 16px 36px;
+}

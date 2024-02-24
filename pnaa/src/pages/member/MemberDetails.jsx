@@ -40,11 +40,51 @@ const MemberDetail = () => {
             {createMaterialButton("#14804A", "Renew member")}
           </div>
         </div>
-        <p>
-          Name: {member.FirstName} {member.LastName}
-        </p>
-        <p>ID: {member.id}</p>
-        {/* ... Example Fields ... */}
+
+        <div className={styles["member-detail-information-container"]}>
+          <div className={styles["member-detail-information-container-left"]}>
+          <table className={styles["member-detail-table"]}>
+                <tr>
+                    <td><p className={styles["membership-card-label-header"]}>MEMBERSHIP CARD</p></td>
+                    <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><div className={styles["membership-card"]}>
+                    <p>
+                      Name: {member.FirstName} {member.LastName}
+                    </p>
+                    <p>ID: {member.id}</p>
+                    {/* ... Example Fields ... */}
+                  </div></td>
+                </tr>
+                <tr>
+                  <td><p className={styles["membership-card-label-header"]}>MEMBERSHIP STATUS</p></td>
+                  <td><p className={styles["membership-card-label-data"]}>Active</p></td>
+                </tr>
+                <tr>
+                  <td><p className={styles["membership-card-label-header"]}>REGISTRATION</p></td>
+                  <td><p className={styles["membership-card-label-data"]}>01.01.0001</p></td>
+                </tr>
+                <tr>
+                  <td><p className={styles["membership-card-label-header"]}>RENEWAL</p></td>
+                  <td><p className={styles["membership-card-label-data"]}>01.01.0001</p></td>
+                </tr>
+                <tr>
+                  <td><p className={styles["membership-card-label-header"]}>RENEWAL DUE</p></td>
+                  <td><p className={styles["membership-card-label-data"]}>01.01.0001</p></td>
+                </tr>
+                <tr>
+                  <td><p className={styles["membership-card-label-header"]}>LEVEL LAST UPDATED</p></td>
+                  <td><p className={styles["membership-card-label-data"]}>01.01.0001</p></td>
+                </tr>
+            </table>
+        
+          </div>  
+          <div className={styles["member-detail-information-container-right"]}>
+            <h1>UGHHHH</h1>
+          </div>
+        </div>
       </div>
     </div>
   );

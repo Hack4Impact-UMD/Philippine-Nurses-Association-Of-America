@@ -120,7 +120,7 @@ const MemberDetail = () => {
             <table className={styles["member-detail-table"]}>
               <tr>
                 <td>
-                  <p className={styles["membership-card-label-header"]}>
+                  <p className={styles["membership-label"]}>
                     MEMBERSHIP CARD
                   </p>
                 </td>
@@ -140,58 +140,58 @@ const MemberDetail = () => {
               </tr>
               <tr>
                 <td>
-                  <p className={styles["membership-card-label-header"]}>
+                  <p className={styles["membership-label"]}>
                     MEMBERSHIP STATUS
                   </p>
                 </td>
                 <td>
-                  <p className={styles["membership-card-label-data"]}>Active</p>
+                  <p className={styles["membership-data"]}>Active</p>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <p className={styles["membership-card-label-header"]}>
+                  <p className={styles["membership-label"]}>
                     REGISTRATION
                   </p>
                 </td>
                 <td>
-                  <p className={styles["membership-card-label-data"]}>
+                  <p className={styles["membership-data"]}>
                     01.01.0001
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <p className={styles["membership-card-label-header"]}>
+                  <p className={styles["membership-label"]}>
                     RENEWAL
                   </p>
                 </td>
                 <td>
-                  <p className={styles["membership-card-label-data"]}>
+                  <p className={styles["membership-data"]}>
                     01.01.0001
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <p className={styles["membership-card-label-header"]}>
+                  <p className={styles["membership-label"]}>
                     RENEWAL DUE
                   </p>
                 </td>
                 <td>
-                  <p className={styles["membership-card-label-data"]}>
+                  <p className={styles["membership-data"]}>
                     01.01.0001
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <p className={styles["membership-card-label-header"]}>
+                  <p className={styles["membership-label"]}>
                     LEVEL LAST UPDATED
                   </p>
                 </td>
                 <td>
-                  <p className={styles["membership-card-label-data"]}>
+                  <p className={styles["membership-data"]}>
                     01.01.0001
                   </p>
                 </td>
@@ -201,79 +201,227 @@ const MemberDetail = () => {
           <div className={styles["member-detail-information-container-right"]}>
             <table className={styles["member-detail-table"]}>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>GENDER</p></td>
-                <td>UHHHH {member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    GENDER
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>AGE</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    AGE
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.age}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>DONATED/SERVED HOURS</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    DONATED/SERVED HOURS
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['underline']}`}>NURSING EDUCATION</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['underline']}`}>
+                    NURSING EDUCATION
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>SCHOOL NAME</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    SCHOOL NAME
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>YEAR GRADUATED</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    YEAR GRADUATED
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>COUNTRY</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    COUNTRY
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.country}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>DEGREE RECEIVED</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    DEGREE RECEIVED
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>HIGHEST LEVEL OF EDUCATION</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    HIGHEST LEVEL OF EDUCATION
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['underline']}`}>WORK INFORMATION</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['underline']}`}>
+                    WORK INFORMATION
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>STATUS</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    STATUS
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>EMPLOYER</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    EMPLOYER
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.employer}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>TYPE OF INSTITUTION</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    TYPE OF INSTITUTION
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>PRIMARY NURSING PRACTICE</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    PRIMARY NURSING PRACTICE
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>ADVANCED PRACTICE NURSES</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    ADVANCED PRACTICE NURSES
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>YEAR OF NURSING EXPERIENCES</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    YEAR OF NURSING EXPERIENCES
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>NATIONAL CERTIFICATION</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    NATIONAL CERTIFICATION
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['small']}`}>YEARS AS PNAA CHAPTER MEMBER</p></td>
-                <td>{member.gender}</td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['small']}`}>
+                    YEARS AS PNAA CHAPTER MEMBER
+                  </p>
+                </td>
+                <td>
+                  <p className={styles["membership-data"]}>
+                    placeholder {member.gender}
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td><p className={`${styles['membership-label']} ${styles['underline']}`}>NOTES</p></td>
+                <td>
+                  <p className={`${styles['membership-label']} ${styles['underline']}`}>
+                    NOTES
+                  </p>
+                </td>
                 <td></td>
               </tr>
             </table>

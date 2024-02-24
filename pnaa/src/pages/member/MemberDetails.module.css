@@ -58,10 +58,6 @@
   width: 100%;
 }
 
-.membership-card-detail-table {
-  width: 100%;
-}
-
 .membership-label {
   font-family: "Source Serif 4", serif;
   font-weight: 600;
@@ -84,6 +80,7 @@
   ); /* Set flex-basis to the proportion of box two */
   min-width: 150px; /* Allows the container to shrink below its content width */
   overflow-x: auto; /* Allows horizontal scrolling if content overflows */
+  overflow-y: auto;
 }
 
 @media (max-width: 800px) {
@@ -114,14 +111,13 @@
   }
 }
 
-
 .underline{
   border-bottom: solid black 1px;
 }
 
 .member-notes{
   background-color: #D9D9D94D;
-  width: 70%;
-  height: 30%;
+  width: 60%;
+  height: 20%;
   border-radius: 15px;
 }

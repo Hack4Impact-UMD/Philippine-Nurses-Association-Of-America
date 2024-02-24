@@ -41,21 +41,20 @@
 
 .member-detail-information-container-left{
   border: solid black 1px;
-  width: 509px;
+  width: 35%;
   padding: 16px 36px;
 }
 
 .membership-card {
   border: solid black 1px;
-  height: 134px;
-  width: 234px;
-}
-
-.member-detail-table {
   width: 100%;
 }
 
-.membership-card-label-header {
+.membership-card-detail-table {
+  width: 100%;
+}
+
+.membership-label {
   font-family: "Source Serif 4", serif;
   font-weight: 600;
   color: #464f60;
@@ -63,8 +62,23 @@
   margin: 0; 
 }
 
+.membership-label.small{
+  font-size: 14px;
+}
+
 .member-detail-information-container-right{
   border: solid black 1px;
-  width: 671px;
+  width: 50%;
   padding: 16px 36px;
+}
+
+.underline{
+  border-bottom: solid black 1px;
+}
+
+.member-notes{
+  background-color: #D9D9D94D;
+  width: 70%;
+  height: 30%;
+  border-radius: 15px;
 }

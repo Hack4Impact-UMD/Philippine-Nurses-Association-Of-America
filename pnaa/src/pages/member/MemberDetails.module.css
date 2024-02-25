@@ -44,7 +44,7 @@
 
 .member-detail-information-container-left {
   border: solid black 1px;
-  width: 509px;
+  width: 35%;
   padding: 16px 36px;
   flex: 0 1 auto;
   flex-basis: calc(
@@ -56,15 +56,10 @@
 
 .membership-card {
   border: solid black 1px;
-  height: 134px;
-  width: 234px;
-}
-
-.member-detail-table {
   width: 100%;
 }
 
-.membership-card-label-header {
+.membership-label {
   font-family: "Source Serif 4", serif;
   font-weight: 600;
   color: #464f60;
@@ -72,9 +67,13 @@
   margin: 0;
 }
 
-.member-detail-information-container-right {
+.membership-label.small{
+  font-size: 14px;
+}
+
+.member-detail-information-container-right{
   border: solid black 1px;
-  width: 671px;
+  width: 50%;
   padding: 16px 36px;
   flex: 0 1 auto;
   flex-basis: calc(
@@ -82,6 +81,7 @@
   ); /* Set flex-basis to the proportion of right box */
   min-width: 150px;
   overflow-x: auto; /* Allows horizontal scrolling if content overflows */
+  overflow-y: auto;
 }
 
 /* Half screen width */
@@ -112,4 +112,15 @@
     padding: 16px;
     box-sizing: border-box;
   }
+}
+
+.underline{
+  border-bottom: solid black 1px;
+}
+
+.member-notes{
+  background-color: #D9D9D94D;
+  width: 60%;
+  height: 20%;
+  border-radius: 15px;
 }

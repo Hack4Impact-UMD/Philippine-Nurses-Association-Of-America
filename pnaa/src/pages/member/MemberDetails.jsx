@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styles from "./MemberDetails.module.css";
+
+import MemberDialogBox from "./MemberDialogBox";
+
+// Material UI Components
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
@@ -13,6 +17,9 @@ const MemberDetail = () => {
   const { member } = location.state;
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [dialogAction, setDialogAction] = useState("");
+
   const open = Boolean(anchorEl);
 
   const mediumScreenWidth = 1000;
@@ -36,6 +43,18 @@ const MemberDetail = () => {
     setAnchorEl(null);
   };
 
+  const handleEditClick = () => {};
+
+  const handleSuspendClick = () => {
+    setDialogAction("suspend");
+    setDialogOpen(true);
+  };
+
+  const handleRenewClick = () => {
+    setDialogAction("renew");
+    setDialogOpen(true);
+  };
+
   const buttonText = (text) => {
     if (screenWidth < mediumScreenWidth) {
       return text.split(" ")[0];
@@ -43,7 +62,7 @@ const MemberDetail = () => {
     return text;
   };
 
-  const createMaterialButton = (color, text) => (
+  const createMaterialButton = (color, text, onClick) => (
     <Button
       startIcon={<AddIcon />}
       style={{
@@ -55,6 +74,7 @@ const MemberDetail = () => {
         padding: "6px 12px",
         textTransform: "none",
       }}
+      onClick={onClick} // Add this line
     >
       {buttonText(text)}
     </Button>
@@ -63,8 +83,8 @@ const MemberDetail = () => {
   const actionButtons = () => (
     <div className={styles["action-button-group"]}>
       {createMaterialButton("#05208BB2", "Edit member")}
-      {createMaterialButton("#91201A", "Suspend member")}
-      {createMaterialButton("#14804A", "Renew member")}
+      {createMaterialButton("#91201A", "Suspend member", handleSuspendClick)}
+      {createMaterialButton("#14804A", "Renew member", handleRenewClick)}
     </div>
   );
 
@@ -80,7 +100,13 @@ const MemberDetail = () => {
       <MenuItem onClick={handleClose} style={{ color: "#05208BB2" }}>
         Edit member
       </MenuItem>
-      <MenuItem onClick={handleClose} style={{ color: "#91201A" }}>
+      <MenuItem
+        onClick={() => {
+          handleClose();
+          handleSuspendClick();
+        }}
+        style={{ color: "#91201A" }}
+      >
         Suspend member
       </MenuItem>
       <MenuItem onClick={handleClose} style={{ color: "#14804A" }}>
@@ -203,6 +229,13 @@ const MemberDetail = () => {
           </div>
         </div>
       </div>
+      <MemberDialogBox
+        open={isDialogOpen}
+        handleClose={() => setDialogOpen(false)}
+        memberName={member ? `${member.FirstName} ${member.LastName}` : ""}
+        memberId={member ? member.id : ""}
+        dialogAction={dialogAction}
+      />
     </div>
   );
 };

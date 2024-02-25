@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import styles from "./MemberDetails.module.css";
 
 import MemberDialogBox from "./MemberDialogBox";
+import db from "../../config/firebase.ts";
 
 // Material UI Components
 import Button from "@mui/material/Button";
@@ -27,6 +28,9 @@ const MemberDetail = () => {
   // Menu anchor for mobile view
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
+  // Extract active status from member data for conditional rendering
+  const [memberActive, setMemberActive] = useState(member.active);
 
   // Screen width breakpoints
   const mediumScreenWidth = 1000;
@@ -74,33 +78,47 @@ const MemberDetail = () => {
   };
 
   // Function for creating different Material UI action buttons
-  const createMaterialButton = (color, text, onClick) => (
+  const createMaterialButton = (color, text, onClick, disabled = false) => (
     <Button
       startIcon={<AddIcon />}
       style={{
-        backgroundColor: color,
-        color: "#fff",
+        backgroundColor: disabled ? "#ccc" : color,
+        color: disabled ? "#666" : "#fff",
         fontFamily: "'Source Serif 4', serif",
         fontSize: "14px",
         borderRadius: "6px",
         padding: "6px 12px",
         textTransform: "none",
+        pointerEvents: disabled ? "none" : "auto",
       }}
       onClick={onClick}
+      disabled={disabled}
     >
       {buttonText(text)}
     </Button>
   );
 
+  // Use active status to determine which buttons are available
   const actionButtons = () => (
     <div className={styles["action-button-group"]}>
       {createMaterialButton("#05208BB2", "Edit member")}
-      {createMaterialButton("#91201A", "Suspend member", handleSuspendClick)}
-      {createMaterialButton("#14804A", "Renew member", handleRenewClick)}
+      {createMaterialButton(
+        "#91201A",
+        "Suspend member",
+        handleSuspendClick,
+        !memberActive
+      )}
+      {createMaterialButton(
+        "#14804A",
+        "Renew member",
+        handleRenewClick,
+        memberActive
+      )}
     </div>
   );
 
   // Create Material UI menu items for mobile view, same functionality as action buttons
+  // Use conditional rendering based on active statuss
   const actionMenuItems = () => (
     <Menu
       anchorEl={anchorEl}
@@ -119,24 +137,28 @@ const MemberDetail = () => {
       >
         Edit member
       </MenuItem>
-      <MenuItem
-        onClick={() => {
-          handleClose();
-          handleSuspendClick();
-        }}
-        style={{ color: "#91201A", fontFamily: "'Source Serif 4', serif" }}
-      >
-        Suspend member
-      </MenuItem>
-      <MenuItem
-        onClick={() => {
-          handleClose();
-          handleRenewClick();
-        }}
-        style={{ color: "#14804A", fontFamily: "'Source Serif 4', serif" }}
-      >
-        Renew member
-      </MenuItem>
+      {memberActive && (
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            handleSuspendClick();
+          }}
+          style={{ color: "#91201A", fontFamily: "'Source Serif 4', serif" }}
+        >
+          Suspend member
+        </MenuItem>
+      )}
+      {!memberActive && (
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            handleRenewClick();
+          }}
+          style={{ color: "#14804A", fontFamily: "'Source Serif 4', serif" }}
+        >
+          Renew member
+        </MenuItem>
+      )}
     </Menu>
   );
 
@@ -262,6 +284,7 @@ const MemberDetail = () => {
         memberName={member ? `${member.FirstName} ${member.LastName}` : ""}
         memberId={member ? member.id : ""}
         dialogAction={dialogAction}
+        onActionSuccess={() => setMemberActive(!memberActive)}
       />
     </div>
   );

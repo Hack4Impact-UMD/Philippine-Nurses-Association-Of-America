@@ -42,11 +42,3 @@
   display: flex;
   gap: 20px;
 }
-
-.content {
-  padding: 16px;
-  text-align: center;
-  line-height: 1.5;
-  font-size: 16px;
-  font-family: "Source Serif 4", serif;
-}

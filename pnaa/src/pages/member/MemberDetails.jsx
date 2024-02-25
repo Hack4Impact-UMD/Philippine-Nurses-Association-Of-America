@@ -13,19 +13,27 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const MemberDetail = () => {
+  // Pass in member data from previous state
   const location = useLocation();
   const { member } = location.state;
+
+  // Collect screen width for responsive design
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const [anchorEl, setAnchorEl] = useState(null);
+
+  // Dialog box state
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState("");
 
+  // Menu anchor for mobile view
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+  // Screen width breakpoints
   const mediumScreenWidth = 1000;
   const halfScreenWidth = 800;
   const mobileScreenWidth = 660;
 
+  // Update screen width on resize
   useEffect(() => {
     const handleResize = () => {
       setScreenWidth(window.innerWidth);
@@ -35,14 +43,7 @@ const MemberDetail = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
+  // Handle action button clicks
   const handleEditClick = () => {};
 
   const handleSuspendClick = () => {
@@ -55,6 +56,16 @@ const MemberDetail = () => {
     setDialogOpen(true);
   };
 
+  // Handle menu click for mobile view
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  // Modify button text for half screen width
   const buttonText = (text) => {
     if (screenWidth < mediumScreenWidth) {
       return text.split(" ")[0];
@@ -62,6 +73,7 @@ const MemberDetail = () => {
     return text;
   };
 
+  // Function for creating different Material UI action buttons
   const createMaterialButton = (color, text, onClick) => (
     <Button
       startIcon={<AddIcon />}
@@ -74,7 +86,7 @@ const MemberDetail = () => {
         padding: "6px 12px",
         textTransform: "none",
       }}
-      onClick={onClick} // Add this line
+      onClick={onClick}
     >
       {buttonText(text)}
     </Button>
@@ -88,6 +100,7 @@ const MemberDetail = () => {
     </div>
   );
 
+  // Create Material UI menu items for mobile view, same functionality as action buttons
   const actionMenuItems = () => (
     <Menu
       anchorEl={anchorEl}
@@ -97,7 +110,13 @@ const MemberDetail = () => {
         "aria-labelledby": "basic-button",
       }}
     >
-      <MenuItem onClick={handleClose} style={{ color: "#05208BB2" }}>
+      <MenuItem
+        onClick={() => {
+          handleClose();
+          handleEditClick();
+        }}
+        style={{ color: "#05208BB2", fontFamily: "'Source Serif 4', serif" }}
+      >
         Edit member
       </MenuItem>
       <MenuItem
@@ -105,20 +124,28 @@ const MemberDetail = () => {
           handleClose();
           handleSuspendClick();
         }}
-        style={{ color: "#91201A" }}
+        style={{ color: "#91201A", fontFamily: "'Source Serif 4', serif" }}
       >
         Suspend member
       </MenuItem>
-      <MenuItem onClick={handleClose} style={{ color: "#14804A" }}>
+      <MenuItem
+        onClick={() => {
+          handleClose();
+          handleRenewClick();
+        }}
+        style={{ color: "#14804A", fontFamily: "'Source Serif 4', serif" }}
+      >
         Renew member
       </MenuItem>
     </Menu>
   );
 
+  // If no member data is available, display error message
   if (!member) {
     return <div>No member data available.</div>;
   }
 
+  // Else, display normal screen
   return (
     <div className={styles["member-detail-container"]}>
       <div className={styles["member-detail-content"]}>

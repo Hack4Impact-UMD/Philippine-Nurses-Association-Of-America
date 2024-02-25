@@ -13,6 +13,15 @@ const MemberDialogBox = ({
   const buttonText = dialogAction === "suspend" ? "Suspend" : "Renew";
   const buttonColor = dialogAction === "suspend" ? "#91201A" : "#14804A";
 
+  // Function to handle all possible dialog box actions
+  const handleDialogAction = () => {
+    if (dialogAction === "suspend") {
+      // handle suspension logic here
+    } else {
+      // handle renewal logic here
+    }
+  };
+
   return (
     <Dialog
       open={open}
@@ -54,7 +63,8 @@ const MemberDialogBox = ({
               textTransform: "none",
             }}
             onClick={() => {
-              /* handle suspension logic here */
+              handleDialogAction();
+              handleClose();
             }}
           >
             {buttonText} Member

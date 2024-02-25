@@ -5,13 +5,20 @@ import SignUp from './auth/SignUp';
 import SignIn from './auth/SignIn';
 import NationalDash from './pages/dashboard/NationalDash';
 import ChapterDash from './pages/dashboard/ChapterDash';
+import RequireAuth from './auth/RequireAuth/RequireAuth';
 
 function App() {
   return (
     <UserProvider> {/* Wrap the Router with UserProvider */}
       <Router>
         <Routes>
-          <Route path="/signup" element={<SignUp />} />
+          
+          <Route path="/signup" element={ 
+            //<RequireAuth>
+                 <SignUp /> 
+           // </RequireAuth>
+          
+          } />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/national-dashboard" element={<NationalDash />} />
           <Route path="/chapter-dashboard" element={<ChapterDash />} />

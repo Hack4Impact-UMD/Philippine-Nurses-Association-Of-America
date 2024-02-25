@@ -66,8 +66,7 @@ exports.createUser = onCall(
                 const collectionObject = {
                   auth_id: userRecord.uid,
                   email: data.email,
-                  name: data.name,
-                  type: data.role.toUpperCase(),
+                  userType: data.role.toLowerCase(),
                 };
 
                 await db

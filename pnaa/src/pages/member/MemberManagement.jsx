@@ -59,6 +59,20 @@ const MemberManagement = () => {
           pageSize={5}
           rowsPerPageOptions={[5, 10, 20]}
           checkboxSelection
+          sx={{
+            border: 10,
+            borderColor: '#E0E0E0',
+            borderRadius: 0,
+            '& .MuiDataGrid-row:nth-child(even)': {
+              backgroundColor: '#BDBDBD'
+            },
+            '& .MuiDataGrid-columnHeader': {
+              backgroundColor: '#BDBDBD'
+            },
+            '& .MuiDataGrid-row:nth-child(odd)': {
+              backgroundColor: '#FFFFFF'
+            },
+          }}
         />
       </div>
     </div>

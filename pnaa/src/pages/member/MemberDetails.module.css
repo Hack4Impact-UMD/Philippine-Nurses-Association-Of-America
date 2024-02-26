@@ -21,6 +21,7 @@
   color: #464f60;
   font-size: 40px;
   margin: 0;
+  letter-spacing: 0.04em;
 }
 
 .membership-header-container {
@@ -45,11 +46,11 @@
   border: solid black 1px;
   width: 35%;
   padding: 16px 36px;
-  flex: 0 1 auto; /* Do not grow, allow shrink, flex-basis is auto */
+  flex: 0 1 auto;
   flex-basis: calc(
     509px / 1195 * 100%
-  ); /* Set flex-basis to the proportion of box one */
-  min-width: 150px; /* Allows the container to shrink below its content width */
+  ); /* Set flex-basis to proportion of left box */
+  min-width: 150px;
   overflow-x: auto; /* Allows horizontal scrolling if content overflows */
 }
 
@@ -78,15 +79,16 @@
   border: solid black 1px;
   width: 50%;
   padding: 16px 36px;
-  flex: 0 1 auto; /* Do not grow, allow shrink, flex-basis is auto */
+  flex: 0 1 auto;
   flex-basis: calc(
     671px / 1180 * 100%
-  ); /* Set flex-basis to the proportion of box two */
-  min-width: 150px; /* Allows the container to shrink below its content width */
+  ); /* Set flex-basis to the proportion of right box */
+  min-width: 150px;
   overflow-x: auto; /* Allows horizontal scrolling if content overflows */
   overflow-y: auto;
 }
 
+/* Half screen width */
 @media (max-width: 800px) {
   .member-detail-content {
     min-width: calc(100% - 80px);
@@ -101,17 +103,18 @@
     font-size: 12px;
   }
 
+  /* Make info boxes vertical */
   .member-detail-information-container {
     flex-direction: column;
   }
 
   .member-detail-information-container-left,
   .member-detail-information-container-right {
-    width: 100%; /* Ensure both containers take the full width */
-    min-width: 0; /* Override any min-width to prevent overflow */
-    overflow-x: auto; /* Enable horizontal scrolling for overflow content */
-    padding: 16px; /* Adjust padding if necessary */
-    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    padding: 16px;
+    box-sizing: border-box;
   }
 }
 

@@ -58,6 +58,10 @@
   width: 100%;
 }
 
+.membership-card-detail-table {
+  width: 100%;
+}
+
 .membership-label {
   font-family: "Source Serif 4", serif;
   font-weight: 600;

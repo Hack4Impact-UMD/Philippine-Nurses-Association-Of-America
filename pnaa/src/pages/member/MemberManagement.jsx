@@ -39,14 +39,14 @@ const MemberManagement = () => {
   }
 
   const columns = [
-    { field: '#', headerName: '#', width: 150 },
-    { field: 'name', headerName: 'NAME', width: 150},
-    { field: 'membership-level', headerName: 'MEMBERSHIP LEVEL', width: 150},
+    { field: '#', headerName: '#', width: 75 },
+    { field: 'name', headerName: 'NAME', width: 275, valueGetter: (params) => params.row.id },
+    { field: 'membership-level', headerName: 'MEMBERSHIP LEVEL', width: 250},
     { field: 'status', headerName: 'STATUS', width: 150},
     { field: 'registration', headerName: 'REGISTRATION', width: 150},
     { field: 'renewal', headerName: 'RENEWAL', width: 150},
     { field: 'renewal-due', headerName: 'RENEWAL DUE', width: 150},
-    { field: 'level-last-updated', headerName: 'LEVEL LAST UPDATED', width: 150},
+    { field: 'level-last-updated', headerName: 'LEVEL LAST UPDATED', width: 225},
   ];
 
   return (
@@ -59,6 +59,7 @@ const MemberManagement = () => {
           pageSize={5}
           rowsPerPageOptions={[5, 10, 20]}
           checkboxSelection
+          columnHeaderHeight={100}
           sx={{
             border: 10,
             borderColor: '#E0E0E0',
@@ -67,7 +68,7 @@ const MemberManagement = () => {
               backgroundColor: '#BDBDBD'
             },
             '& .MuiDataGrid-columnHeader': {
-              backgroundColor: '#BDBDBD'
+              backgroundColor: '#BDBDBD',
             },
             '& .MuiDataGrid-row:nth-child(odd)': {
               backgroundColor: '#FFFFFF'

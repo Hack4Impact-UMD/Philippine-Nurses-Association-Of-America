@@ -14,7 +14,6 @@ const About = () => {
       <h2>Chapter Information</h2>
       {currentUser.chapterData && (
         <>
-          <h2>console.log(currentUser)</h2>
           <p>Chapter Name: {currentUser.chapterData.name}</p>
           <p>MemberCount: {currentUser.chapterData.memberCount}</p>
           <p>Location: {currentUser.chapterData.location}</p>

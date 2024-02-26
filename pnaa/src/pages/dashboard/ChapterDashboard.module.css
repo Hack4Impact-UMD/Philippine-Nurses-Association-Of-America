@@ -2,37 +2,39 @@
 .navTabs {
   background-color: #EDF0F2; /* White background */
   padding-left: 0; /* Remove padding */
-  margin: 0; /* Remove margin */
   overflow: hidden; /* Clear floats */
   border-bottom: 1px solid #ccc; /* Line under the tabs */
   display: flex; /* Align tabs in a row */
   height: 77px;
   position: absolute;
-  width: 1200px;
-  top: 71px;
-  left: 77px;
-  border-radius: 15px;
+  width: 1195px;
+  right: 100px;
+  border-radius: 15px; 
 }
 
 /* Style for each tab item */
 .tabItem {
   display: inline-block; /* Arrange items in a line */
   list-style-type: none; /* Remove list bullets */
-  height: 77px;
-  border-radius: 15px;
+  height: 1000px;
+}
+
+.tabItem:first-child {
+  margin-left: 0; /* Remove margin on the left for the first tab */
+  padding-left: 0; /* Remove padding on the left for the first tab */
 }
 
 /* Style for the tab links */
 .tabLink {
   display: inline-block; /* Arrange links in a line */
-  width: 180px; /* Full width for the tab */
+  width: 195px; /* Full width for the tab */
   padding: 15px 0; /* Padding inside each tab */
-  height: 77px;
+  height: 400px; /* Increase the height to 100px */
   text-decoration: none; /* No underlines on the links */
   font-size: 16px; /* Text size */
   font-weight: bold; /* Make the text bold */
   border: 1px solid #ccc; /* Border around each tab */
-  border-bottom: none; /* Remove bottom border */
+  /*border-bottom: none; /* Remove bottom border */
   background-color: #D9D9D9; /* Light grey background */
   color: #000; /* Black text color */
   transition: background-color 0.2s; /* Smooth transition for hover effect */
@@ -47,6 +49,7 @@
     color: #000; /* Black text color */
     text-decoration: none; /* No underlines on the links */
     font-weight: bold; /* Make the text bold */
+    height: 400px;
     /*border-bottom: 1px solid white; /* Hide border under active tab */
   }
   

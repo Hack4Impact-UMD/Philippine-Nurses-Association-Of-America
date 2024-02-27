@@ -6,7 +6,7 @@ const MemberDetail = () => {
   const { member } = location.state;
 
   if (!member) {
-    return <div>No member data available.</div>;
+    return <div> No member data available. </div>;
   }
 
   return (

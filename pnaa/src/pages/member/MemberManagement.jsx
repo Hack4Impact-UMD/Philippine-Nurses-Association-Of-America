@@ -9,6 +9,7 @@ const MemberManagement = () => {
   const { currentUser, loading: userLoading } = useUser();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedRows, setSelectedRows] = useState([]);
 
 
   //Fetches all member data within chapter
@@ -21,7 +22,7 @@ const MemberManagement = () => {
         try {
           const snapshot = await getDocs(membersRef);
           const membersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          console.log(membersList);
+          console.log("fadfadf", membersList);
           setMembers(membersList);
         } catch (error) {
           console.error("Error fetching members:", error);
@@ -94,9 +95,31 @@ const MemberManagement = () => {
     </div>
   );
 
+  const SuspendMember = (
+    <div style={{ marginRight: '10px' }}>
+      <MemberButton
+        text="+ Suspend Member"
+        backgroundColor={"#AB2218"}
+        width="170px"
+        height="32px"
+      />
+    </div>
+  )
+
+  const RenewMember = (
+    <div style={{ marginRight: '10px' }}>
+      <MemberButton
+        text="+ Renew Member"
+        backgroundColor={"#53A67E"}
+        width="156px"
+        height="32px"
+      />
+    </div>
+  )
+
   const columns = [
     { field: '#', headerName: '#', width: 75 },
-    { field: 'name', headerName: 'NAME', width: 275, valueGetter: (params) => params.row.id },
+    { field: 'name', headerName: 'NAME', width: 275, valueGetter: (params) => params.row.FirstName + " " + params.row.LastName },
     { field: 'membership-level', headerName: 'MEMBERSHIP LEVEL', width: 250, renderCell: (params) => ( <Status text="Active Member (1 year)" backgroundColor={"#EBF0FA"} textColor="blue" width="163px" height="20px"/> ) },
     { field: 'status', headerName: 'STATUS', width: 150, renderCell: (params) => ( <Status text="Active" backgroundColor={"#E1FCEF"} textColor="green" width="58px" height="20px"/> ) },
     { field: 'registration', headerName: 'REGISTRATION', width: 150},
@@ -105,12 +128,18 @@ const MemberManagement = () => {
     { field: 'level-last-updated', headerName: 'LEVEL LAST UPDATED', width: 225},
   ];
 
+  const handleSelectionChange = (newSelection) => {
+    setSelectedRows(newSelection);
+  };
+
   return (
     <div>
       <h1>Member Management Page</h1>
       <div style={{ height: '80%', width: '100%' }}>
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-          {AddMember}
+          {selectedRows.length === 0 && AddMember}
+          {selectedRows.length !== 0 && SuspendMember}
+          {selectedRows.length !== 0 && RenewMember}
         </div>
         <DataGrid
           rows={members}
@@ -118,14 +147,14 @@ const MemberManagement = () => {
           pageSize={5}
           rowsPerPageOptions={[5, 10, 20]}
           checkboxSelection
+          onRowSelectionModelChange={handleSelectionChange}
           columnHeaderHeight={100}
-          headerRight={AddMember}
           sx={{
             border: 10,
             borderColor: '#E0E0E0',
             borderRadius: 0,
             '& .MuiDataGrid-row:nth-child(even)': {
-              backgroundColor: '#BDBDBD'
+              backgroundColor: '#E0E0E0'
             },
             '& .MuiDataGrid-columnHeader': {
               backgroundColor: '#BDBDBD',

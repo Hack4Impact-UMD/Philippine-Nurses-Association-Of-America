@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../../config/UserContext';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import './MemberManagement.css';
 
@@ -10,6 +10,7 @@ const MemberManagement = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
+  const navigate = useNavigate();
 
 
   //Fetches all member data within chapter
@@ -132,6 +133,10 @@ const MemberManagement = () => {
     setSelectedRows(newSelection);
   };
 
+  const handleRowClick = (params) => {
+    navigate(`/chapter-dashboard/member-detail/`, { state: { member: params.row } });
+  };
+
   return (
     <div>
       <h1>Member Management Page</h1>
@@ -148,6 +153,7 @@ const MemberManagement = () => {
           rowsPerPageOptions={[5, 10, 20]}
           checkboxSelection
           onRowSelectionModelChange={handleSelectionChange}
+          onRowClick={handleRowClick} // Add the onRowClick event handler
           columnHeaderHeight={100}
           sx={{
             border: 10,

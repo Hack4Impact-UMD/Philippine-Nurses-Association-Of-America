@@ -16,7 +16,7 @@ const ChapterDashboard = () => {
 
   if (!currentUser) {
     navigate('/signin');
-    return null;                                            
+    return null;
   }
 
   const signOut = () => {
@@ -30,6 +30,13 @@ const ChapterDashboard = () => {
       <button onClick={signOut}>Sign Out</button>
       <div className={styles.navTabs}>
         <ul>
+          <li className={styles.tabItem}>
+            <NavLink
+              to="/chapter-dashboard"
+              className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
+              Dashboard
+            </NavLink>
+          </li>
           <li className={styles.tabItem}>
             <NavLink
               to="about"
@@ -54,26 +61,18 @@ const ChapterDashboard = () => {
 
           <li className={styles.tabItem}>
             <NavLink
-              to="members"
+              to="donations"
               className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
-              Member Management
+              Donation
             </NavLink>
           </li>
           <li className={styles.tabItem}>
             <NavLink
-              to="events"
+              to="community-outreach"
               className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
-              Education / Event
-            </NavLink>
-          </li> <li className={styles.tabItem}>
-            <NavLink
-              to="members"
-              className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
-              Member Management
+              Community Outreach
             </NavLink>
           </li>
-         
-
         </ul>
       </div>
       <div className={styles.tabContent}>

@@ -4,6 +4,7 @@ import styles from "./MemberDetails.module.css";
 
 import MemberDialogBox from "./MemberDialogBox";
 import db from "../../config/firebase.ts";
+import logo from "./PNAA_Logo.png"
 
 // Material UI Components
 import Button from "@mui/material/Button";
@@ -205,11 +206,17 @@ const MemberDetail = () => {
                 <td></td>
                 <td>
                   <div className={styles["membership-card"]}>
-                    <p>
-                      Name: {member.FirstName} {member.LastName}
-                    </p>
-                    <p>ID: {member.id}</p>
-                    {/* ... Example Fields ... */}
+                    <div className={styles["membership-card-left"]}>
+                      <img className={styles["PNAA_Logo"]} src={logo}/>
+                      <p>Philippine Nurses Association of America</p>
+                    </div>
+                    <div className={styles["membership-card-right"]}>
+                      <p>
+                        {member.FirstName} {member.LastName}
+                      </p>
+                      <p>Member ID: {member.id}</p>
+                      {/* ... Example Fields ... */}
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -389,11 +396,7 @@ const MemberDetail = () => {
                     WORK INFORMATION
                   </p>
                 </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
+                <td></td>
               </tr>
               <tr>
                 <td>

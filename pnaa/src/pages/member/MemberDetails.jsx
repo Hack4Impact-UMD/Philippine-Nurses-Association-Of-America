@@ -211,11 +211,21 @@ const MemberDetail = () => {
                       <p>Philippine Nurses Association of America</p>
                     </div>
                     <div className={styles["membership-card-right"]}>
-                      <p>
+                      <p className={`${styles['membership-data']} ${styles['name-font']}`}>
                         {member.FirstName} {member.LastName}
                       </p>
-                      <p>Member ID: {member.id}</p>
+                      <div className={styles["membership-card-data"]}>
+                      <p className={`${styles['membership-data']} ${styles['membership-card-font']}`}>
+                        CHAPTER NAME: {member.ChapterName}
+                      </p>
+                      <p className={`${styles['membership-data']} ${styles['membership-card-font']}`}>
+                        Member ID: {member.id}
+                      </p>
+                      <p className={`${styles['membership-data']} ${styles['membership-card-font']}`}>
+                        Renwal Due: {member.RenewalDue}
+                      </p>
                       {/* ... Example Fields ... */}
+                    </div>
                     </div>
                   </div>
                 </td>
@@ -290,7 +300,7 @@ const MemberDetail = () => {
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
+                    placeholder {member.Gender}
                   </p>
                 </td>
               </tr>
@@ -324,11 +334,7 @@ const MemberDetail = () => {
                     NURSING EDUCATION
                   </p>
                 </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
+                <td></td>
               </tr>
               <tr>
                 <td>

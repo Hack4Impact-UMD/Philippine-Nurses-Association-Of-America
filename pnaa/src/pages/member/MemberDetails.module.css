@@ -59,18 +59,30 @@
   width: 100%;
   display: flex;
   padding: 10px;
+  border-radius: 15px;
 }
 
-.membership-card-detail-table {
+.member-detail-table {
   width: 100%;
+  border-spacing: 15px;
 }
 
-.membership-label {
+.membership-label, 
+.membership-data {
   font-family: "Source Serif 4", serif;
-  font-weight: 600;
+  font-weight: 400;
   color: #464f60;
   font-size: 16px;
   margin: 0;
+}
+
+.name-font{
+  font-weight: 700px;
+}
+
+.membership-card-font{
+  font-size: 8px;
+  font-weight: 600px;
 }
 
 .membership-label.small{
@@ -88,6 +100,43 @@
   min-width: 150px;
   overflow-x: auto; /* Allows horizontal scrolling if content overflows */
   overflow-y: auto;
+}
+
+.underline{
+  border-bottom: solid black 1px;
+}
+
+.member-notes{
+  background-color: #D9D9D94D;
+  width: 60%;
+  height: 20%;
+  border-radius: 15px;
+}
+
+.PNAA_Logo{
+  width: 72px;
+  height: 72px;
+}
+
+.membership-card-left{
+  text-align: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: "Source Serif 4", serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  width:50%;
+}
+
+.membership-card-right{
+  text-align: right;
+  align-items: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* Half screen width */
@@ -118,35 +167,4 @@
     padding: 16px;
     box-sizing: border-box;
   }
-}
-
-.underline{
-  border-bottom: solid black 1px;
-}
-
-.member-notes{
-  background-color: #D9D9D94D;
-  width: 60%;
-  height: 20%;
-  border-radius: 15px;
-}
-
-.PNAA_Logo{
-  width: 72px;
-  height: 72px;
-}
-
-.membership-card-left{
-  text-align: center;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center
-}
-.membership-card-right{
-  text-align: right;
-  align-items: right;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }

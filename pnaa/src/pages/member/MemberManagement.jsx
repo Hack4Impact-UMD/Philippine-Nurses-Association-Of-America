@@ -18,12 +18,17 @@ const MemberManagement = () => {
     if (currentUser?.chapterId) {
       const fetchMembers = async () => {
         const db = getFirestore();
-        const membersRef = collection(db, 'chapters', currentUser.chapterId, 'members');
+        const membersRef = collection(
+          db,
+          "chapters",
+          currentUser.chapterId,
+          "members"
+        );
 
         try {
           const snapshot = await getDocs(membersRef);
           const membersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          console.log("fadfadf", membersList);
+          console.log(membersList);
           setMembers(membersList);
         } catch (error) {
           console.error("Error fetching members:", error);

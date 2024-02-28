@@ -165,7 +165,7 @@ const MemberDetail = () => {
 
   // If no member data is available, display error message
   if (!member) {
-    return <div>No member data available.</div>;
+    return <div> No member data available. </div>;
   }
 
   // Else, display normal screen

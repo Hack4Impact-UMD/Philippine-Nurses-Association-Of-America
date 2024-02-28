@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { UserProvider } from './config/UserContext';
 import SignUp from './auth/SignUp';
@@ -28,7 +27,6 @@ function App() {
             <Route path="events" element={<Events />} />
             <Route path="donations" element={<Donations />} />
             <Route path="community-outreach" element={<CommunityOutreach />} />
-            {/* Define other nested routes here */}
           </Route>
           <Route path="/" element={<SignIn />} />
         </Routes>

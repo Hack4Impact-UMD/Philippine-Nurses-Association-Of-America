@@ -125,7 +125,19 @@ const MemberManagement = () => {
 
   const columns = [
     { field: '#', headerName: '#', width: 75 },
-    { field: 'name', headerName: 'NAME', width: 275, valueGetter: (params) => params.row.FirstName + " " + params.row.LastName },
+    {
+      field: 'name',
+      headerName: 'NAME',
+      width: 275,
+      renderCell: (params) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => navigateToMemberDetails(params.row)}
+        >
+          {params.row.FirstName + " " + params.row.LastName}
+        </div>
+      ),
+    },
     { field: 'membership-level', headerName: 'MEMBERSHIP LEVEL', width: 250, renderCell: (params) => ( <Status text="Active Member (1 year)" backgroundColor={"#EBF0FA"} textColor="blue" width="163px" height="20px"/> ) },
     { field: 'status', headerName: 'STATUS', width: 150, renderCell: (params) => ( <Status text="Active" backgroundColor={"#E1FCEF"} textColor="green" width="58px" height="20px"/> ) },
     { field: 'registration', headerName: 'REGISTRATION', width: 150},
@@ -138,8 +150,8 @@ const MemberManagement = () => {
     setSelectedRows(newSelection);
   };
 
-  const handleRowClick = (params) => {
-    navigate(`/chapter-dashboard/member-detail/`, { state: { member: params.row } });
+  const navigateToMemberDetails = (member) => {
+    navigate(`/chapter-dashboard/member-detail/`, { state: { member } });
   };
 
   return (
@@ -158,7 +170,6 @@ const MemberManagement = () => {
           rowsPerPageOptions={[5, 10, 20]}
           checkboxSelection
           onRowSelectionModelChange={handleSelectionChange}
-          onRowClick={handleRowClick} // Add the onRowClick event handler
           columnHeaderHeight={100}
           sx={{
             border: 10,

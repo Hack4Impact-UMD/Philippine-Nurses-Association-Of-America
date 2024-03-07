@@ -3,6 +3,7 @@
 .member-detail-container {
   display: flex;
   justify-content: center;
+  padding-top: 71px;
   padding-bottom: 71px;
 }
 

@@ -3,7 +3,7 @@ import { useUser } from '../../config/UserContext';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
-import './MemberManagement.css';
+import './MemberManagement.module.css';
 
 const MemberManagement = () => {
   const { currentUser, loading: userLoading } = useUser();
@@ -156,36 +156,37 @@ const MemberManagement = () => {
 
   return (
     <div>
-      <h1>Member Management Page</h1>
-      <div style={{ height: '80%', width: '100%' }}>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+      <div style={{ height: '80%', width: '100%', margin: '0 auto' }}> 
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '10px', marginRight: '50px' }}>
           {selectedRows.length === 0 && AddMember}
           {selectedRows.length !== 0 && SuspendMember}
           {selectedRows.length !== 0 && RenewMember}
         </div>
-        <DataGrid
-          rows={members}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5, 10, 20]}
-          checkboxSelection
-          onRowSelectionModelChange={handleSelectionChange}
-          columnHeaderHeight={100}
-          sx={{
-            border: 10,
-            borderColor: '#E0E0E0',
-            borderRadius: 0,
-            '& .MuiDataGrid-row:nth-child(even)': {
-              backgroundColor: '#E0E0E0'
-            },
-            '& .MuiDataGrid-columnHeader': {
-              backgroundColor: '#BDBDBD',
-            },
-            '& .MuiDataGrid-row:nth-child(odd)': {
-              backgroundColor: '#FFFFFF'
-            },
-          }}
-        />
+        <div style={{ margin: '0 50px' }}>
+          <DataGrid
+            rows={members}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5, 10, 20]}
+            checkboxSelection
+            onRowSelectionModelChange={handleSelectionChange}
+            columnHeaderHeight={100}
+            sx={{
+              border: 13,
+              borderColor: '#d9d9d9',
+              borderRadius: 2,
+              '& .MuiDataGrid-row:nth-child(even)': {
+                backgroundColor: '#E0E0E0'
+              },
+              '& .MuiDataGrid-columnHeader': {
+                backgroundColor: '#BDBDBD',
+              },
+              '& .MuiDataGrid-row:nth-child(odd)': {
+                backgroundColor: '#FFFFFF'
+              },
+            }}
+          />
+        </div>
       </div>
     </div>
   );

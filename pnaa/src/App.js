@@ -8,8 +8,7 @@ import About from './pages/about/About';
 import MemberManagement from './pages/member/MemberManagement';
 import MemberDetail from './pages/member/MemberDetails';
 import Events from './pages/events/Events'
-import Donations from './pages/donation/Donations';
-import CommunityOutreach from './pages/community-outreach/CommunityOutreach';
+import Fundraising from './pages/fundraising/Fundraising';
 
 
 function App() {
@@ -25,8 +24,7 @@ function App() {
             <Route path="members" element={<MemberManagement />} />
             <Route path="member-detail" element={<MemberDetail />} />
             <Route path="events" element={<Events />} />
-            <Route path="donations" element={<Donations />} />
-            <Route path="community-outreach" element={<CommunityOutreach />} />
+            <Route path="fundraising" element={<Fundraising />} />
           </Route>
           <Route path="/" element={<SignIn />} />
         </Routes>

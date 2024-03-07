@@ -32,7 +32,7 @@ const ChapterDashboard = () => {
         <ul>
           <li className={styles.tabItem}>
             <NavLink
-              to="/chapter-dashboard"
+              to=""
               className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
               Dashboard
             </NavLink>
@@ -48,14 +48,14 @@ const ChapterDashboard = () => {
             <NavLink
               to="members"
               className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
-              Member Management
+              Members
             </NavLink>
           </li>
           <li className={styles.tabItem}>
             <NavLink
               to="events"
               className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
-              Education / Event
+              Events
             </NavLink>
           </li>
 
@@ -63,14 +63,7 @@ const ChapterDashboard = () => {
             <NavLink
               to="donations"
               className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
-              Donation
-            </NavLink>
-          </li>
-          <li className={styles.tabItem}>
-            <NavLink
-              to="community-outreach"
-              className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
-              Community Outreach
+              Fundraising
             </NavLink>
           </li>
         </ul>

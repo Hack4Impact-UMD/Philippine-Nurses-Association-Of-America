@@ -1,58 +1,36 @@
-/* Feel free to change anything */
 .navTabs {
-    width: '1100px';
-    background-color: #fff; /* White background */
-    padding-left: 0; /* Remove padding */
-    margin: 0; /* Remove margin */
-    overflow: hidden; /* Clear floats */
-    border-bottom: 1px solid #bdbdbd; /* Line under the tabs */
-    display: flex; /* Align tabs in a row */
-  }
-  
-  /* Style for each tab item */
-  .tabItem {
-    font-family:"Source Serif 4";
-    background-color: #bdbdbd;
-    color: "#4F4F4F";
-    display: inline-block; /* Arrange items in a line */
-    list-style-type: none; /* Remove list bullets */
-    margin-right: -4px; /* Prevent double borders between tabs */
-  }
-  
-  /* Style for the tab links */
-  .tabLink {
-    display: inline-block; /* Arrange links in a line */
-    padding: 10px 55px; /* Padding inside each tab */
-    text-decoration: none; /* No underlines on the links */
-    font-size: 16px; /* Text size */
-    border: 1px solid #ccc; /* Border around each tab */
-    border-bottom: none; /* Remove bottom border */
-    background-color: #bdbdbd; /* Light grey background */
-    color: #05208b4; /* Black text color */
-    transition: background-color 0.2s; /* Smooth transition for hover effect */
-    border-top-left-radius: 4px; /* Rounded corners at the top-left */
-    border-top-right-radius: 4px; /* Rounded corners at the top-right */
-    border-radius: 10px 10px 0 0;
-  }
-  
-  /* Style for the active tab link */
-  .activeTabLink {
-    border-radius: 15px 15px 15px 15px;
-    padding: 10px 55px;
-    background-color: #bdbdbd; /* White background for active tab */
-    color: #000000; /* Black text color */
-    border-bottom: 1px solid white; /* Hide border under active tab */
-  }
-  
-  /* Hover effect for tabs */
-  .tabLink:hover {
-    border-radius: 15px 15px 15px 15px;
-    background-color: #ddd; /* Darker grey background on hover */
-  }
-  
-  /* Container for the content displayed by the tab */
-  .tabContent {
-    border: 1px solid #052080; /* Border around the content area */
-    border-top: none; /* Remove top border to merge with tabs */
-  }
-  
+  width: '1100px';
+  background-color: #fff; 
+  margin: 0 auto;
+  display: flex; 
+  justify-content: center;
+}
+
+.tabItem {
+  display: inline-block;
+}
+
+.tabLink, .activeTabLink {
+  padding: 10px 30px; 
+  text-decoration: none;
+  font-size: 16px; /* Text size */
+  background-color: #ffffff; 
+  color: #4F4F4F; /* Dark gray text color */
+  border: 1px solid #ddd; /* Slight border for definition */
+  border-radius: 5px; /* Slight rounding of corners */
+  transition: background-color 0.2s; /* Smooth transition for hover effect */
+}
+
+.activeTabLink {
+  background-color: #e0e0e0; /* Slightly darker background for the active tab */
+  color: #000000; /* Black text color */
+  border-bottom: none; /* Active tab appears connected to the content area */
+}
+
+.tabLink:hover {
+  background-color: #d0d0d0; /* Slightly darker background on hover */
+}
+
+.tabContent {
+  /* Styles for the content displayed by the tab */
+}

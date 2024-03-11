@@ -1,0 +1,36 @@
+.navTabs {
+  width: '1100px';
+  background-color: #fff; 
+  margin: 0 auto;
+  display: flex; 
+  justify-content: center;
+}
+
+.tabItem {
+  display: inline-block;
+}
+
+.tabLink, .activeTabLink {
+  padding: 10px 30px; 
+  text-decoration: none;
+  font-size: 16px; /* Text size */
+  background-color: #ffffff; 
+  color: #4F4F4F; /* Dark gray text color */
+  border: 1px solid #ddd; /* Slight border for definition */
+  border-radius: 5px; /* Slight rounding of corners */
+  transition: background-color 0.2s; /* Smooth transition for hover effect */
+}
+
+.activeTabLink {
+  background-color: #e0e0e0; /* Slightly darker background for the active tab */
+  color: #000000; /* Black text color */
+  border-bottom: none; /* Active tab appears connected to the content area */
+}
+
+.tabLink:hover {
+  background-color: #d0d0d0; /* Slightly darker background on hover */
+}
+
+.tabContent {
+  /* Styles for the content displayed by the tab */
+}

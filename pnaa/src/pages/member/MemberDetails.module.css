@@ -1,0 +1,171 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&display=swap");
+
+.member-detail-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 71px;
+  padding-bottom: 71px;
+}
+
+.member-detail-content {
+  border: 13px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 71px;
+  width: calc(100% - 142px);
+  padding: 16px 36px;
+}
+
+.membership-header {
+  font-family: "Source Serif 4", serif;
+  font-weight: 600;
+  color: #464f60;
+  font-size: 40px;
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.membership-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action-button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.member-detail-information-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 15px 0px 5px 0px;
+}
+
+.member-detail-information-container-left {
+  border: solid black 1px;
+  width: 35%;
+  padding: 16px 36px;
+  flex: 0 1 auto;
+  flex-basis: calc(
+    509px / 1195 * 100%
+  ); /* Set flex-basis to proportion of left box */
+  min-width: 150px;
+  overflow-x: auto; /* Allows horizontal scrolling if content overflows */
+}
+
+.membership-card {
+  border: solid black 1px;
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+.member-detail-table {
+  width: 100%;
+  border-spacing: 15px;
+}
+
+.membership-label, 
+.membership-data {
+  font-family: "Source Serif 4", serif;
+  font-weight: 400;
+  color: #464f60;
+  font-size: 16px;
+  margin: 0;
+}
+
+.name-font{
+  font-weight: 700px;
+}
+
+.membership-card-font{
+  font-size: 8px;
+  font-weight: 600px;
+}
+
+.membership-label.small{
+  font-size: 14px;
+}
+
+.member-detail-information-container-right{
+  border: solid black 1px;
+  width: 50%;
+  padding: 16px 36px;
+  flex: 0 1 auto;
+  flex-basis: calc(
+    671px / 1180 * 100%
+  ); /* Set flex-basis to the proportion of right box */
+  min-width: 150px;
+  overflow-x: auto; /* Allows horizontal scrolling if content overflows */
+  overflow-y: auto;
+}
+
+.underline{
+  border-bottom: solid black 1px;
+}
+
+.member-notes{
+  background-color: #D9D9D94D;
+  width: 60%;
+  height: 20%;
+  border-radius: 15px;
+}
+
+.PNAA_Logo{
+  width: 72px;
+  height: 72px;
+}
+
+.membership-card-left{
+  text-align: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: "Source Serif 4", serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  width:50%;
+}
+
+.membership-card-right{
+  text-align: right;
+  align-items: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Half screen width */
+@media (max-width: 800px) {
+  .member-detail-content {
+    min-width: calc(100% - 80px);
+    padding: 16px 20px;
+  }
+
+  .membership-header {
+    font-size: 30px;
+  }
+
+  .action-button-group .MuiButton-label {
+    font-size: 12px;
+  }
+
+  /* Make info boxes vertical */
+  .member-detail-information-container {
+    flex-direction: column;
+  }
+
+  .member-detail-information-container-left,
+  .member-detail-information-container-right {
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+}

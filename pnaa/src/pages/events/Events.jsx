@@ -21,7 +21,7 @@ const Events = () => {
         setEvents(eventsList);
       } catch (error) {
         console.log("Error getting documents: ", error);
-      } finally{
+      } finally {
         setLoading(false);
       }
     };
@@ -40,6 +40,7 @@ const Events = () => {
         {events.map((event) => (
           <li key={event.id}>
             <Link to={`/events/${event.id}`}>{event.name}</Link>
+
           </li>
         ))}
       </ul>

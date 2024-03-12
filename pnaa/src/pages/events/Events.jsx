@@ -39,8 +39,14 @@ const Events = () => {
       <ul>
         {events.map((event) => (
           <li key={event.id}>
-            <Link to={`/events/${event.id}`}>{event.name}</Link>
-
+            <Link
+              to={"/chapter-dashboard/event-details"}
+              state={{
+                event: event,
+              }}
+            >
+              {event.name}
+            </Link>
           </li>
         ))}
       </ul>

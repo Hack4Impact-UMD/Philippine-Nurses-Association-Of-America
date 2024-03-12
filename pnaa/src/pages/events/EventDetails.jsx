@@ -13,6 +13,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 const EventDetail = () => {
   // Else, display normal screen
   return (
+    <div><p> hello world </p>
           <div className={styles["member-detail-information-container-right"]}>
             <table className={styles["member-detail-table"]}>
               <tr>
@@ -23,7 +24,7 @@ const EventDetail = () => {
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.Gender}
+                    placeholder {}
                   </p>
                 </td>
               </tr>
@@ -35,7 +36,7 @@ const EventDetail = () => {
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.age}
+                    placeholder {}
                   </p>
                 </td>
               </tr>
@@ -47,7 +48,7 @@ const EventDetail = () => {
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
+                    placeholder {}
                   </p>
                 </td>
               </tr>
@@ -67,7 +68,7 @@ const EventDetail = () => {
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
+                    placeholder {`event`.gender}
                   </p>
                 </td>
               </tr>
@@ -79,7 +80,7 @@ const EventDetail = () => {
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
+                    placeholder {`event`.gender}
                   </p>
                 </td>
               </tr>
@@ -91,7 +92,7 @@ const EventDetail = () => {
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.country}
+                    placeholder {}
                   </p>
                 </td>
               </tr>
@@ -103,7 +104,7 @@ const EventDetail = () => {
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
+                    placeholder {}
                   </p>
                 </td>
               </tr>
@@ -115,11 +116,12 @@ const EventDetail = () => {
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
+                    placeholder {}
                   </p>
                 </td>
               </tr>
             </table>
+    </div>
     </div>
   )
 };

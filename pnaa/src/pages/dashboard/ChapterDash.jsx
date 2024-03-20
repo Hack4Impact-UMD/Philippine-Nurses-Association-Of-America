@@ -61,7 +61,7 @@ const ChapterDashboard = () => {
 
           <li className={styles.tabItem}>
             <NavLink
-              to="donations"
+              to="fundraising"
               className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
               Fundraising
             </NavLink>

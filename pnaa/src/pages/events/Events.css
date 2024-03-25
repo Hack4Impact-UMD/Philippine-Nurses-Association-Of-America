@@ -1,0 +1,16 @@
+div {
+    font-family: 'Source Serif 4', serif;
+}
+
+.event-cell {
+    font-weight: 500;
+    color:black;
+}
+
+.cell {
+    color:#464F60;
+}
+
+.MuiDataGrid-checkbox {
+    border-radius: 4px;
+}

@@ -4,7 +4,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { Select, MenuItem, Button } from '@mui/material';
-
+import './Events.css'
 
 const Events = () => {
 
@@ -47,7 +47,7 @@ const Events = () => {
     }
   }
   
-  if (loading) { 
+  if (loading || userLoading) { 
     return <div>Loading...</div>;
   }
 
@@ -84,6 +84,26 @@ const Events = () => {
           height="20px"
           />
       );
+    } else if (status === "Chapter") {
+      return (
+        <Status
+          text="Chapter Name"
+          backgroundColor="#FCF2E6"
+          textColor="brown"
+          width="107px"
+          height="20px"
+        />
+      )
+    } else {
+      return (
+        <Status
+          text="Non-local Chapter"
+          backgroundColor="#FAF0F3"
+          textColor='red'
+          width="132px"
+          height="20px"
+        />
+      )
     }
   };
 
@@ -131,15 +151,15 @@ const Events = () => {
   );
 
   const columns = [
-    { field: 'name', headerName: 'EVENT NAME', width: 300 },
-    { field: 'date', headerName: 'DATE', width: 100 },
-    { field: 'time', headerName: 'TIME', width: 125 },
-    { field: 'location', headerName: 'LOCATION', width: 150 },
-    { field: 'status', headerName: 'STATUS', width: 150, renderCell: (params) => (renderStatus(params.status))},
-    { field: 'attendee#', headerName: 'ATTENDEE #', width: 125},
-    { field: 'contact hrs', headerName: 'CONTACT HRS', width: 125},
-    { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 125},
-    { field: 'participants_served', headerName: 'PARTICIPANTS SERVED', width: 200 },
+    { field: 'name', headerName: 'EVENT NAME', width: 250, cellClassName:'event-cell' },
+    { field: 'date', headerName: 'DATE', width: 100, cellClassName:'cell' },
+    { field: 'time', headerName: 'TIME', width: 125, cellClassName:'cell'},
+    { field: 'location', headerName: 'LOCATION', width: 150, cellClassName:'cell'},
+    { field: 'status', headerName: 'STATUS', width: 200, renderCell: (params) => (renderStatus(params.value))},
+    { field: 'attendee#', headerName: 'ATTENDEE #', width: 125, cellClassName:'cell'},
+    { field: 'contact hrs', headerName: 'CONTACT HRS', width: 125, cellClassName:'cell'},
+    { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 125, cellClassName:'cell'},
+    { field: 'participants_served', headerName: 'PARTICIPANTS SERVED', width: 200, cellClassName:'cell'},
   ];
 
   const handleSelectionChange = (newSelection) => {
@@ -167,16 +187,20 @@ const Events = () => {
     <div>
       <div>
         <h1>Events</h1>
-        <div>
-          <label htmlFor="chapterSelect">Select Chapter:</label>
-          <select id="chapterSelect" value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
-            <option value="">All Chapters</option>
-            {chapters.map((chapter, index) => (
-              <option key={index} value={chapter}>{chapter}</option>
-            ))}
-          </select>
-          {exportRegistration}
-          {recordRegistration}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ marginRight: 'auto', padding: '10px' }}>
+            <label htmlFor="chapterSelect">Select Chapter:</label>
+            <select id="chapterSelect" value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
+              <option value="">All Chapters</option>
+              {chapters.map((chapter, index) => (
+                <option key={index} value={chapter}>{chapter}</option>
+              ))}
+            </select>
+          </div>
+          <div style={{ display: 'flex', padding: '5px' }}>
+            {exportRegistration}
+            {recordRegistration}
+          </div>
         </div>
         <div>
         <DataGrid
@@ -190,17 +214,21 @@ const Events = () => {
           columnHeaderHeight={100}
           sx={{
             border: 10,
-            borderColor: '#E0E0E0',
+            borderColor: '#BDBDBD',
             borderRadius: 0,
             '& .MuiDataGrid-row:nth-child(even)': {
-              backgroundColor: '#E0E0E0'
+              backgroundColor: "rgba(224, 224, 224, 0.75)"
+              
             },
             '& .MuiDataGrid-columnHeader': {
-              backgroundColor: '#BDBDBD',
+              backgroundColor: "rgba(224, 224, 224, 0.75)"
             },
             '& .MuiDataGrid-row:nth-child(odd)': {
               backgroundColor: '#FFFFFF'
             },
+            '& .MuiDataGrid-footerContainer': {
+              backgroundColor: "rgba(224, 224, 224, 0.75)"
+            }
           }}
         />
         </div>

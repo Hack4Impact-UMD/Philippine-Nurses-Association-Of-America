@@ -14,3 +14,9 @@ div {
 .MuiDataGrid-checkbox {
     border-radius: 4px;
 }
+
+#filterlabel {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 4px;
+}

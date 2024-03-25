@@ -189,7 +189,7 @@ const Events = () => {
         <h1>Events</h1>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ marginRight: 'auto', padding: '10px' }}>
-            <label htmlFor="chapterSelect">Select Chapter:</label>
+            <label  id="filterlabel" htmlFor="chapterSelect">Select Chapter:</label>
             <select id="chapterSelect" value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
               <option value="">All Chapters</option>
               {chapters.map((chapter, index) => (
@@ -202,7 +202,7 @@ const Events = () => {
             {recordRegistration}
           </div>
         </div>
-        <div>
+        <div id="table-background">
         <DataGrid
           rows={events}
           columns={columns}
@@ -215,7 +215,7 @@ const Events = () => {
           sx={{
             border: 10,
             borderColor: 'rgba(189,189,189,0.75)',
-            borderRadius: 0,
+            borderRadius: 4,
             '& .MuiDataGrid-row:nth-child(even)': {
               backgroundColor: "rgba(224, 224, 224, 0.75)"
               

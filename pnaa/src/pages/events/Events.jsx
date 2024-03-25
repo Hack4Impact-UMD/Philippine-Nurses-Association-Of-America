@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useUser } from "../../config/UserContext";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { db } from "../../config/firebase.ts";
 import { Link } from "react-router-dom";
 
 const Events = () => {
@@ -10,7 +11,6 @@ const Events = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const db = getFirestore();
       const eventsCol = collection(db, "events");
       try {
         const snapshot = await getDocs(eventsCol);
@@ -42,7 +42,7 @@ const Events = () => {
             <Link
               to={"/chapter-dashboard/event-details"}
               state={{
-                event: event,
+                event: { ...event, archived: event.archived ?? false },
               }}
             >
               {event.name}

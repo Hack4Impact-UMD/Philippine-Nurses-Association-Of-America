@@ -218,6 +218,8 @@ const EventDetails = () => {
       )}
     </Menu>
   );
+  
+  const fieldsToShow = ["date", "time", "location", "status", "attendee#", "about", "event poster", "contact hrs"];
 
   // Else, display normal screen
   return (
@@ -243,32 +245,45 @@ const EventDetails = () => {
         </div>
 
         <div className={styles["event-detail-information-container"]}>
-          <table className={styles["event-detail-table"]}>
-            {Object.entries(editedEvent).map(([key, value]) => (
-              <tr key={key}>
-                <td>
-                  <p className={styles["event-label"]}>{key.toUpperCase()}</p>
-                </td>
-                <td>
-                  {isEditMode ? (
-                    <input
-                      type="text"
-                      value={value}
-                      onChange={(e) =>
-                        setEditedEvent({
-                          ...editedEvent,
-                          [key]: e.target.value,
-                        })
-                      }
-                      className={styles["edit-input"]} // Add CSS for this
-                    />
-                  ) : (
-                    <p className={styles["event-data"]}>{value.toString()}</p>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </table>
+        
+
+        <table className={styles["event-detail-table"]}>
+          {fieldsToShow.map((fieldName) => {
+          const value = editedEvent[fieldName] || ""; // Initialize value to an empty string if key doesn't exist
+          return (
+            <tr key={fieldName}>
+              <td>
+                <p className={styles["event-label"]}>{fieldName.toUpperCase()}</p>
+              </td>
+              <td>
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    value={value}
+                    onChange={(e) =>
+                      setEditedEvent({
+                        ...editedEvent,
+                        [fieldName]: e.target.value,
+                      })
+                    }
+                    className={styles["edit-input"]} // Add CSS for this
+                  />
+                ) : (
+                  <p className={styles["event-data"]}>{value.toString()}</p>
+                )}
+              </td>
+            </tr>
+          );
+        })}
+        <tr>
+          <td>
+            <p className={styles["event-label"]}>OTHER DETAILS</p>
+          </td>
+          <td className={styles["other-details"]}>
+            <p>{editedEvent.other_details}</p>
+          </td>
+        </tr>
+      </table>
         </div>
       </div>
       <EventDialogBox

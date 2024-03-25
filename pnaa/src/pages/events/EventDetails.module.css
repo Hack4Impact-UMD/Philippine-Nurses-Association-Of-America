@@ -115,6 +115,12 @@
   justify-content: space-between;
 }
 
+.other-details{
+  background-color: #D9D9D94D;
+  border-radius: 15px;
+  min-width: 50%;
+}
+
 @media (max-width: 1200px) {
   .event-header {
     font-size: 35px;

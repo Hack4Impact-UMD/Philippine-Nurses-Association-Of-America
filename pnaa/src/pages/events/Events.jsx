@@ -214,7 +214,7 @@ const Events = () => {
           columnHeaderHeight={100}
           sx={{
             border: 10,
-            borderColor: '#BDBDBD',
+            borderColor: 'rgba(189,189,189,0.75)',
             borderRadius: 0,
             '& .MuiDataGrid-row:nth-child(even)': {
               backgroundColor: "rgba(224, 224, 224, 0.75)"

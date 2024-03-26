@@ -7,6 +7,7 @@ import ChapterDash from './pages/dashboard/ChapterDash';
 import About from './pages/about/About';
 import MemberManagement from './pages/member/MemberManagement';
 import MemberDetail from './pages/member/MemberDetails';
+import Members from './pages/member/Members';
 import Events from './pages/events/Events'
 import Fundraising from './pages/fundraising/Fundraising';
 
@@ -21,7 +22,7 @@ function App() {
           <Route path="/national-dashboard" element={<NationalDash />} />
           <Route path="/chapter-dashboard/*" element={<ChapterDash />}>
             <Route path="about" element={<About />} />
-            <Route path="members" element={<MemberManagement />} />
+            <Route path="members" element={<Members />} />
             <Route path="member-detail" element={<MemberDetail />} />
             <Route path="events" element={<Events />} />
             <Route path="fundraising" element={<Fundraising />} />

@@ -1,8 +1,12 @@
 # Philippine-Nurses-Association-Of-America
 
-To run local development:
 npm install
+
+To run client:
 npm start
+
+To run server:
+npm run server
 
 Task 1:
 Entirety of the chapters dashboard

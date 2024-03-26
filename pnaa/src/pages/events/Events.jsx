@@ -29,9 +29,7 @@ const Events = () => {
         const eventsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
         setEvents(eventsList);
         setOriginalEvents(eventsList);
-        const uniqueChapters = [...new Set(eventsList.map(event => event.chapter))];
         const uniqueRegions = [...new Set(eventsList.map(event => event.region))];
-        setChapters(uniqueChapters);
         setOriginalRegions(uniqueRegions);
 
       } catch (error) {
@@ -42,6 +40,22 @@ const Events = () => {
     }
     fetchEvents();
   }, [currentUser]);
+
+  useEffect(() => {
+    const fetchChapters = async () => {
+      const db = getFirestore();
+      const chaptersRef = collection(db, 'chapters');
+      try {
+        const snapshot = await getDocs(chaptersRef);
+        const chapterNames = snapshot.docs.map(doc => doc.data().name);
+        setChapters(chapterNames);
+      } catch (error) {
+        console.error("Error fetching chapters: ", error);
+      }
+    }
+    fetchChapters();
+  }, []);
+
   
   if (loading || userLoading) { 
     return <div>Loading...</div>;
@@ -171,6 +185,7 @@ const Events = () => {
     
     if (!selectedChapter) {
       setEvents(originalEvents);
+      setSelectedRegion('');
     } else {
       let filteredEvents = originalEvents.filter(event => event.chapter === selectedChapter);
       
@@ -188,6 +203,7 @@ const Events = () => {
     
     if (!selectedRegion) {
       setEvents(originalEvents);
+      setSelectedChapter('')
     } else {
       let filteredEvents = originalEvents.filter(event => event.region === selectedRegion);
       

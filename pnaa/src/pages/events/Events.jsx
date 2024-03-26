@@ -11,8 +11,11 @@ const Events = () => {
   const { currentUser, loading: userLoading } = useUser();
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
+  const [originalEvents, setOriginalEvents] = useState([]);
+  const [originalRegions, setOriginalRegions] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedChapter, setSelectedChapter] = useState(''); // State to hold the selected chapter
+  const [selectedRegion, setSelectedRegion] = useState('');
   const [chapters, setChapters] = useState([]); // State to hold the list of chapters
   const navigate = useNavigate();
 
@@ -25,8 +28,11 @@ const Events = () => {
         const snapshot = await getDocs(eventsRef);
         const eventsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
         setEvents(eventsList);
+        setOriginalEvents(eventsList);
         const uniqueChapters = [...new Set(eventsList.map(event => event.chapter))];
+        const uniqueRegions = [...new Set(eventsList.map(event => event.region))];
         setChapters(uniqueChapters);
+        setOriginalRegions(uniqueRegions);
 
       } catch (error) {
         console.error("Error fetching events: ", error);
@@ -36,16 +42,6 @@ const Events = () => {
     }
     fetchEvents();
   }, [currentUser]);
-
-  const filterEventsByChapter = () => {
-    if (!selectedChapter) {
-      setEvents(events);
-    }
-    else {
-      const filteredEvents = events.filter(event => event.chapter === selectedChapter);
-      setEvents(filteredEvents);
-    }
-  }
   
   if (loading || userLoading) { 
     return <div>Loading...</div>;
@@ -174,11 +170,32 @@ const Events = () => {
     setSelectedChapter(selectedChapter);
     
     if (!selectedChapter) {
-      // If no chapter is selected, reset events to show all events
-      setEvents(events);
+      setEvents(originalEvents);
     } else {
-      // Filter events based on selected chapter
-      const filteredEvents = events.filter(event => event.chapter === selectedChapter);
+      let filteredEvents = originalEvents.filter(event => event.chapter === selectedChapter);
+      
+      // If a region is selected, further filter the events based on the selected region
+      if (selectedRegion) {
+        filteredEvents = filteredEvents.filter(event => event.region === selectedRegion);
+      }
+      
+      setEvents(filteredEvents);
+    }
+  };
+  
+  const handleFilterByRegion = (selectedRegion) => {
+    setSelectedRegion(selectedRegion);
+    
+    if (!selectedRegion) {
+      setEvents(originalEvents);
+    } else {
+      let filteredEvents = originalEvents.filter(event => event.region === selectedRegion);
+      
+      // If a chapter is selected, further filter the events based on the selected chapter
+      if (selectedChapter) {
+        filteredEvents = filteredEvents.filter(event => event.chapter === selectedChapter);
+      }
+      
       setEvents(filteredEvents);
     }
   };
@@ -194,6 +211,13 @@ const Events = () => {
               <option value="">All Chapters</option>
               {chapters.map((chapter, index) => (
                 <option key={index} value={chapter}>{chapter}</option>
+              ))}
+            </select>
+            <label id="filterRegion" htmlFor='regionSelect'>Select Region:</label>
+            <select id='regionSelect' value={selectedRegion} onChange={(e) => handleFilterByRegion(e.target.value)}>
+              <option value="">All Regions</option>
+              {originalRegions.map((region, index) => (
+                <option key={index} value={region}>{region}</option>
               ))}
             </select>
           </div>

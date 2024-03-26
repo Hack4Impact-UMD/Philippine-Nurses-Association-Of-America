@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { UserProvider } from './config/UserContext';
 import SignUp from './auth/SignUp';
@@ -9,6 +8,7 @@ import About from './pages/about/About';
 import MemberManagement from './pages/member/MemberManagement';
 import MemberDetail from './pages/member/MemberDetails';
 import Events from './pages/events/Events'
+import Fundraising from './pages/fundraising/Fundraising';
 
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
             <Route path="members" element={<MemberManagement />} />
             <Route path="member-detail" element={<MemberDetail />} />
             <Route path="events" element={<Events />} />
-            {/* Define other nested routes here */}
+            <Route path="fundraising" element={<Fundraising />} />
           </Route>
           <Route path="/" element={<SignIn />} />
         </Routes>

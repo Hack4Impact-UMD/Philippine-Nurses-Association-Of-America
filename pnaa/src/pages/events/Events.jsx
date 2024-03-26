@@ -55,6 +55,7 @@ const Events = () => {
     }
     fetchChapters();
   }, []);
+
   
   if (loading || userLoading) { 
     return <div>Loading...</div>;

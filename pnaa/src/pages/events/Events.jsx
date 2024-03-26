@@ -202,6 +202,7 @@ const Events = () => {
     
     if (!selectedRegion) {
       setEvents(originalEvents);
+      setSelectedChapter('')
     } else {
       let filteredEvents = originalEvents.filter(event => event.region === selectedRegion);
       

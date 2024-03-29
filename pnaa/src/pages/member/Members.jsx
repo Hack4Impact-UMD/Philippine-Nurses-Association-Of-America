@@ -8,13 +8,13 @@ const Members = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await fetch('https://us-central1-pnaa-8b56f.cloudfunctions.net/WildApricotApi/api/members');
+        const response = await fetch('http://localhost:5000/api/members');
         if (!response.ok) {
           throw new Error('Failed to fetch members');
         }
         const data = await response.json();
         console.log("DATA", data);
-        setMembers(data);
+        // setMembers(data);
       } catch (err) {
         setError(err.message);
       } finally {

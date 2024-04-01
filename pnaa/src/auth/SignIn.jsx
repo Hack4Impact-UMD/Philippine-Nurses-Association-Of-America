@@ -75,7 +75,7 @@ const SignIn = () => {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       />
-      <button onClick={handleSignIn}>Login</button>
+      <button id="loginbutton" onClick={handleSignIn}>Login</button>
       {/* <button onClick={handleGoogleSignIn}>Sign in with Google</button> */}
       {error && <p style={{ color: "red" }}>{error}</p>}{" "}
       <p id="dont">

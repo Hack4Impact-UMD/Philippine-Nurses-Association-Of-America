@@ -1,3 +1,4 @@
+
 #container {
     box-shadow: 0px 4px 4px 4px #05208B80;
     position: fixed;
@@ -51,6 +52,7 @@
     border-radius: 8px;
     opacity: 0px;
     background: linear-gradient(90deg, rgba(152, 175, 221, 0.21) 0%, rgba(217, 217, 217, 0.04) 100%);
+    font-size: 20px;
 }
 
 #password {
@@ -64,4 +66,26 @@
     border-radius: 8px;
     opacity: 0px;
     background: linear-gradient(90deg, rgba(152, 175, 221, 0.21) 0%, rgba(217, 217, 217, 0.04) 100%);
+    font-size: 20px;
+}
+
+#loginbutton {
+    width: Fixed (151px)px;
+    height: Fixed (46px)px;
+    padding: 6px 12px 6px 12px;
+    gap: 8px;
+    border-radius: 6px 0px 0px 0px;
+    opacity: 0px;
+    position: fixed;
+    top: 65%;
+    left: 40%;
+    background: #2264E51F;
+    box-shadow: 0px 2px 5px 0px #2264E51F;
+
+    box-shadow: 0px 0px 0px 1px #2264E5;
+
+    box-shadow: 0px 1px 1px 0px #00000024;
+
+    box-shadow: 0px 1px 0px 0px #4B85FA inset;
+
 }

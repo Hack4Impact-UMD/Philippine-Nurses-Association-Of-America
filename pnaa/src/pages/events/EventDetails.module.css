@@ -24,6 +24,15 @@
   letter-spacing: 0.05em;
 }
 
+.event-header-input {
+  font-family: "Source Serif 4", serif;
+  font-weight: 600;
+  color: #464f60;
+  font-size: 36px;
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
 .event-header-container {
   display: flex;
   justify-content: space-between;
@@ -115,8 +124,8 @@
   justify-content: space-between;
 }
 
-.other-details{
-  background-color: #D9D9D94D;
+.other-details {
+  background-color: #d9d9d94d;
   border-radius: 15px;
   min-width: 50%;
 }
@@ -124,6 +133,10 @@
 @media (max-width: 1200px) {
   .event-header {
     font-size: 35px;
+  }
+
+  .event-header-input {
+    font-size: 31px;
   }
 }
 
@@ -136,6 +149,10 @@
 
   .event-header {
     font-size: 30px;
+  }
+
+  .event-header-input {
+    font-size: 26px;
   }
 
   .action-button-group .MuiButton-label {

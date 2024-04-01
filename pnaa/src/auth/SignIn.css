@@ -70,22 +70,16 @@
 }
 
 #loginbutton {
-    width: Fixed (151px)px;
-    height: Fixed (46px)px;
+    width: 151px;
+    height: 46px;
     padding: 6px 12px 6px 12px;
     gap: 8px;
-    border-radius: 6px 0px 0px 0px;
+    border-radius: 6px;
     opacity: 0px;
     position: fixed;
-    top: 65%;
-    left: 40%;
-    background: #2264E51F;
-    box-shadow: 0px 2px 5px 0px #2264E51F;
-
-    box-shadow: 0px 0px 0px 1px #2264E5;
-
-    box-shadow: 0px 1px 1px 0px #00000024;
-
-    box-shadow: 0px 1px 0px 0px #4B85FA inset;
-
+    top: 62.5%;
+    left: 38%;
+    background-color: #2264E5;
+    color: white;
+    font-size: 20px;
 }

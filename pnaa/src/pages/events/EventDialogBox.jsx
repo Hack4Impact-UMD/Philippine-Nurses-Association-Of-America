@@ -35,7 +35,7 @@ const EventDialogBox = ({
 
     try {
       await updateDoc(eventRef, {
-        active: newActiveStatus,
+        archived: newActiveStatus,
       });
       /*
       console.log(

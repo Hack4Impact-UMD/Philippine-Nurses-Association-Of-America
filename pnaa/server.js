@@ -8,12 +8,12 @@ app.use(cors());
 
 async function getAccessToken() {
     const url = 'https://oauth.wildapricot.org/auth/token';
-    const apiKey = 'cnpoZW5nMjU6eW1tazdmb2plZnV0aTQwcnNzZnFmOGZyd3VtNGVy';
+    const apiKey = 'API KEY GOES HERE RICKY <---------';
     const headers = {
         'Authorization': `Basic ${apiKey}`,
         'Content-Type': 'application/x-www-form-urlencoded'
     };
-    const body = 'grant_type=password&username=rzheng25@terpmail.umd.edu&password=XYt$wCjvV5h8gAA&scope=auto';
+    const body = 'grant_type=password&username=rzheng25@terpmail.umd.edu&password=PASSWORD GOES HERE <-----&scope=auto';
 
     const response = await axios.post(url, body, { headers: headers });
 

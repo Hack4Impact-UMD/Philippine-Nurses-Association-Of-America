@@ -12,6 +12,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignIn = async () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -70,11 +71,20 @@ const SignIn = () => {
       />
       <input
         id="password"
-        type="password"
+        type={showPassword ? "text" : "password"}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       />
+      <label htmlFor="showPassword">
+          <input
+            id="showPassword"
+            type="checkbox"
+            checked={showPassword}
+            onChange={() => setShowPassword(!showPassword)}
+          />
+          Show Password
+      </label>
       <button id="loginbutton" onClick={handleSignIn}>Login</button>
       {/* <button onClick={handleGoogleSignIn}>Sign in with Google</button> */}
       {error && <p style={{ color: "red" }}>{error}</p>}{" "}

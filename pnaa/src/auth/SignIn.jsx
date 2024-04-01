@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { signInWithGoogle } from "./AuthService";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
+import "./SignIn.css"
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -57,13 +58,14 @@ const SignIn = () => {
   };
 
   return (
-    <div>
-      <h2>Sign In</h2>
+    <div id="background">
+      <div id="container">
+      <h2 id="login">Login</h2>
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
+        placeholder="Member ID / Email Address"
       />
       <input
         type="password"
@@ -71,12 +73,13 @@ const SignIn = () => {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       />
-      <button onClick={handleSignIn}>Sign In</button>
+      <button onClick={handleSignIn}>Login</button>
       {/* <button onClick={handleGoogleSignIn}>Sign in with Google</button> */}
       {error && <p style={{ color: "red" }}>{error}</p>}{" "}
-      <p>
+      <p id="dont">
         Don't have an account? <Link to="/signup">Sign Up</Link>
       </p>
+      </div>
     </div>
   );
 };

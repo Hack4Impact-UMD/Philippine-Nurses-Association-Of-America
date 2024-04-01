@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./EventDetails.module.css";
 
-import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  updateDoc,
+  setDoc,
+  collection,
+} from "firebase/firestore";
 import { db } from "../../config/firebase.ts";
 import EventDialogBox from "./EventDialogBox";
 
@@ -30,14 +36,28 @@ const EventDetails = () => {
 
   // Edit mode state
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editedEvent, setEditedEvent] = useState(event);
-
+  const [editedEvent, setEditedEvent] = useState(
+    event || {
+      name: "",
+      date: "",
+      time: "",
+      location: "",
+      status: "",
+      attendee: "",
+      about: "",
+      event_poster: "",
+      contact_hrs: "",
+      other_details: "",
+    }
+  );
   // Menu anchor for mobile view
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   // Extract active status from event data for conditional rendering
-  const [eventArchived, setEventArchived] = useState(event.archived);
+  const [eventArchived, setEventArchived] = useState(
+    event ? event.archived : false
+  );
 
   // Screen width breakpoints
   const mediumScreenWidth = 1200;
@@ -54,10 +74,15 @@ const EventDetails = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // If no event data is available, display error message
-  if (!event) {
-    return <div> No event data available. </div>;
-  }
+  useEffect(() => {
+    if (event) {
+      setEditedEvent(event);
+      setEventArchived(event.archived);
+    } else {
+      setIsEditMode(true);
+      setEventArchived(false);
+    }
+  }, [event]);
 
   // Handle action button clicks
   const handleBackClick = () => {
@@ -81,16 +106,26 @@ const EventDetails = () => {
   };
 
   const handleSaveClick = async () => {
-    // Reference to the document
-    const eventRef = doc(db, "events", editedEvent.id);
-
-    try {
-      // Update the document
-      await updateDoc(eventRef, editedEvent);
-      setIsEditMode(false);
-      // Handle post-update logic, such as refreshing data or UI
-    } catch (error) {
-      console.error("Error updating document: ", error);
+    if (event === null) {
+      // Create a new event
+      try {
+        const eventsCol = collection(db, "events");
+        const newEventRef = doc(eventsCol);
+        await setDoc(newEventRef, editedEvent);
+        setIsEditMode(false);
+        navigate("/chapter-dashboard/events");
+      } catch (error) {
+        console.error("Error creating event: ", error);
+      }
+    } else {
+      // Update existing event
+      const eventRef = doc(db, "events", editedEvent.id);
+      try {
+        await updateDoc(eventRef, editedEvent);
+        setIsEditMode(false);
+      } catch (error) {
+        console.error("Error updating document: ", error);
+      }
     }
   };
 
@@ -218,15 +253,38 @@ const EventDetails = () => {
       )}
     </Menu>
   );
-  
-  const fieldsToShow = ["date", "time", "location", "status", "attendee#", "about", "event poster", "contact hrs"];
+
+  const fieldsToShow = [
+    "date",
+    "time",
+    "location",
+    "status",
+    "attendee#",
+    "about",
+    "event poster",
+    "contact hrs",
+  ];
 
   // Else, display normal screen
   return (
     <div className={styles["event-detail-container"]}>
       <div className={styles["event-detail-content"]}>
         <div className={styles["event-header-container"]}>
-          <p className={styles["event-header"]}>{event.name}</p>
+          {isEditMode ? (
+            <input
+              type="text"
+              value={editedEvent.name}
+              onChange={(e) =>
+                setEditedEvent({
+                  ...editedEvent,
+                  ["name"]: e.target.value,
+                })
+              }
+              className={styles["event-header-input"]}
+            />
+          ) : (
+            <p className={styles["event-header"]}>{editedEvent.name}</p>
+          )}
           {screenWidth < mobileScreenWidth ? (
             <>
               <IconButton
@@ -245,55 +303,55 @@ const EventDetails = () => {
         </div>
 
         <div className={styles["event-detail-information-container"]}>
-        
-
-        <table className={styles["event-detail-table"]}>
-          {fieldsToShow.map((fieldName) => {
-          const value = editedEvent[fieldName] || ""; // Initialize value to an empty string if key doesn't exist
-          return (
-            <tr key={fieldName}>
+          <table className={styles["event-detail-table"]}>
+            {fieldsToShow.map((fieldName) => {
+              const value = editedEvent[fieldName] || ""; // Initialize value to an empty string if key doesn't exist
+              return (
+                <tr key={fieldName}>
+                  <td>
+                    <p className={styles["event-label"]}>
+                      {fieldName.toUpperCase()}
+                    </p>
+                  </td>
+                  <td>
+                    {isEditMode ? (
+                      <input
+                        type="text"
+                        value={value}
+                        onChange={(e) =>
+                          setEditedEvent({
+                            ...editedEvent,
+                            [fieldName]: e.target.value,
+                          })
+                        }
+                        className={styles["edit-input"]} // Add CSS for this
+                      />
+                    ) : (
+                      <p className={styles["event-data"]}>{value.toString()}</p>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+            <tr>
               <td>
-                <p className={styles["event-label"]}>{fieldName.toUpperCase()}</p>
+                <p className={styles["event-label"]}>OTHER DETAILS</p>
               </td>
-              <td>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    value={value}
-                    onChange={(e) =>
-                      setEditedEvent({
-                        ...editedEvent,
-                        [fieldName]: e.target.value,
-                      })
-                    }
-                    className={styles["edit-input"]} // Add CSS for this
-                  />
-                ) : (
-                  <p className={styles["event-data"]}>{value.toString()}</p>
-                )}
+              <td className={styles["other-details"]}>
+                <p>{editedEvent.other_details}</p>
               </td>
             </tr>
-          );
-        })}
-        <tr>
-          <td>
-            <p className={styles["event-label"]}>OTHER DETAILS</p>
-          </td>
-          <td className={styles["other-details"]}>
-            <p>{editedEvent.other_details}</p>
-          </td>
-        </tr>
-      </table>
+          </table>
         </div>
       </div>
       <EventDialogBox
         open={isDialogOpen}
         handleClose={() => setDialogOpen(false)}
-        eventName={event ? event.name : ""}
-        eventId={event ? event.id : ""}
+        eventName={editedEvent.name || ""}
+        eventId={editedEvent.id || ""}
         dialogAction={dialogAction}
         onActionSuccess={() => setEventArchived(!eventArchived)}
-      />
+      />{" "}
     </div>
   );
 };

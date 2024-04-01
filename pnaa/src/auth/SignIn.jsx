@@ -62,12 +62,14 @@ const SignIn = () => {
       <div id="container">
       <h2 id="login">Login</h2>
       <input
+        id="email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Member ID / Email Address"
       />
       <input
+        id="password"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}

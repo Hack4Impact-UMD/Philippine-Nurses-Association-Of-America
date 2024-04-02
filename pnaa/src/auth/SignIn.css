@@ -11,6 +11,7 @@
     opacity: 0px;
     border: 1px solid #2264E559;
     z-index: 2;
+    background-color: white;
 }
 
 #dont {
@@ -82,4 +83,78 @@
     background-color: #2264E5;
     color: white;
     font-size: 20px;
+}
+
+#error {
+    position: fixed;
+    top: 23%;
+    left: 8%;
+}
+
+#showPassword {
+    position: fixed;
+    left: 8%;
+    top: 60%;
+    background: linear-gradient(90deg, rgba(152, 175, 221, 0.21) 0%, rgba(217, 217, 217, 0.04) 100%);
+    width: 29px;
+    height: 29px;
+}
+
+#passwordLabel {
+    position: fixed;
+    top: 61%;
+    left: 11%;
+    width: 110px;
+    height: 19px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    font-weight: 100;
+    line-height: 19.19px;
+}
+
+#forgot {
+    position: fixed;
+    top: 41%;
+    left: 37%;
+    color: #91201A;
+    font-family: 'Source Serif 4', serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 27.42px;
+    text-align: right;    
+}
+
+#logo {
+    position: fixed;
+    width: 1123px;
+    height: 1123px;
+    z-index: -1;
+    max-width: calc(100% + 50px);
+    opacity: 50%;
+    transform: rotate(9.36deg);
+    left: 33%;
+    top: 5%;
+}
+
+#orgname {
+    position: fixed;
+    right: 1%;
+    top: 0%;
+    font-family: 'Source Serif 4', serif;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 27.42px;
+    text-align: right;
+    color: #4F4F4F;
+}
+
+#mantra {
+    position: fixed;
+    right: 1%;
+    top: 3%;
+    font-family: 'Source Serif 4', serif;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 27.42px;
+    text-align: right;
 }

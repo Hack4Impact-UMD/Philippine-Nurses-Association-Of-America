@@ -7,19 +7,19 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { DataGrid } from '@mui/x-data-grid';
 import { Select, MenuItem, Button } from '@mui/material';
-import './Events.css'
+import Styles from "./Events.module.css";
 
 
 const Events = () => {
   const { currentUser, loading: userLoading } = useUser();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+ 
 
 
-  const { currentUser, loading: userLoading } = useUser();
-  const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState([]);
+
+
+ 
   const [originalEvents, setOriginalEvents] = useState([]);
   const [originalRegions, setOriginalRegions] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);

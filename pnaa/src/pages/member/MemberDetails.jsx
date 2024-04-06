@@ -4,7 +4,7 @@ import styles from "./MemberDetails.module.css";
 
 import MemberDialogBox from "./MemberDialogBox";
 import db from "../../config/firebase.ts";
-import logo from "./PNAA_Logo.png"
+import logo from "../../assets/PNAA_Logo.png"
 
 // Material UI Components
 import Button from "@mui/material/Button";

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebase";
-import { signInWithGoogle } from "./AuthService";
+import { auth } from "../../config/firebase";
+import { signInWithGoogle } from "../../auth/AuthService";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-import "./SignIn.css"
-import PNAA_Logo from "../pages/member/PNAA_Logo.png"; 
+import styles from "./SignIn.module.css"
+import PNAA_Logo from "../../assets/PNAA_Logo.png"; 
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -60,43 +60,43 @@ const SignIn = () => {
   };
 
   return (
-    <div id="background">
-      <p id="orgname">Philippine Nurses Association of America</p>
-      <p id="mantra"><span style={{color:'#0533F3'}}>Shine</span><span style={{color:'#AB2218'}}> PNAA </span><span style={{color:'#F4D44C'}}>Shine</span></p>
-      <div id="container">
+    <div id={styles["background"]}>
+      <p id={styles["orgname"]}>Philippine Nurses Association of America</p>
+      <p id={styles["mantra"]}><span style={{color:'#0533F3'}}>Shine</span><span style={{color:'#AB2218'}}> PNAA </span><span style={{color:'#F4D44C'}}>Shine</span></p>
+      <div id={styles["container"]}>
       <h2 id="login">Login</h2>
       <input
-        id="email"
+        id={styles["email"]}
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Member ID / Email Address"
       />
-      <p id="forgot">Forgot Password?</p>
+      <p id={styles["forgot"]}>Forgot Password?</p>
       <input
-        id="password"
+        id={styles["password"]}
         type={showPassword ? "text" : "password"}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       />
-      <label id="passwordLabel" htmlFor="showPassword">
+      <label id={styles["passwordLabel"]} htmlFor="showPassword">
           <input
-            id="showPassword"
+            id={styles["showPassword"]}
             type="checkbox"
             checked={showPassword}
             onChange={() => setShowPassword(!showPassword)}
           />
           Show Password
       </label>
-      <button id="loginbutton" onClick={handleSignIn}>Login</button>
+      <button id={styles["loginbutton"]} onClick={handleSignIn}>Login</button>
       {/* <button onClick={handleGoogleSignIn}>Sign in with Google</button> */}
-      {error && <p id="error" style={{ color: "red" }}>{error}</p>}{" "}
-      <p id="dont">
+      {error && <p id={styles["error"]} style={{ color: "red" }}>{error}</p>}{" "}
+      <p id={styles["dont"]} >
         Don't have an account? <Link to="/signup">Sign Up</Link>
       </p>
       </div>
-      <img src={PNAA_Logo} alt="PNAA Logo" id="logo"/>
+      <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]}/>
     </div>
   );
 };

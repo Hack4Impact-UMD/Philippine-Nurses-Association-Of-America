@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { UserProvider } from "./config/UserContext";
-import SignUp from "./auth/SignUp";
-import SignIn from "./auth/SignIn";
+import SignUp from "./pages/signup/SignUp";
+import SignIn from "./pages/signin/SignIn";
 import NationalDash from "./pages/dashboard/NationalDash";
 import ChapterDash from "./pages/dashboard/ChapterDash";
 import About from "./pages/about/About";

@@ -15,6 +15,10 @@ const SignIn = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const handleForgotPassword = () => {
+    navigate("/forgotpassword"); // Navigate to ForgotPassword page
+  };
+
   const handleSignIn = async () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
@@ -72,7 +76,7 @@ const SignIn = () => {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Member ID / Email Address"
       />
-      <p id={styles["forgot"]}>Forgot Password?</p>
+      <p id={styles["forgot"]} onClick={handleForgotPassword}>Forgot Password?</p> {/* Click event to navigate to ForgotPassword page */}
       <input
         id={styles["password"]}
         type={showPassword ? "text" : "password"}

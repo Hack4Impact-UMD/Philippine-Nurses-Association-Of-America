@@ -1,16 +1,25 @@
-import React, {useState, useEffect} from 'react';
-import { useUser } from '../../config/UserContext';
+
+import React, { useState, useEffect } from "react";
+import { useUser } from "../../config/UserContext";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { db } from "../../config/firebase.ts";
+import { Link, useNavigate } from "react-router-dom";
+
 import { DataGrid } from '@mui/x-data-grid';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
 import { Select, MenuItem, Button } from '@mui/material';
-import './Events.css'
+import Styles from "./Events.module.css";
+
 
 const Events = () => {
-
   const { currentUser, loading: userLoading } = useUser();
-  const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+ 
+
+
+
+
+ 
   const [originalEvents, setOriginalEvents] = useState([]);
   const [originalRegions, setOriginalRegions] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -58,6 +67,7 @@ const Events = () => {
 
   
   if (loading || userLoading) { 
+
     return <div>Loading...</div>;
   }
 
@@ -177,7 +187,7 @@ const Events = () => {
   };
 
   const handleRowClick = (params) => {
-    navigate(`/chapter-dashboard/member-detail/`, { state: { member: params.row } });
+    navigate(`/chapter-dashboard/event-detail/`, { state: { member: params.row } });
   };
 
   const handleFilterByChapter = (selectedChapter) => {
@@ -218,6 +228,7 @@ const Events = () => {
 
   return (
     <div>
+
       <div>
         <h1>Events</h1>
         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -275,10 +286,13 @@ const Events = () => {
 
       </div>
     
+
     </div>
   );
 };
 
 
-
 export default Events;
+
+
+

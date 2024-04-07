@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from "react-router-dom";
-import { auth } from '../config/firebase';
+import { auth } from '../../config/firebase';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from '../config/firebase';
+import { db } from '../../config/firebase';
 import emailjs from '@emailjs/browser';
 
 

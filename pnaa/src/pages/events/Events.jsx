@@ -12,12 +12,6 @@ import './Events.css'
 
 const Events = () => {
   const { currentUser, loading: userLoading } = useUser();
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-
-
-  const { currentUser, loading: userLoading } = useUser();
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [originalEvents, setOriginalEvents] = useState([]);

@@ -10,6 +10,7 @@ import MemberDetail from "./pages/member/MemberDetails";
 import Events from "./pages/events/Events";
 import Fundraising from "./pages/fundraising/Fundraising";
 import EventDetail from "./pages/events/EventDetails";
+import ChapterDetails from "./pages/chapter-details/ChapterDetails";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="events" element={<Events />} />
             <Route path="event-details" element={<EventDetail />} />
             <Route path="fundraising" element={<Fundraising />} />
+            <Route path="chapter-details" element={<ChapterDetails />} />
           </Route>
           <Route path="/" element={<SignIn />} />
         </Routes>

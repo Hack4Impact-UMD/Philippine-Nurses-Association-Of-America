@@ -11,6 +11,7 @@ import Events from "./pages/events/Events";
 import Fundraising from "./pages/fundraising/Fundraising";
 import EventDetail from "./pages/events/EventDetails";
 import ChapterDetails from "./pages/chapter-details/ChapterDetails";
+import ChapterDetailsNational from "./pages/chapter-details/ChapterDetailsNational";
 
 function App() {
   return (

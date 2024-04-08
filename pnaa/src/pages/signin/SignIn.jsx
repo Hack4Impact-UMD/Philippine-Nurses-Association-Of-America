@@ -92,9 +92,7 @@ const SignIn = () => {
       <button id={styles["loginbutton"]} onClick={handleSignIn}>Login</button>
       {/* <button onClick={handleGoogleSignIn}>Sign in with Google</button> */}
       {error && <p id={styles["error"]} style={{ color: "red" }}>{error}</p>}{" "}
-      <p id={styles["dont"]} >
-        Don't have an account? <Link to="/signup">Sign Up</Link>
-      </p>
+      
       </div>
       <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]}/>
     </div>

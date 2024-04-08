@@ -21,6 +21,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/national-dashboard" element={<NationalDash />} />
+          <Route path="/national-dashboard/signup" element={<SignUp />} />
           <Route path="/chapter-dashboard/*" element={<ChapterDash />}>
             <Route path="about" element={<About />} />
             <Route path="members" element={<MemberManagement />} />

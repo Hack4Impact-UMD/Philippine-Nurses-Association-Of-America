@@ -18,35 +18,34 @@ const ChapterDetails = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const location = useLocation();
   const { chapter } = location.state;
+  console.log("ffdffdf" + chapter);
   const navigate = useNavigate();
 
     //Fetches all member data within chapter
     useEffect(() => {
-      if (currentUser?.chapterId) {
+      const fetchMembers = async () => {
+        const db = getFirestore();
+        const membersRef = collection(
+          db,
+          "chapters",
+          chapter.chapterId,
+          "members"
+        );
 
-        const fetchMembers = async () => {
-          const db = getFirestore();
-          const membersRef = collection(
-            db,
-            "chapters",
-            currentUser.chapterId,
-            "members"
-          );
-  
-          try {
-            const snapshot = await getDocs(membersRef);
-            const membersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            console.log(membersList);
-            setMembers(membersList);
-          } catch (error) {
-            console.error("Error fetching members:", error);
-          } finally {
-            setLoading(false);
-          }
-        };
-  
-        fetchMembers();
-      }
+        try {
+          const snapshot = await getDocs(membersRef);
+          const membersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          console.log(membersList);
+          setMembers(membersList);
+        } catch (error) {
+          console.error("Error fetching members:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchMembers();
+      
     }, [currentUser]);
   
     if (userLoading || loading) {

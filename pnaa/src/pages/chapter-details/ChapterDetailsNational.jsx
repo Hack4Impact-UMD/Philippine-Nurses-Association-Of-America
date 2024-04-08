@@ -91,11 +91,13 @@ const ChapterDetailsNational = () => {
         setSelectedRows(newSelection);
       };
 
-      const handleRowClick = (params) => {
-        navigate(`/chapter-dashboard/chapter-details/`, { state: { member: params.row } });
+      const handleRowClick = (chapter) => {
+        console.log(chapter)
+        navigate(`/chapter-dashboard/chapter-details/`, { state: { chapter } });
       };
 
       const navigateToChapterDetails = (chapter) => {
+        console.log(chapter)
         navigate(`/chapter-dashboard/chapter-details/`, { state: { chapter } });
       };
   

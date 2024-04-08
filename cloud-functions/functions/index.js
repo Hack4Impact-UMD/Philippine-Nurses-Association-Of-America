@@ -37,7 +37,6 @@ exports.generalCloudFunction = onCall(
  *            name: string, the user's name
  *            role: string, (Options: "ADMIN", "TEACHER")
  */
-
 exports.createUser = onCall(
   { region: "us-east4", cors: true },
   async ({ auth, data }) => {
@@ -54,7 +53,7 @@ exports.createUser = onCall(
         await authorization
           .createUser({
             email: data.email,
-            password: pass,
+            password: "abc123",
           })
           .then(async (userRecord) => {
             await authorization
@@ -66,20 +65,21 @@ exports.createUser = onCall(
                 const collectionObject = {
                   auth_id: userRecord.uid,
                   email: data.email,
-                  name: data.name,
-                  type: data.role.toUpperCase(),
+                  userType: data.role.toLowerCase(),
+                 
                 };
-
                 await db
                   .collection("users")
-                  .where("auth_id", "==", data.firebase_id)
+                  .where("auth_id", "==", userRecord.uid)
                   .get()
                   .then(async (querySnapshot) => {
                     if (querySnapshot.docs.length == 0) {
-                      await db
-                        .collection("users")
-                        .add(collectionObject)
-                        .then(async () => {
+                      await db.collection("users").doc(userRecord.uid).set({
+                        auth_id: userRecord.uid,
+                        email: data.email,
+                        userType: data.role.toLowerCase(),
+                    }).
+                      then(async () => {
                           resolve({ reason: "Success", text: "Success" });
                         })
                         .catch((error) => {
@@ -156,6 +156,7 @@ exports.createUser = onCall(
     });
   }
 );
+
 
 /**
  * Deletes the user

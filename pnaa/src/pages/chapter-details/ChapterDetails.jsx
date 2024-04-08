@@ -16,29 +16,13 @@ const ChapterDetails = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [chapter, setChapter] = useState(null); // State to hold the chapter data
+  const location = useLocation();
+  const { chapter } = location.state;
   const navigate = useNavigate();
 
     //Fetches all member data within chapter
     useEffect(() => {
       if (currentUser?.chapterId) {
-        const fetchChapter = async () => {
-          if (currentUser?.chapterId) {
-            const db = getFirestore();
-            const chapterRef = doc(db, "chapters", currentUser.chapterId);
-            
-            try {
-              const chapterDoc = await getDoc(chapterRef);
-              if (chapterDoc.exists()) {
-                setChapter(chapterDoc.data()); // Store the chapter data in state
-              }
-            } catch (error) {
-              console.error("Error fetching chapter:", error);
-            } finally {
-              setLoading(false);
-            }
-          }
-        };
 
         const fetchMembers = async () => {
           const db = getFirestore();
@@ -62,7 +46,6 @@ const ChapterDetails = () => {
         };
   
         fetchMembers();
-        fetchChapter();
       }
     }, [currentUser]);
   

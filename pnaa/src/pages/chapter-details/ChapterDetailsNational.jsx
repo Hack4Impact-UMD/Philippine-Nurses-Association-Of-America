@@ -66,7 +66,20 @@ const ChapterDetailsNational = () => {
       }
 
       const columns = [
-        { field: 'name', headerName: 'NAME', width: 250, cellClassName:'event-cell' },
+        //{ field: 'name', headerName: 'NAME', width: 250, cellClassName:'event-cell' },
+        {
+          field: 'name',
+          headerName: 'NAME',
+          width: 275,
+          renderCell: (params) => (
+            <div
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigateToChapterDetails(params.row)}
+            >
+              {params.row.name}
+            </div>
+          ),
+        },
         { field: 'president', headerName: 'PRESIDENT', width: 100, cellClassName:'cell' },
         { field: 'member-count', headerName: 'MEMBER COUNT', width: 125, cellClassName:'cell'},
         { field: 'contact hrs', headerName: 'CONTACT HRS', width: 125, cellClassName:'cell'},
@@ -79,7 +92,11 @@ const ChapterDetailsNational = () => {
       };
 
       const handleRowClick = (params) => {
-        navigate(`/chapter-dashboard/event-detail/`, { state: { member: params.row } });
+        navigate(`/chapter-dashboard/chapter-details/`, { state: { member: params.row } });
+      };
+
+      const navigateToChapterDetails = (chapter) => {
+        navigate(`/chapter-dashboard/chapter-details/`, { state: { chapter } });
       };
   
   return (

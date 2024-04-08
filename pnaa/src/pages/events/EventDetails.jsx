@@ -263,6 +263,7 @@ const EventDetails = () => {
     "about",
     "event poster",
     "contact hrs",
+    "other_details"
   ];
 
   // Else, display normal screen
@@ -333,14 +334,6 @@ const EventDetails = () => {
                 </tr>
               );
             })}
-            <tr>
-              <td>
-                <p className={styles["event-label"]}>OTHER DETAILS</p>
-              </td>
-              <td className={styles["other-details"]}>
-                <p>{editedEvent.other_details}</p>
-              </td>
-            </tr>
           </table>
         </div>
       </div>

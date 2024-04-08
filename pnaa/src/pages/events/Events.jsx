@@ -12,14 +12,10 @@ import Styles from "./Events.module.css";
 
 const Events = () => {
   const { currentUser, loading: userLoading } = useUser();
-  const [events, setEvents] = useState([]);
+
   const [loading, setLoading] = useState(true);
- 
+  const [events, setEvents] = useState([]);
 
-
-
-
- 
   const [originalEvents, setOriginalEvents] = useState([]);
   const [originalRegions, setOriginalRegions] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -231,6 +227,20 @@ const Events = () => {
 
       <div>
         <h1>Events</h1>
+        <ul>
+          {events.map((event) => (
+            <li key={event.id}>
+              <Link
+                to={"/chapter-dashboard/event-details"}
+                state={{
+                  event: { ...event, archived: event.archived ?? false },
+                }}
+              >
+                {event.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ marginRight: 'auto', padding: '10px' }}>
             <label  id="filterlabel" htmlFor="chapterSelect">Select Chapter:</label>

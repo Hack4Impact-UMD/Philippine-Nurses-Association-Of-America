@@ -1,19 +1,19 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const fs = require('fs');
 
 const app = express();
 app.use(cors());
 
-
 async function getAccessToken() {
     const url = 'https://oauth.wildapricot.org/auth/token';
-    const apiKey = 'API KEY GOES HERE RICKY <---------';
+    const apiKey = 'cnpoZW5nMjU6eW1tazdmb2plZnV0aTQwcnNzZnFmOGZyd3VtNGVy';
     const headers = {
         'Authorization': `Basic ${apiKey}`,
         'Content-Type': 'application/x-www-form-urlencoded'
     };
-    const body = 'grant_type=password&username=rzheng25@terpmail.umd.edu&password=PASSWORD GOES HERE <-----&scope=auto';
+    const body = 'grant_type=password&username=rzheng25@terpmail.umd.edu&password=XYt$wCjvV5h8gAA&scope=auto';
 
     const response = await axios.post(url, body, { headers: headers });
 
@@ -35,7 +35,7 @@ async function fetchContactsData(accessToken) {
 
   // Poll the ResultUrl until the Contacts array is not empty
   while (!response.data.Contacts || response.data.Contacts.length === 0) {
-    await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for 5 seconds before retrying
+    await new Promise(resolve => setTimeout(resolve, 5001)); // Wait for 5 seconds before retrying
     response = await axios.get(response.data.ResultUrl, {
       headers: {
         'Accept': 'application/json',
@@ -43,6 +43,9 @@ async function fetchContactsData(accessToken) {
       }
     });
   }
+
+  // Save the data to a local file
+  fs.writeFileSync('contactsData.json', JSON.stringify(response.data.Contacts, null, 2));
 
   return response.data.Contacts; //Returns only the contacts
 }
@@ -82,18 +85,19 @@ async function memberShipLevels(accessToken) {
 
 app.get('/api/members', async (req, res) => {
   try {
-    const accessToken = await getAccessToken();
+    // const accessToken = await getAccessToken();
 
-    if (!accessToken) {
-      return res.status(500).send('Failed to obtain access token');
-    }
+    // if (!accessToken) {
+    //   return res.status(500).send('Failed to obtain access token');
+    // }
 
     // const membershipLevelData = await memberShipLevels(accessToken);
     // acceptTermsOfUse(accessToken)
 
-    const contactsData = await fetchContactsData(accessToken);
+    // const contactsData = await fetchContactsData(accessToken);
     
     // console.log("ENDPOINT DATA", contactsData);
+    const contactsData = readDataLocally();
     res.json(contactsData);
   } catch (error) {
     console.error('Error fetching members:', error);
@@ -101,7 +105,17 @@ app.get('/api/members', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+function readDataLocally() {
+  try {
+    const data = fs.readFileSync('contactsData/contactsData.json', 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading contacts data:', error);
+    return [];
+  }
+}
+
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

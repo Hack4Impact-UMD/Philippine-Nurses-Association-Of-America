@@ -98,12 +98,38 @@ app.get('/api/members', async (req, res) => {
     
     // console.log("ENDPOINT DATA", contactsData);
     const contactsData = readDataLocally();
-    res.json(contactsData);
+
+    const cleanedData = cleanData(contactsData);
+
+    res.json(cleanedData);
+    processData(cleanedData)
+
   } catch (error) {
     console.error('Error fetching members:', error);
-    res.status(500).send('Server error');
+    // res.status(500).send('Server error');
   }
 });
+
+function processData(data) {
+  const chapterSet = new Set();
+
+  data.forEach(contact => {
+    const chapterField = contact.FieldValues.find(field => field.FieldName === "Chapter (Active/Associate - 1 year)");
+    if (chapterField && chapterField.Value && chapterField.Value.Label) {
+      chapterSet.add(chapterField.Value.Label);
+    }
+  });
+
+  console.log("Chapter Set:", Array.from(chapterSet));
+}
+
+function cleanData(data) {
+
+  //Sathya work here <---------
+  return data; 
+}
+
+
 
 function readDataLocally() {
   try {
@@ -114,8 +140,6 @@ function readDataLocally() {
     return [];
   }
 }
-
-
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

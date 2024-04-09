@@ -26,6 +26,7 @@ const ChapterDetailsNational = () => {
           try {
             const snapshot = await getDocs(chaptersRef);
             const chaptersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+            console.log("chaopterslist", chaptersList);
             setChapters(chaptersList);
           } catch (error) {
             console.error("Error fetching chapters: ", error);
@@ -91,13 +92,8 @@ const ChapterDetailsNational = () => {
         setSelectedRows(newSelection);
       };
 
-      const handleRowClick = (chapter) => {
-        console.log(chapter)
-        navigate(`/chapter-dashboard/chapter-details/`, { state: { chapter } });
-      };
-
       const navigateToChapterDetails = (chapter) => {
-        console.log(chapter)
+        console.log("chapter", chapter);
         navigate(`/chapter-dashboard/chapter-details/`, { state: { chapter } });
       };
   
@@ -114,7 +110,8 @@ const ChapterDetailsNational = () => {
             rowsPerPageOptions={[5, 10, 20]}
             checkboxSelection
             onRowSelectionModelChange={handleSelectionChange}
-            onRowClick={handleRowClick} // Add the onRowClick event handler
+            //Keep this out, we would rather click on name than entire row
+            // onRowClick={handleRowClick} // Add the onRowClick event handler 
             columnHeaderHeight={100}
             sx={{
                 border: 10,

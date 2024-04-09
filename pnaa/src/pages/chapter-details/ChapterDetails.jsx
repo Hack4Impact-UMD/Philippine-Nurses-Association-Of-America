@@ -18,7 +18,6 @@ const ChapterDetails = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const location = useLocation();
   const { chapter } = location.state;
-  console.log("ffdffdf" + chapter);
   const navigate = useNavigate();
 
     //Fetches all member data within chapter
@@ -28,7 +27,7 @@ const ChapterDetails = () => {
         const membersRef = collection(
           db,
           "chapters",
-          chapter.chapterId,
+          chapter.id,
           "members"
         );
 

@@ -73,6 +73,8 @@ const ChapterDetails = () => {
       );
     }
 
+    
+
     const columns = [
       { field: '#', headerName: '#', width: 50 },
       {

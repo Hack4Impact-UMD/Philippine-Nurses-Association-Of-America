@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { DataGrid } from '@mui/x-data-grid';
 import { Select, MenuItem, Button } from '@mui/material';
-import styles from "./ChapterDetails.module.css";
+import styles from "./ChapterDetailsNational.module.css";
 
 
 const ChapterDetailsNational = () => {

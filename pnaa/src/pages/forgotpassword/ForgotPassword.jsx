@@ -5,15 +5,18 @@ import { Link, useNavigate} from "react-router-dom";
 import styles from  "./ForgotPassword.module.css"
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { createUser } from '../../backend/authFunctions';
+import { sendResetEmail } from "../../backend/authFunctions";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
-  const handleResetPassword = () => {
+  const handleResetPassword = async () => {
     // Implement logic to send reset password link
     // You can use Firebase's password reset functionality here
     // Example: auth.sendPasswordResetEmail(email);
+    sendResetEmail(email);
     console.log("Reset password link sent to", email);
   };
 
@@ -30,10 +33,10 @@ const ForgotPassword = () => {
             <span className={styles.titleIcon}></span>
             Forgot Password
         </h2>
-        <h3 className={styles.emailInstructions}>
+        <span className={styles.emailInstructions}>
             <span className={styles.lockIcon}></span> 
             Enter your email and we will send you a link to reset your password.
-        </h3>
+        </span>
         <div className={styles.lockIconContainer}>
             <LockOutlinedIcon className={styles.lockIconStyle} />
         </div>
@@ -47,7 +50,7 @@ const ForgotPassword = () => {
             className={styles.emailInput} // Apply CSS class for styling
         />
         <button onClick={handleResetPassword} className={styles.submitButton}>Submit</button>
-        <p onClick={() => navigate("/signin")} className={styles.backToLogin}>Back to login</p>
+        <button onClick={() => navigate("/signin")} className={styles.backToLogin}>Back to login</button>
 
     </div>      
       <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]} />

@@ -81,10 +81,10 @@ const ChapterDetailsNational = () => {
             </div>
           ),
         },
-        { field: 'president', headerName: 'PRESIDENT', width: 100, cellClassName:'cell' },
-        { field: 'member-count', headerName: 'MEMBER COUNT', width: 125, cellClassName:'cell'},
-        { field: 'contact hrs', headerName: 'CONTACT HRS', width: 125, cellClassName:'cell'},
-        { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 125, cellClassName:'cell'},
+        { field: 'president', headerName: 'PRESIDENT', width: 150, cellClassName:'cell' },
+        { field: 'member-count', headerName: 'MEMBER COUNT', width: 175, cellClassName:'cell'},
+        { field: 'contact hrs', headerName: 'CONTACT HRS', width: 150, cellClassName:'cell'},
+        { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 150, cellClassName:'cell'},
         { field: 'participants_served', headerName: 'PARTICIPANTS SERVED', width: 200, cellClassName:'cell'},
       ];
 
@@ -96,11 +96,46 @@ const ChapterDetailsNational = () => {
         console.log("chapter", chapter);
         navigate(`/chapter-dashboard/chapter-details/`, { state: { chapter } });
       };
+
+      const ChapterButton = ({ text, backgroundColor, width, height }) => {
+        const styles = {
+          ChapterButton: {
+            backgroundColor: backgroundColor,
+            color: 'white',
+            width: width,
+            height: height,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '6px',
+          },
+        };
+    
+        return (
+          <div style={styles.ChapterButton}>
+            {text}
+          </div>
+        );
+      }
+
+      const ArchiveChapter = (
+        <div style={{ marginRight: '10px'}}>
+          <ChapterButton
+            text="Archive Chapter"
+            backgroundColor={"#05208B"}
+            width="150px"
+            height="32px"
+          />
+        </div>
+      );
   
   return (
     <div className={styles["chapter-details-container"]}>
       <div>
         <h1>Chapters</h1>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '10px' }}>
+            {ArchiveChapter}
+        </div>
         <div className={styles["chapter-details-inner"]}>
           <div className={styles["chapter-details-data"]}>
           <DataGrid

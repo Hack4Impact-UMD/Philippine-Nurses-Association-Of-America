@@ -13,7 +13,8 @@ div {
 
 .chapter-details-inner {
     display: flex; /* Use flexbox to arrange children */
-    flex: 1; /* Take up all available space */
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .chapter-details-right{

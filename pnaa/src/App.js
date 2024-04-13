@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { UserProvider } from "./config/UserContext";
 import SignUp from "./pages/signup/SignUp";
 import SignIn from "./pages/signin/SignIn";
+import ForgotPassword from "./pages/forgotpassword/ForgotPassword";
 import NationalDash from "./pages/dashboard/NationalDash";
 import ChapterDash from "./pages/dashboard/ChapterDash";
 import About from "./pages/about/About";
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/national-dashboard" element={<NationalDash />} />
           <Route path="/national-dashboard/signup" element={<SignUp />} />
           <Route path="/chapter-dashboard/*" element={<ChapterDash />}>

@@ -129,6 +129,7 @@ const ChapterDetailsNational = () => {
         </div>
       );
   
+    
   return (
     <div className={styles["chapter-details-container"]}>
       <div>
@@ -138,12 +139,13 @@ const ChapterDetailsNational = () => {
         </div>
         <div className={styles["chapter-details-inner"]}>
           <div className={styles["chapter-details-data"]}>
+          
           <DataGrid
             rows={chapters}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5, 10, 20]}
-            checkboxSelection
+            checkboxSelections
             onRowSelectionModelChange={handleSelectionChange}
             //Keep this out, we would rather click on name than entire row
             // onRowClick={handleRowClick} // Add the onRowClick event handler 

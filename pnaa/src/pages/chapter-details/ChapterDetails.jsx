@@ -118,6 +118,10 @@ const ChapterDetails = () => {
       <div>
         <h1>{chapter.name}</h1>
         <p>{chapter.region}</p>
+        <p>{chapter.presidentName}</p>
+        <p>{chapter.presidentEmail}</p>
+
+
         <div className={styles["chapter-details-inner"]}>
           <div className={styles["chapter-details-left"]}>
 
@@ -148,6 +152,7 @@ const ChapterDetails = () => {
               })}
             </table>
           </div>
+    
           <div className={styles["chapter-details-right"]}>
             <DataGrid
               rows={members}

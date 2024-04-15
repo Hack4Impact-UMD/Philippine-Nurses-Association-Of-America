@@ -81,11 +81,11 @@ const ChapterDetailsNational = () => {
             </div>
           ),
         },
-        { field: 'president', headerName: 'PRESIDENT', width: 150, cellClassName:'cell' },
-        { field: 'member-count', headerName: 'MEMBER COUNT', width: 175, cellClassName:'cell'},
-        { field: 'contact hrs', headerName: 'CONTACT HRS', width: 150, cellClassName:'cell'},
-        { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 150, cellClassName:'cell'},
-        { field: 'participants_served', headerName: 'PARTICIPANTS SERVED', width: 200, cellClassName:'cell'},
+        { field: 'president', headerName: 'PRESIDENT', width: 250, cellClassName:'cell' },
+        { field: 'member-count', headerName: 'MEMBER COUNT', width: 300, cellClassName:'cell'},
+        { field: 'contact hrs', headerName: 'CONTACT HRS', width: 300, cellClassName:'cell'},
+        { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 341, cellClassName:'cell'},
+        { field: 'participants_served', headerName: 'PARTICIPANTS SERVED', width: 300, cellClassName:'cell'},
       ];
 
       const handleSelectionChange = (newSelection) => {
@@ -178,6 +178,3 @@ const ChapterDetailsNational = () => {
 
 
 export default ChapterDetailsNational;
-
-
-

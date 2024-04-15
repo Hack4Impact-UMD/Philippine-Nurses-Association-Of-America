@@ -263,8 +263,23 @@ const EventDetails = () => {
     "about",
     "event poster",
     "contact hrs",
-    "other_details"
+    "other_details",
   ];
+
+  const fieldTypes = {
+    date: { type: "date", validate: (value) => !isNaN(Date.parse(value)) },
+    time: {
+      type: "time",
+      validate: (value) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(value),
+    },
+    location: { type: "text", validate: () => true },
+    status: { type: "text", validate: () => true },
+    "attendee#": { type: "number", validate: (value) => !isNaN(value) },
+    about: { type: "text", validate: () => true },
+    "event poster": { type: "text", validate: () => true },
+    "contact hrs": { type: "number", validate: (value) => !isNaN(value) },
+    other_details: { type: "text", validate: () => true },
+  };
 
   // Else, display normal screen
   return (
@@ -306,7 +321,9 @@ const EventDetails = () => {
         <div className={styles["event-detail-information-container"]}>
           <table className={styles["event-detail-table"]}>
             {fieldsToShow.map((fieldName) => {
-              const value = editedEvent[fieldName] || ""; // Initialize value to an empty string if key doesn't exist
+              const value = editedEvent[fieldName] || "";
+              const { type, validate } = fieldTypes[fieldName] || {};
+
               return (
                 <tr key={fieldName}>
                   <td>
@@ -317,15 +334,23 @@ const EventDetails = () => {
                   <td>
                     {isEditMode ? (
                       <input
-                        type="text"
+                        type={type || "text"}
                         value={value}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          if (validate && !validate(newValue)) {
+                            console.error(
+                              "Invalid value for field: ",
+                              fieldName
+                            );
+                            return;
+                          }
                           setEditedEvent({
                             ...editedEvent,
-                            [fieldName]: e.target.value,
-                          })
-                        }
-                        className={styles["edit-input"]} // Add CSS for this
+                            [fieldName]: newValue,
+                          });
+                        }}
+                        className={styles["edit-input"]}
                       />
                     ) : (
                       <p className={styles["event-data"]}>{value.toString()}</p>

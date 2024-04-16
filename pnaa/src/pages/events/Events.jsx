@@ -123,7 +123,7 @@ const Events = () => {
     }
   };
 
-  const MemberButton = ({ text, backgroundColor, width, height }) => {
+  const MemberButton = ({ text, backgroundColor, width, height, onClick }) => {
     const styles = {
       memberButton: {
         backgroundColor: backgroundColor,
@@ -134,15 +134,16 @@ const Events = () => {
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '6px',
+        cursor: 'pointer'
       },
     };
   
     return (
-      <div style={styles.memberButton}>
+      <div style={styles.memberButton} onClick={onClick}>
         {text}
       </div>
     );
-  }
+}
   
   const exportRegistration = (
     <div style={{ marginRight: '10px'}}>
@@ -155,15 +156,21 @@ const Events = () => {
     </div>
   );
 
+  const handleAddEvent = () => {
+    console.log("afsdf");
+    navigate("/chapter-dashboard/event-details", { state: { event: null } });
+  };
+
   const recordRegistration = (
-    <div style={{ marginRight: '10px'}}>
+    <div style={{ marginRight: '10px' }}>
     <MemberButton
       text="+ Record Event Registration"
       backgroundColor={"#05208B"}
       width="229px"
       height="32px"
+      onClick={handleAddEvent} // Pass handleAddEvent function as an onClick prop
     />
-    </div>
+  </div>
   );
 
   const columns = [
@@ -193,7 +200,7 @@ const Events = () => {
   const handleSelectionChange = (newSelection) => {
     setSelectedRows(newSelection);
   };
-
+  
   const handleRowClick = (params) => {
     navigate("/chapter-dashboard/event-details", { state: { event: params.row } });
   };

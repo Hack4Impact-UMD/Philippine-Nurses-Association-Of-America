@@ -157,7 +157,7 @@ const Fundraising = () => {
       renderCell: (params) => (
         <div
           style={{ cursor: 'pointer' }}
-          onClick={() => navigateToMemberDetails(params.row)}
+          onClick={() => navigateToFundraiserDetails(params.row)}
         >
           {params.row.Name}
         </div>
@@ -167,9 +167,14 @@ const Fundraising = () => {
       field: 'Date', 
       headerName: 'DATE', 
       width: 200, 
-      renderCell: (params) => ( 
-        <Status text="33.04.2018" textColor="black" width="200px" height="20px"/> 
-      ) 
+      renderCell: (params) => (
+       
+        <div
+        style={{ cursor: 'pointer' }}
+        onClick={() => navigateToFundraiserDetails(params.row)}
+      >
+        {params.row.Date}
+        </div>) 
     },
     { 
       field: 'Type', 
@@ -187,7 +192,7 @@ const Fundraising = () => {
        
         <div
         style={{ cursor: 'pointer' }}
-        onClick={() => navigateToMemberDetails(params.row)}
+        onClick={() => navigateToFundraiserDetails(params.row)}
       >
         {"$" + params.row.Amount}
       </div> 
@@ -209,7 +214,7 @@ const Fundraising = () => {
       renderCell: (params) => ( 
         <div
         style={{ cursor: 'pointer' }}
-        onClick={() => navigateToMemberDetails(params.row)}
+        onClick={() => navigateToFundraiserDetails(params.row)}
       >
         {params.row.Note}
       </div> 
@@ -222,8 +227,8 @@ const Fundraising = () => {
     setSelectedRows(newSelection);
   };
 
-  const navigateToMemberDetails = (member) => {
-    navigate(`/chapter-dashboard/member-detail/`, { state: { member } });
+  const navigateToFundraiserDetails = (fundraiser) => {
+    navigate(`/chapter-dashboard/fundraising-detail/`, { state: { fundraiser } });
   };
 
   return (

@@ -11,6 +11,7 @@ import MemberDetail from "./pages/member/MemberDetails";
 import Events from "./pages/events/Events";
 import Fundraising from "./pages/fundraising/Fundraising";
 import EventDetail from "./pages/events/EventDetails";
+import FundraisingDetail from "./pages/fundraising/FundraisingDetails";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path="events" element={<Events />} />
             <Route path="event-details" element={<EventDetail />} />
             <Route path="fundraising" element={<Fundraising />} />
+            <Route path="fundraising-detail" element={<FundraisingDetail />} />
           </Route>
           <Route path="/" element={<SignIn />} />
         </Routes>

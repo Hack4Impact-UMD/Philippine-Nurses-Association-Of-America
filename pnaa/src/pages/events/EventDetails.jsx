@@ -34,7 +34,7 @@ const EventDetails = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState("");
 
-  // Edit mode state
+  // edit mode state
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedEvent, setEditedEvent] = useState(
     event || {
@@ -336,7 +336,8 @@ const EventDetails = () => {
             })}
           </table>
         </div>
-      </div>
+       
+    </div>
       <EventDialogBox
         open={isDialogOpen}
         handleClose={() => setDialogOpen(false)}
@@ -345,6 +346,7 @@ const EventDetails = () => {
         dialogAction={dialogAction}
         onActionSuccess={() => setEventArchived(!eventArchived)}
       />{" "}
+      
     </div>
   );
 };

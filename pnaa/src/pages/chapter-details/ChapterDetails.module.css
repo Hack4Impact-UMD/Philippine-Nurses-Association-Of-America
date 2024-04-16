@@ -11,6 +11,15 @@ div {
     flex-direction: column; /* Arrange children vertically */
 }
 
+.chapter-details-container-right{
+    position:absolute;
+    flex-direction: column;
+    display: flex; /* Use flexbox to arrange children */
+    flex: 1;
+    top: 25%;
+    right:5%;
+}
+
 .chapter-details-inner {
     display: flex; /* Use flexbox to arrange children */
     flex: 1; /* Take up all available space */
@@ -18,14 +27,18 @@ div {
 
 .chapter-details-right{
     margin: 0px, 50px;
-    width: 50%;
+    /*width: 50%;*/
+    flex-direction: column;
+    margin-top: 10px; /* Adjust margin as needed */
+  
 }
 
 .chapter-details-left{
-    width: 50%;
+    width: 60%;
 }
 
 .chapter-cell {
+
     font-weight: 500;
     color:black;
 }

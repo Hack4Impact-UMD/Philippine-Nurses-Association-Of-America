@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { DataGrid } from '@mui/x-data-grid';
 import { Select, MenuItem, Button } from '@mui/material';
 import styles from "./ChapterDetails.module.css";
+import { Email } from "@mui/icons-material";
 
 
 const ChapterDetails = () => {
@@ -118,13 +119,15 @@ const ChapterDetails = () => {
       <div>
         <h1>{chapter.name}</h1>
         <p>{chapter.region}</p>
-        <p>{chapter.presidentName}</p>
-        <p>{chapter.presidentEmail}</p>
 
+
+      <div className = {styles["chapter-details-container-right"]}>
+          <h2>{chapter.name}</h2>
+          <p>{chapter.name}</p>
+      </div>
 
         <div className={styles["chapter-details-inner"]}>
           <div className={styles["chapter-details-left"]}>
-
             <table className={styles["chapter-detail-table"]}>
               {fieldsToShow.map((fieldName) => {
                 const value = chapter[fieldName] || ""; // Initialize value to an empty string if key doesn't exist
@@ -151,8 +154,10 @@ const ChapterDetails = () => {
                 );
               })}
             </table>
+
+
           </div>
-    
+
           <div className={styles["chapter-details-right"]}>
             <DataGrid
               rows={members}
@@ -177,7 +182,7 @@ const ChapterDetails = () => {
                 },
               }}
             />
-          </div>
+          </div>    
         </div>
 
       </div>

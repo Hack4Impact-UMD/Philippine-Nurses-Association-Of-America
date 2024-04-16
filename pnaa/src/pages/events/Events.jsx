@@ -167,7 +167,19 @@ const Events = () => {
   );
 
   const columns = [
-    { field: 'name', headerName: 'EVENT NAME', width: 250, cellClassName:'event-cell' },
+    { 
+      field: 'name', 
+      headerName: 'EVENT NAME', 
+      width: 250, 
+      renderCell: (params) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => handleRowClick(params)}
+        >
+          {params.value}
+        </div>
+      ),
+    },
     { field: 'date', headerName: 'DATE', width: 100, cellClassName:'cell' },
     { field: 'time', headerName: 'TIME', width: 125, cellClassName:'cell'},
     { field: 'location', headerName: 'LOCATION', width: 150, cellClassName:'cell'},
@@ -183,7 +195,7 @@ const Events = () => {
   };
 
   const handleRowClick = (params) => {
-    navigate(`/chapter-dashboard/event-detail/`, { state: { member: params.row } });
+    navigate("/chapter-dashboard/event-details", { state: { event: params.row } });
   };
 
   const handleFilterByChapter = (selectedChapter) => {
@@ -224,23 +236,8 @@ const Events = () => {
 
   return (
     <div>
-
       <div>
         <h1>Events</h1>
-        <ul>
-          {events.map((event) => (
-            <li key={event.id}>
-              <Link
-                to={"/chapter-dashboard/event-details"}
-                state={{
-                  event: { ...event, archived: event.archived ?? false },
-                }}
-              >
-                {event.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ marginRight: 'auto', padding: '10px' }}>
             <label  id="filterlabel" htmlFor="chapterSelect">Select Chapter:</label>
@@ -271,7 +268,7 @@ const Events = () => {
           rowsPerPageOptions={[5, 10, 20]}
           checkboxSelection
           onRowSelectionModelChange={handleSelectionChange}
-          onRowClick={handleRowClick} // Add the onRowClick event handler
+          // onRowClick={handleRowClick} // Add the onRowClick event handler
           columnHeaderHeight={100}
           sx={{
             border: 10,

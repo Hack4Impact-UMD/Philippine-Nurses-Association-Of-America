@@ -1,7 +1,24 @@
-const express = require('express');
+const express = require('express'); //Wont need this in final build
 const axios = require('axios');
 const cors = require('cors');
-const fs = require('fs');
+const fs = require('fs'); //Wont need this in final build
+
+const { initializeApp } = require('firebase/app');
+const { getFirestore, collection, doc, setDoc } = require('firebase/firestore');
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAef0b2KDrdWCcKJBmOW88PX4FZLtrn8Co",
+    authDomain: "pnaa-8b56f.firebaseapp.com",
+    projectId: "pnaa-8b56f",
+    storageBucket: "pnaa-8b56f.appspot.com",
+    messagingSenderId: "1072615861967",
+    appId: "1:1072615861967:web:8ed5ad49a18b5a2b0651ba",
+    measurementId: "G-HW8Z1LHJSM"
+  };
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+  
 
 const app = express();
 app.use(cors());
@@ -97,12 +114,30 @@ app.get('/api/members', async (req, res) => {
     // const contactsData = await fetchContactsData(accessToken);
     
     // console.log("ENDPOINT DATA", contactsData);
+
     const contactsData = readDataLocally();
+    
+    // const cleanedData = cleanData(contactsData);
 
-    const cleanedData = cleanData(contactsData);
+    const testdata = {
+        "PNA Georgia": {
+          totalActive: 5,
+          totalLapsed: 3,
+          members: [
+            { name: "John Doe", email: "john@example.com", membershipLevel: "Active Member (1 year)", activeStatus: "Active", renewalDueDate: "2023-05-20" },
+          ]
+        }
+      };
 
-    res.json(cleanedData);
-    processData(cleanedData)
+
+    // try {
+    //     await updateData(testdata);
+    //     console.log("Data updated successfully");
+    // } catch (error) {
+    //     console.error("Failed to update data:", error);
+    // }
+  
+    res.json(testdata);
 
   } catch (error) {
     console.error('Error fetching members:', error);
@@ -110,7 +145,82 @@ app.get('/api/members', async (req, res) => {
   }
 });
 
-function processData(data) {
+
+function processMembershipData(data) {
+    const chaptersData = {};
+  
+    data.forEach(contact => {
+      const chapterField = contact.FieldValues.find(field => field.FieldName === "Chapter (Active/Associate - 1 year)");
+      const renewalField = contact.FieldValues.find(field => field.FieldName === "Renewal due");
+      const currentDate = new Date();  // Get the current date
+      const renewalDate = renewalField ? new Date(renewalField.Value) : null;
+      const isActive = renewalDate ? renewalDate >= currentDate : false;
+      const membershipLevel = contact.MembershipLevel ? contact.MembershipLevel.Name : 'Unknown';
+      const memberInfo = {
+        name: `${contact.FirstName} ${contact.LastName}`,
+        email: contact.Email,
+        membershipLevel,
+        activeStatus: isActive ? 'Active' : 'Lapsed',
+        renewalDueDate: renewalDate ? renewalDate.toISOString().substring(0, 10) : 'N/A'
+      };
+  
+      if (chapterField && chapterField.Value && chapterField.Value.Label) {
+        const chapter = chapterField.Value.Label;
+  
+        // Initialize chapter object if not already present
+        if (!chaptersData[chapter]) {
+          chaptersData[chapter] = {
+            totalActive: 0,
+            totalLapsed: 0,
+            members: []
+          };
+        }
+  
+        // Increment counts based on active status
+        if (isActive) {
+          chaptersData[chapter].totalActive++;
+        } else {
+          chaptersData[chapter].totalLapsed++;
+        }
+  
+        // Add member info to the combined list
+        chaptersData[chapter].members.push(memberInfo);
+      }
+    });
+  
+    console.log(JSON.stringify(chaptersData, null, 2));
+    return chaptersData;
+  }
+
+
+  async function updateData(data) {
+    const chaptersCollection = collection(db, 'chapters');
+
+    for (const [chapterName, chapterData] of Object.entries(data)) {
+        const chapterDoc = doc(chaptersCollection, chapterName);
+
+        // Set or update main chapter data with total counts
+        await setDoc(chapterDoc, {
+            totalActive: chapterData.totalActive,
+            totalLapsed: chapterData.totalLapsed
+        }, { merge: true });
+
+        const membersCollection = collection(chapterDoc, 'members');
+
+        // Upload all members with merge option
+        for (const member of chapterData.members) {
+            const memberDoc = doc(membersCollection); // Creating a new document for each member
+            await setDoc(memberDoc, member, { merge: true });
+        }
+    }
+}
+
+function getTotalActiveCount(chapterData) {
+  return Object.values(chapterData).reduce((sum, chapter) => sum + chapter.activeCount, 0);
+}
+
+
+function getChapterList(data) {
   const chapterSet = new Set();
 
   data.forEach(contact => {
@@ -120,13 +230,18 @@ function processData(data) {
     }
   });
 
-  console.log("Chapter Set:", Array.from(chapterSet));
+  console.log("Chapter Set:", chapterSet);
 }
 
 function cleanData(data) {
+  const filteredData = data.filter(entry => {
+      return entry.hasOwnProperty('MembershipLevel') && Object.keys(entry.MembershipLevel).length > 0;
+  });
 
-  //Sathya work here <---------
-  return data; 
+  const validMembers = filteredData.filter(entry => {
+      return entry.MembershipLevel.hasOwnProperty('Id') && entry.MembershipLevel.Id !== null && entry.MembershipLevel.Id !== undefined && entry.MembershipLevel.Id !== "";
+  });
+  return validMembers;
 }
 
 

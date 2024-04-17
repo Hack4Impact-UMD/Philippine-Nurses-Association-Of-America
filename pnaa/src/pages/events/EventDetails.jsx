@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./EventDetails.module.css";
+import { useUser } from '../../config/UserContext';
 
-import {
-  getFirestore,
-  doc,
-  updateDoc,
-  setDoc,
-  collection,
-} from "firebase/firestore";
+import { getFirestore, doc, updateDoc, setDoc, collection } from "firebase/firestore";
 import { db } from "../../config/firebase.ts";
 import EventDialogBox from "./EventDialogBox";
 
@@ -21,6 +16,8 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const EventDetails = () => {
+  const { currentUser } = useUser();
+
   // Pass in event data from previous state
   const location = useLocation();
   const { event } = location.state;
@@ -42,7 +39,8 @@ const EventDetails = () => {
       date: "",
       time: "",
       location: "",
-      status: "",
+      status: "Chapter", //Default status
+      chapter: currentUser.chapterData.name, //Automatically fills in chapter of the user
       attendee: "",
       about: "",
       event_poster: "",
@@ -80,9 +78,10 @@ const EventDetails = () => {
       setEventArchived(event.archived);
     } else {
       setIsEditMode(true);
+      setEditedEvent((prev) => ({ ...prev, chapter: currentUser.chapterData.name }));
       setEventArchived(false);
     }
-  }, [event]);
+  }, [event, currentUser.chapterData.name]);
 
   // Handle action button clicks
   const handleBackClick = () => {
@@ -259,11 +258,12 @@ const EventDetails = () => {
     "time",
     "location",
     "status",
-    "attendee#",
+    "chapter",
+    "attendee #",
     "about",
     "event poster",
     "contact hrs",
-    "other_details",
+    "other details",
   ];
 
   const fieldTypes = {
@@ -274,12 +274,15 @@ const EventDetails = () => {
     },
     location: { type: "text", validate: () => true },
     status: { type: "text", validate: () => true },
+    chapter: { type: "text", validate: () => true },
     "attendee#": { type: "number", validate: (value) => !isNaN(value) },
     about: { type: "text", validate: () => true },
     "event poster": { type: "text", validate: () => true },
     "contact hrs": { type: "number", validate: (value) => !isNaN(value) },
     other_details: { type: "text", validate: () => true },
   };
+
+  const statusOptions = ["National", "Chapter", "Non-Chapter"];
 
   // Else, display normal screen
   return (
@@ -323,7 +326,7 @@ const EventDetails = () => {
             {fieldsToShow.map((fieldName) => {
               const value = editedEvent[fieldName] || "";
               const { type, validate } = fieldTypes[fieldName] || {};
-
+              const readOnly = fieldName === "chapter" && event;
               return (
                 <tr key={fieldName}>
                   <td>
@@ -332,17 +335,33 @@ const EventDetails = () => {
                     </p>
                   </td>
                   <td>
-                    {isEditMode ? (
+                    {isEditMode && fieldName === "status" ? (
+                      <select
+                        value={value}
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          setEditedEvent({
+                            ...editedEvent,
+                            [fieldName]: newValue,
+                          });
+                        }}
+                        className={styles["edit-input"]}
+                      >
+                        {statusOptions.map(option => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    ) : isEditMode ? (
                       <input
                         type={type || "text"}
                         value={value}
                         onChange={(e) => {
+                          if (readOnly) return;
                           const newValue = e.target.value;
                           if (validate && !validate(newValue)) {
-                            console.error(
-                              "Invalid value for field: ",
-                              fieldName
-                            );
+                            console.error("Invalid value for field: ", fieldName);
                             return;
                           }
                           setEditedEvent({
@@ -351,6 +370,7 @@ const EventDetails = () => {
                           });
                         }}
                         className={styles["edit-input"]}
+                        readOnly={readOnly}
                       />
                     ) : (
                       <p className={styles["event-data"]}>{value.toString()}</p>
@@ -361,8 +381,7 @@ const EventDetails = () => {
             })}
           </table>
         </div>
-       
-    </div>
+      </div>
       <EventDialogBox
         open={isDialogOpen}
         handleClose={() => setDialogOpen(false)}
@@ -371,7 +390,7 @@ const EventDetails = () => {
         dialogAction={dialogAction}
         onActionSuccess={() => setEventArchived(!eventArchived)}
       />{" "}
-      
+
     </div>
   );
 };

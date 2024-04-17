@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useUser } from "../../config/UserContext";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
@@ -89,7 +88,7 @@ const Events = () => {
     );
   }
 
-  const renderStatus = (status) => {
+  const renderStatus = (status, chapter) => {
     if (status === "National") {
       return (
         <Status
@@ -103,7 +102,7 @@ const Events = () => {
     } else if (status === "Chapter") {
       return (
         <Status
-          text="Chapter Name"
+          text={chapter}
           backgroundColor="#FCF2E6"
           textColor="brown"
           width="107px"
@@ -113,7 +112,7 @@ const Events = () => {
     } else {
       return (
         <Status
-          text="Non-local Chapter"
+          text="Non-Chapter"
           backgroundColor="#FAF0F3"
           textColor='red'
           width="132px"
@@ -190,7 +189,7 @@ const Events = () => {
     { field: 'date', headerName: 'DATE', width: 100, cellClassName:'cell' },
     { field: 'time', headerName: 'TIME', width: 125, cellClassName:'cell'},
     { field: 'location', headerName: 'LOCATION', width: 150, cellClassName:'cell'},
-    { field: 'status', headerName: 'STATUS', width: 200, renderCell: (params) => (renderStatus(params.value))},
+    { field: 'status', headerName: 'STATUS', width: 200, renderCell: (params) => (renderStatus(params.value, params.row.chapter))},
     { field: 'attendee#', headerName: 'ATTENDEE #', width: 125, cellClassName:'cell'},
     { field: 'contact hrs', headerName: 'CONTACT HRS', width: 125, cellClassName:'cell'},
     { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 125, cellClassName:'cell'},
@@ -202,6 +201,7 @@ const Events = () => {
   };
   
   const handleRowClick = (params) => {
+    console.log("FAESF", params);
     navigate("/chapter-dashboard/event-details", { state: { event: params.row } });
   };
 
@@ -247,14 +247,14 @@ const Events = () => {
         <h1>Events</h1>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ marginRight: 'auto', padding: '10px' }}>
-            <label  id="filterlabel" htmlFor="chapterSelect">Select Chapter:</label>
+            <label  id="filterlabel" htmlFor="chapterSelect">Select Chapter: </label>
             <select id="chapterSelect" value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
               <option value="">All Chapters</option>
               {chapters.map((chapter, index) => (
                 <option key={index} value={chapter}>{chapter}</option>
               ))}
             </select>
-            <label id="filterRegion" htmlFor='regionSelect'>Select Region:</label>
+            <label id="filterRegion" htmlFor='regionSelect'> Select Region: </label>
             <select id='regionSelect' value={selectedRegion} onChange={(e) => handleFilterByRegion(e.target.value)}>
               <option value="">All Regions</option>
               {originalRegions.map((region, index) => (

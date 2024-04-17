@@ -17,6 +17,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 const EventDetails = () => {
   const { currentUser } = useUser();
+  console.log("currentUser", currentUser);
 
   // Pass in event data from previous state
   const location = useLocation();
@@ -41,6 +42,7 @@ const EventDetails = () => {
       location: "",
       status: "Chapter", //Default status
       chapter: currentUser.chapterData.name, //Automatically fills in chapter of the user
+      region: currentUser.chapterData.region || "Not Specified",
       attendee: "",
       about: "",
       event_poster: "",

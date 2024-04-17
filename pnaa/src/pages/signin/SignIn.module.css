@@ -1,16 +1,11 @@
 
 #container {
-    box-shadow: 0px 4px 4px 4px #05208B80;
-    position: fixed;
-    top: 5%;
-    left: 2%;
+    position: relative; /* Changed from fixed to relative */
     width: 650px;
     height: 604px;
-    gap: 0px;
+    margin: 5% 2%; /* Adjust this to center or place as needed */
     border-radius: 15px;
-    opacity: 0px;
-    border: 1px solid #2264E559;
-    z-index: 2;
+    box-shadow: 0px 4px 4px rgba(5, 32, 139, 0.5);
     background-color: white;
 }
 
@@ -123,6 +118,14 @@
     line-height: 27.42px;
     text-align: right;
     cursor: pointer;    
+}
+
+.forgotPassword {
+    position: absolute;
+    bottom: 10px; /* Adjust according to your design */
+    right: 10px; /* This keeps it inside the container at bottom-right */
+    color: #91201A;
+    cursor: pointer;
 }
 
 #logo {

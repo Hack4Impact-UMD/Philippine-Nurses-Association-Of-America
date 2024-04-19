@@ -261,7 +261,7 @@ const EventDetails = () => {
     "location",
     "status",
     "chapter",
-    "attendee #",
+    "attendee#",
     "about",
     "event poster",
     "contact hrs",

@@ -252,7 +252,7 @@ const Events = () => {
           <div style={{ marginRight: 'auto', padding: '10px' }}>
             <label id="filterlabel" htmlFor="chapterSelect">Filter By Chapter or Archived: </label>
             <select id="chapterSelect" value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
-              <option value="">All Chapters</option>
+              <option value="">All Events</option>
               <option value="Unarchived Events">Unarchived Events</option>
               <option value="Archived Events">Archived Events</option>
               {chapters.map((chapter, index) => (

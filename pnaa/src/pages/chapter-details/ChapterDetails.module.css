@@ -1,0 +1,70 @@
+div {
+    font-family: 'Source Serif 4', serif;
+}
+
+.chapter-details-container{
+    border: 10px solid #AA5B0059;
+    border-radius: 10px;
+    padding: 0px 20px 20px 20px; /* top right bottom left */
+    margin: 30px;
+    display: flex; /* Use flexbox to arrange children */
+    flex-direction: column; /* Arrange children vertically */
+}
+
+.chapter-details-container-right{
+    position:absolute;
+    flex-direction: column;
+    display: flex; /* Use flexbox to arrange children */
+    flex: 1;
+    top: 25%;
+    right:5%;
+}
+
+.chapter-details-inner {
+    display: flex; /* Use flexbox to arrange children */
+    flex: 1; /* Take up all available space */
+}
+
+.chapter-details-right{
+    margin: 0px, 50px;
+    /*width: 50%;*/
+    flex-direction: column;
+    margin-top: 10px; /* Adjust margin as needed */
+  
+}
+
+.chapter-details-left{
+    width: 60%;
+}
+
+.chapter-cell {
+
+    font-weight: 500;
+    color:black;
+}
+
+.cell {
+    color:#464F60;
+}
+
+.MuiDataGrid-checkbox {
+    border-radius: 4px;
+}
+
+.chapter-label,
+.chapter-data {
+  font-family: "Source Serif 4", serif;
+  font-weight: 400;
+  color: #464f60;
+  font-size: 16px;
+  margin: 0;
+}
+
+.chapter-detail-table {
+    width: 100%;
+    border-spacing: 15px;
+}
+
+.special-word {
+    color: blue; 
+}

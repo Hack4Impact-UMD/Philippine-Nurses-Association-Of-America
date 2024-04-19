@@ -1,0 +1,19 @@
+div {
+    font-family: 'Source Serif 4', serif;
+}
+
+.chapter-details-container{
+    border: 10px solid #BDBDBD;
+    border-radius: 10px;
+    background-color: #BDBDBD;
+    padding: 0px 20px 20px 20px; /* top right bottom left */
+    margin: 30px;
+    display: flex; /* Use flexbox to arrange children */
+    flex-direction: column; /* Arrange children vertically */
+}
+
+.chapter-details-inner {
+    display: flex; /* Use flexbox to arrange children */
+    flex-direction: column;
+    flex-grow: 1; /* Take up all available space */
+}

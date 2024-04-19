@@ -18,7 +18,7 @@ const Members = () => {
         const data = await response.json();
         console.log("DATA", data);
 
-        updateData(data);
+        // updateData(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -31,25 +31,26 @@ const Members = () => {
 
   async function updateData(data) {
     const chaptersCollection = collection(db, 'chapters');
-
+  
     for (const [chapterName, chapterData] of Object.entries(data)) {
         const chapterDoc = doc(chaptersCollection, chapterName);
-
-        // Set or update main chapter data with total counts
+  
+        // Set or update main chapter data with total counts and the chapter's name
         await setDoc(chapterDoc, {
+            name: chapterData.name, 
             totalActive: chapterData.totalActive,
             totalLapsed: chapterData.totalLapsed
         }, { merge: true });
-
+  
         const membersCollection = collection(chapterDoc, 'members');
-
+  
         // Upload all members with merge option
         for (const member of chapterData.members) {
             const memberDoc = doc(membersCollection); // Creating a new document for each member
             await setDoc(memberDoc, member, { merge: true });
         }
     }
-}
+  }
 
 
 

@@ -23,14 +23,17 @@ const db = getFirestore(firebaseApp);
 const app = express();
 app.use(cors());
 
+ //Neel use firebase env vars here
+const apiKey = 'cnpoZW5nMjU6eW1tazdmb2plZnV0aTQwcnNzZnFmOGZyd3VtNGVy'; 
+const body = 'grant_type=password&username=rzheng25@terpmail.umd.edu&password=XYt$wCjvV5h8gAA&scope=auto'
+const accountId = '213319';
+
 async function getAccessToken() {
     const url = 'https://oauth.wildapricot.org/auth/token';
-    const apiKey = 'cnpoZW5nMjU6eW1tazdmb2plZnV0aTQwcnNzZnFmOGZyd3VtNGVy';
     const headers = {
         'Authorization': `Basic ${apiKey}`,
         'Content-Type': 'application/x-www-form-urlencoded'
     };
-    const body = 'grant_type=password&username=rzheng25@terpmail.umd.edu&password=XYt$wCjvV5h8gAA&scope=auto';
 
     const response = await axios.post(url, body, { headers: headers });
 
@@ -43,7 +46,7 @@ async function getAccessToken() {
 
 async function fetchContactsData(accessToken) {
   // Initial request to the contacts endpoint
-  let response = await axios.get('https://api.wildapricot.com/v2.1/accounts/213319/contacts', {
+  let response = await axios.get(`https://api.wildapricot.com/v2.1/accounts/${accountId}/contacts`, {
     headers: {
       'Accept': 'application/json',
       'Authorization': `Bearer ${accessToken}`
@@ -61,14 +64,11 @@ async function fetchContactsData(accessToken) {
     });
   }
 
-  // Save the data to a local file
-  fs.writeFileSync('contactsData.json', JSON.stringify(response.data.Contacts, null, 2));
-
   return response.data.Contacts; //Returns only the contacts
 }
 
 async function acceptTermsOfUse(accessToken) {
-  const url = `https://api.wildapricot.com/v2.1/rpc/213319/acceptTermsOfUse`;
+  const url = `https://api.wildapricot.com/v2.1/rpc/${accountId}/acceptTermsOfUse`;
   const headers = {
     'Authorization': `Bearer ${accessToken}`,
     'Content-Type': 'application/json'
@@ -83,61 +83,28 @@ async function acceptTermsOfUse(accessToken) {
   console.log('Terms of use accepted');
 }
 
-async function memberShipLevels(accessToken) {
-  const url = `https://api.wildapricot.com/v2.1/accounts/213319/membershipLevels`;
-  const headers = {
-    'Authorization': `Bearer ${accessToken}`,
-    'Content-Type': 'application/json'
-  };
-
-  const response = await axios.get(url, { headers: headers });
-
-  if (response.status !== 200) {
-    throw new Error('Failed to accept terms of use');
-  }
-
-  console.log("FADFASDFSAF", response.data);
-  return response.data;
-}
 
 app.get('/api/members', async (req, res) => {
   try {
-    // const accessToken = await getAccessToken();
+    const accessToken = await getAccessToken();
 
-    // if (!accessToken) {
-    //   return res.status(500).send('Failed to obtain access token');
-    // }
+    if (!accessToken) {
+      return res.status(500).send('Failed to obtain access token');
+    }
 
-    // const membershipLevelData = await memberShipLevels(accessToken);
     // acceptTermsOfUse(accessToken)
 
-    // const contactsData = await fetchContactsData(accessToken);
+    const contactsData = await fetchContactsData(accessToken);
+
+    // const contactsData = readDataLocally();
     
-    // console.log("ENDPOINT DATA", contactsData);
+    const cleanedData = cleanData(contactsData);
 
-    const contactsData = readDataLocally();
-    
-    // const cleanedData = cleanData(contactsData);
+    const processedData = processMembershipData(cleanedData);
 
-    const testdata = {
-        "PNA Georgia": {
-          totalActive: 5,
-          totalLapsed: 3,
-          members: [
-            { name: "John Doe", email: "john@example.com", membershipLevel: "Active Member (1 year)", activeStatus: "Active", renewalDueDate: "2023-05-20" },
-          ]
-        }
-      };
-
-
-    // try {
-    //     await updateData(testdata);
-    //     console.log("Data updated successfully");
-    // } catch (error) {
-    //     console.error("Failed to update data:", error);
-    // }
-  
-    res.json(testdata);
+    // updateData(testdata);
+    // console.log("update complete");
+    res.json(processedData);
 
   } catch (error) {
     console.error('Error fetching members:', error);
@@ -147,9 +114,9 @@ app.get('/api/members', async (req, res) => {
 
 
 function processMembershipData(data) {
-    const chaptersData = {};
-  
-    data.forEach(contact => {
+  const chaptersData = {};
+
+  data.forEach(contact => {
       const chapterField = contact.FieldValues.find(field => field.FieldName === "Chapter (Active/Associate - 1 year)");
       const renewalField = contact.FieldValues.find(field => field.FieldName === "Renewal due");
       const currentDate = new Date();  // Get the current date
@@ -157,63 +124,139 @@ function processMembershipData(data) {
       const isActive = renewalDate ? renewalDate >= currentDate : false;
       const membershipLevel = contact.MembershipLevel ? contact.MembershipLevel.Name : 'Unknown';
       const memberInfo = {
-        name: `${contact.FirstName} ${contact.LastName}`,
-        email: contact.Email,
-        membershipLevel,
-        activeStatus: isActive ? 'Active' : 'Lapsed',
-        renewalDueDate: renewalDate ? renewalDate.toISOString().substring(0, 10) : 'N/A'
+          name: `${contact.FirstName} ${contact.LastName}`,
+          email: contact.Email,
+          membershipLevel,
+          activeStatus: isActive ? 'Active' : 'Lapsed',
+          renewalDueDate: renewalDate ? renewalDate.toISOString().substring(0, 10) : 'N/A'
       };
-  
+
       if (chapterField && chapterField.Value && chapterField.Value.Label) {
-        const chapter = chapterField.Value.Label;
-  
-        // Initialize chapter object if not already present
-        if (!chaptersData[chapter]) {
-          chaptersData[chapter] = {
-            totalActive: 0,
-            totalLapsed: 0,
-            members: []
-          };
-        }
-  
-        // Increment counts based on active status
-        if (isActive) {
-          chaptersData[chapter].totalActive++;
-        } else {
-          chaptersData[chapter].totalLapsed++;
-        }
-  
-        // Add member info to the combined list
-        chaptersData[chapter].members.push(memberInfo);
+          const chapter = chapterField.Value.Label;
+
+          // Initialize chapter object if not already present
+          if (!chaptersData[chapter]) {
+              chaptersData[chapter] = {
+                  name: chapter,  // Add the chapter name field
+                  totalActive: 0,
+                  totalLapsed: 0,
+                  members: []
+              };
+          }
+
+          // Increment counts based on active status
+          if (isActive) {
+              chaptersData[chapter].totalActive++;
+          } else {
+              chaptersData[chapter].totalLapsed++;
+          }
+
+          // Add member info to the combined list
+          chaptersData[chapter].members.push(memberInfo);
       }
-    });
-  
-    console.log(JSON.stringify(chaptersData, null, 2));
-    return chaptersData;
-  }
+  });
 
-
-  async function updateData(data) {
-    const chaptersCollection = collection(db, 'chapters');
-
-    for (const [chapterName, chapterData] of Object.entries(data)) {
-        const chapterDoc = doc(chaptersCollection, chapterName);
-
-        // Set or update main chapter data with total counts
-        await setDoc(chapterDoc, {
-            totalActive: chapterData.totalActive,
-            totalLapsed: chapterData.totalLapsed
-        }, { merge: true });
-
-        const membersCollection = collection(chapterDoc, 'members');
-
-        // Upload all members with merge option
-        for (const member of chapterData.members) {
-            const memberDoc = doc(membersCollection); // Creating a new document for each member
-            await setDoc(memberDoc, member, { merge: true });
-        }
-    }
+  // console.log(JSON.stringify(chaptersData, null, 2));
+  return chaptersData;
 }
+
+
+
+async function updateData(data) {
+  const chaptersCollection = collection(db, 'chapters');
+
+  for (const [chapterName, chapterData] of Object.entries(data)) {
+      const chapterDoc = doc(chaptersCollection, chapterName);
+
+      // Set or update main chapter data with total counts and the chapter's name
+      await setDoc(chapterDoc, {
+          name: chapterData.name, // Include the chapter's name
+          totalActive: chapterData.totalActive,
+          totalLapsed: chapterData.totalLapsed
+      }, { merge: true });
+
+      const membersCollection = collection(chapterDoc, 'members');
+
+      // Upload all members with merge option
+      for (const member of chapterData.members) {
+          const memberDoc = doc(membersCollection); // Creating a new document for each member
+          await setDoc(memberDoc, member, { merge: true });
+      }
+  }
+}
+
+
+function cleanData(data) {
+  const filteredData = data.filter(entry => {
+      return entry.hasOwnProperty('MembershipLevel') && Object.keys(entry.MembershipLevel).length > 0;
+  });
+
+  const validMembers = filteredData.filter(entry => {
+      return entry.MembershipLevel.hasOwnProperty('Id') && entry.MembershipLevel.Id !== null && entry.MembershipLevel.Id !== undefined && entry.MembershipLevel.Id !== "";
+  });
+  return validMembers;
+}
+
+
+const testdata = 
+{
+  "PNA Maryland RETIRED": {
+    "name": "PNA Maryland RETIRED",
+    "totalActive": 100000,
+    "totalLapsed": 1,
+    "members": [
+      {
+        "name": "Veronica Contreras",
+        "email": "mvcontrv1@gmail.com",
+        "membershipLevel": "Active Member (1 year)",
+        "activeStatus": "Active",
+        "renewalDueDate": "2024-10-20"
+      },
+      {
+        "name": "Wilma Custodio",
+        "email": "wecustudio@yahoo.com",
+        "membershipLevel": "Active Member (1 year)",
+        "activeStatus": "Active",
+        "renewalDueDate": "2025-03-11"
+      },
+      {
+        "name": "a k",
+        "email": "ameliackiamko@gmail.com",
+        "membershipLevel": "Active Member (1 year)",
+        "activeStatus": "Lapsed",
+        "renewalDueDate": "1970-01-01"
+      }
+    ]
+  },
+  "PNA Ohio ACTIVE": {
+    "name": "PNA Ohio ACTIVE",
+    "totalActive": 3,
+    "totalLapsed": 0,
+    "members": [
+      {
+        "name": "James Holden",
+        "email": "jholden@example.com",
+        "membershipLevel": "Active Member (2 years)",
+        "activeStatus": "Active",
+        "renewalDueDate": "2025-08-15"
+      },
+      {
+        "name": "Naomi Nagata",
+        "email": "nnagata@example.com",
+        "membershipLevel": "Active Member (2 years)",
+        "activeStatus": "Active",
+        "renewalDueDate": "2025-12-22"
+      },
+      {
+        "name": "Amos Burton",
+        "email": "aburton@example.com",
+        "membershipLevel": "Active Member (2 years)",
+        "activeStatus": "Active",
+        "renewalDueDate": "2025-07-30"
+      }
+    ]
+  }
+};
 
 function getTotalActiveCount(chapterData) {
   return Object.values(chapterData).reduce((sum, chapter) => sum + chapter.activeCount, 0);
@@ -232,18 +275,6 @@ function getChapterList(data) {
 
   console.log("Chapter Set:", chapterSet);
 }
-
-function cleanData(data) {
-  const filteredData = data.filter(entry => {
-      return entry.hasOwnProperty('MembershipLevel') && Object.keys(entry.MembershipLevel).length > 0;
-  });
-
-  const validMembers = filteredData.filter(entry => {
-      return entry.MembershipLevel.hasOwnProperty('Id') && entry.MembershipLevel.Id !== null && entry.MembershipLevel.Id !== undefined && entry.MembershipLevel.Id !== "";
-  });
-  return validMembers;
-}
-
 
 
 function readDataLocally() {

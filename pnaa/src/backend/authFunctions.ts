@@ -66,7 +66,7 @@ import {
   export function createUser(newEmail: string, newRole: string): Promise<void> {
     return new Promise((resolve, reject) => {
       /* If role isn't one of the expected ones, reject it.*/
-      if (newRole != 'chapter' && newRole != 'national') {
+      if (newRole != 'admin' && newRole != 'user') {
         reject();
       }
       const createUserCloudFunction = httpsCallable(functions, 'createUser');

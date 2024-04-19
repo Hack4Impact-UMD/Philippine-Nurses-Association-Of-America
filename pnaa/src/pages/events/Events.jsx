@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useUser } from "../../config/UserContext";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
@@ -12,14 +11,10 @@ import Styles from "./Events.module.css";
 
 const Events = () => {
   const { currentUser, loading: userLoading } = useUser();
-  const [events, setEvents] = useState([]);
+
   const [loading, setLoading] = useState(true);
- 
+  const [events, setEvents] = useState([]);
 
-
-
-
- 
   const [originalEvents, setOriginalEvents] = useState([]);
   const [originalRegions, setOriginalRegions] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -27,7 +22,6 @@ const Events = () => {
   const [selectedRegion, setSelectedRegion] = useState('');
   const [chapters, setChapters] = useState([]); // State to hold the list of chapters
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -38,7 +32,7 @@ const Events = () => {
         const eventsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
         setEvents(eventsList);
         setOriginalEvents(eventsList);
-        const uniqueRegions = [...new Set(eventsList.map(event => event.region))];
+        const uniqueRegions = [...new Set(eventsList.filter(event => event.region != null).map(event => event.region))];
         setOriginalRegions(uniqueRegions);
 
       } catch (error) {
@@ -65,8 +59,8 @@ const Events = () => {
     fetchChapters();
   }, []);
 
-  
-  if (loading || userLoading) { 
+
+  if (loading || userLoading) {
 
     return <div>Loading...</div>;
   }
@@ -93,31 +87,31 @@ const Events = () => {
     );
   }
 
-  const renderStatus = (status) => {
+  const renderStatus = (status, chapter) => {
     if (status === "National") {
       return (
         <Status
           text="National"
           backgroundColor="#EBF0FA"
           textColor="blue"
-          width="70px"
+          width="132px"
           height="20px"
-          />
+        />
       );
     } else if (status === "Chapter") {
       return (
         <Status
-          text="Chapter Name"
+          text={chapter}
           backgroundColor="#FCF2E6"
           textColor="brown"
-          width="107px"
+          width="132px"
           height="20px"
         />
       )
     } else {
       return (
         <Status
-          text="Non-local Chapter"
+          text="Non-Chapter"
           backgroundColor="#FAF0F3"
           textColor='red'
           width="132px"
@@ -127,7 +121,7 @@ const Events = () => {
     }
   };
 
-  const MemberButton = ({ text, backgroundColor, width, height }) => {
+  const MemberButton = ({ text, backgroundColor, width, height, onClick }) => {
     const styles = {
       memberButton: {
         backgroundColor: backgroundColor,
@@ -138,48 +132,67 @@ const Events = () => {
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '6px',
+        cursor: 'pointer'
       },
     };
-  
+
     return (
-      <div style={styles.memberButton}>
+      <div style={styles.memberButton} onClick={onClick}>
         {text}
       </div>
     );
   }
-  
+
   const exportRegistration = (
-    <div style={{ marginRight: '10px'}}>
-    <MemberButton
-      text="+ Export Registration"
-      backgroundColor={"#53A67E"}
-      width="182px"
-      height="32px"
-    />
+    <div style={{ marginRight: '10px' }}>
+      <MemberButton
+        text="+ Export Registration"
+        backgroundColor={"#53A67E"}
+        width="182px"
+        height="32px"
+      />
     </div>
   );
 
+  const handleAddEvent = () => {
+    console.log("afsdf");
+    navigate("/chapter-dashboard/event-details", { state: { event: null } });
+  };
+
   const recordRegistration = (
-    <div style={{ marginRight: '10px'}}>
-    <MemberButton
-      text="+ Record Event Registration"
-      backgroundColor={"#05208B"}
-      width="229px"
-      height="32px"
-    />
+    <div style={{ marginRight: '10px' }}>
+      <MemberButton
+        text="+ Record Event Registration"
+        backgroundColor={"#05208B"}
+        width="229px"
+        height="32px"
+        onClick={handleAddEvent} // Pass handleAddEvent function as an onClick prop
+      />
     </div>
   );
 
   const columns = [
-    { field: 'name', headerName: 'EVENT NAME', width: 250, cellClassName:'event-cell' },
-    { field: 'date', headerName: 'DATE', width: 100, cellClassName:'cell' },
-    { field: 'time', headerName: 'TIME', width: 125, cellClassName:'cell'},
-    { field: 'location', headerName: 'LOCATION', width: 150, cellClassName:'cell'},
-    { field: 'status', headerName: 'STATUS', width: 200, renderCell: (params) => (renderStatus(params.value))},
-    { field: 'attendee#', headerName: 'ATTENDEE #', width: 125, cellClassName:'cell'},
-    { field: 'contact hrs', headerName: 'CONTACT HRS', width: 125, cellClassName:'cell'},
-    { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 125, cellClassName:'cell'},
-    { field: 'participants_served', headerName: 'PARTICIPANTS SERVED', width: 200, cellClassName:'cell'},
+    {
+      field: 'name',
+      headerName: 'EVENT NAME',
+      width: 250,
+      renderCell: (params) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => handleRowClick(params)}
+        >
+          {params.value}
+        </div>
+      ),
+    },
+    { field: 'date', headerName: 'DATE', width: 100, cellClassName: 'cell' },
+    { field: 'time', headerName: 'TIME', width: 125, cellClassName: 'cell' },
+    { field: 'location', headerName: 'LOCATION', width: 150, cellClassName: 'cell' },
+    { field: 'status', headerName: 'STATUS', width: 200, renderCell: (params) => (renderStatus(params.value, params.row.chapter)) },
+    { field: 'attendee#', headerName: 'ATTENDEE #', width: 125, cellClassName: 'cell' },
+    { field: 'contact hrs', headerName: 'CONTACT HRS', width: 125, cellClassName: 'cell' },
+    { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 125, cellClassName: 'cell' },
+    { field: 'participants_served', headerName: 'PARTICIPANTS SERVED', width: 200, cellClassName: 'cell' },
   ];
 
   const handleSelectionChange = (newSelection) => {
@@ -187,60 +200,66 @@ const Events = () => {
   };
 
   const handleRowClick = (params) => {
-    navigate(`/chapter-dashboard/event-detail/`, { state: { member: params.row } });
+    console.log("FAESF", params);
+    navigate("/chapter-dashboard/event-details", { state: { event: params.row } });
   };
 
   const handleFilterByChapter = (selectedChapter) => {
     setSelectedChapter(selectedChapter);
-    
-    if (!selectedChapter) {
+
+    if (!selectedChapter || selectedChapter === "All Chapters") {
       setEvents(originalEvents);
       setSelectedRegion('');
+    } else if (selectedChapter === "Unarchived Events") {
+      setEvents(originalEvents.filter(event => event.archived === false || event.archived == null));
+    } else if (selectedChapter === "Archived Events") {
+      setEvents(originalEvents.filter(event => event.archived === true));
     } else {
       let filteredEvents = originalEvents.filter(event => event.chapter === selectedChapter);
-      
+
       // If a region is selected, further filter the events based on the selected region
       if (selectedRegion) {
         filteredEvents = filteredEvents.filter(event => event.region === selectedRegion);
       }
-      
+
       setEvents(filteredEvents);
     }
   };
-  
+
   const handleFilterByRegion = (selectedRegion) => {
     setSelectedRegion(selectedRegion);
-    
+
     if (!selectedRegion) {
       setEvents(originalEvents);
       setSelectedChapter('')
     } else {
       let filteredEvents = originalEvents.filter(event => event.region === selectedRegion);
-      
+
       // If a chapter is selected, further filter the events based on the selected chapter
       if (selectedChapter) {
         filteredEvents = filteredEvents.filter(event => event.chapter === selectedChapter);
       }
-      
+
       setEvents(filteredEvents);
     }
   };
 
   return (
     <div>
-
       <div>
         <h1>Events</h1>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ marginRight: 'auto', padding: '10px' }}>
-            <label  id="filterlabel" htmlFor="chapterSelect">Select Chapter:</label>
+            <label id="filterlabel" htmlFor="chapterSelect">Filter By Chapter or Archived: </label>
             <select id="chapterSelect" value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
               <option value="">All Chapters</option>
+              <option value="Unarchived Events">Unarchived Events</option>
+              <option value="Archived Events">Archived Events</option>
               {chapters.map((chapter, index) => (
                 <option key={index} value={chapter}>{chapter}</option>
               ))}
             </select>
-            <label id="filterRegion" htmlFor='regionSelect'>Select Region:</label>
+            <label id="filterRegion" htmlFor='regionSelect'> Select Region: </label>
             <select id='regionSelect' value={selectedRegion} onChange={(e) => handleFilterByRegion(e.target.value)}>
               <option value="">All Regions</option>
               {originalRegions.map((region, index) => (
@@ -254,38 +273,38 @@ const Events = () => {
           </div>
         </div>
         <div id="table-background">
-        <DataGrid
-          rows={events}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5, 10, 20]}
-          checkboxSelection
-          onRowSelectionModelChange={handleSelectionChange}
-          onRowClick={handleRowClick} // Add the onRowClick event handler
-          columnHeaderHeight={100}
-          sx={{
-            border: 10,
-            borderColor: 'rgba(189,189,189,0.75)',
-            borderRadius: 4,
-            '& .MuiDataGrid-row:nth-child(even)': {
-              backgroundColor: "rgba(224, 224, 224, 0.75)"
-              
-            },
-            '& .MuiDataGrid-columnHeader': {
-              backgroundColor: "rgba(224, 224, 224, 0.75)"
-            },
-            '& .MuiDataGrid-row:nth-child(odd)': {
-              backgroundColor: '#FFFFFF'
-            },
-            '& .MuiDataGrid-footerContainer': {
-              backgroundColor: "rgba(224, 224, 224, 0.75)"
-            }
-          }}
-        />
+          <DataGrid
+            rows={events}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5, 10, 20]}
+            checkboxSelection
+            onRowSelectionModelChange={handleSelectionChange}
+            // onRowClick={handleRowClick} // Add the onRowClick event handler
+            columnHeaderHeight={100}
+            sx={{
+              border: 10,
+              borderColor: 'rgba(189,189,189,0.75)',
+              borderRadius: 4,
+              '& .MuiDataGrid-row:nth-child(even)': {
+                backgroundColor: "rgba(224, 224, 224, 0.75)"
+
+              },
+              '& .MuiDataGrid-columnHeader': {
+                backgroundColor: "rgba(224, 224, 224, 0.75)"
+              },
+              '& .MuiDataGrid-row:nth-child(odd)': {
+                backgroundColor: '#FFFFFF'
+              },
+              '& .MuiDataGrid-footerContainer': {
+                backgroundColor: "rgba(224, 224, 224, 0.75)"
+              }
+            }}
+          />
         </div>
 
       </div>
-    
+
 
     </div>
   );

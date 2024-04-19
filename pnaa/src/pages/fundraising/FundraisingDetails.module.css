@@ -1,12 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&display=swap");
 
-.event-detail-container {
+.fundraiser-detail-container {
   display: flex;
   justify-content: center;
+  padding-top: 71px;
   padding-bottom: 71px;
+  height: 700px;
 }
 
-.event-detail-content {
+.fundraiser-detail-content {
   border: 13px solid #d9d9d9;
   border-radius: 8px;
   padding: 20px;
@@ -15,25 +17,16 @@
   padding: 16px 36px;
 }
 
-.event-header {
+.fundraiser-header {
   font-family: "Source Serif 4", serif;
   font-weight: 600;
   color: #464f60;
   font-size: 40px;
   margin: 0;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
-.event-header-input {
-  font-family: "Source Serif 4", serif;
-  font-weight: 600;
-  color: #464f60;
-  font-size: 36px;
-  margin: 0;
-  letter-spacing: 0.05em;
-}
-
-.event-header-container {
+.fundraiser-header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -44,15 +37,28 @@
   gap: 10px;
 }
 
-.event-detail-information-container {
+.fundraiser-detail-information-container {
   display: flex;
   justify-content: space-between;
   gap: 15px;
   margin: 15px 0px 5px 0px;
-  border: solid black 1px;
 }
 
-.event-card {
+.fundraiser-detail-information-container-left {
+  border: solid black 1px;
+  width: 55%;
+  padding: 16px 36px;
+  height: 390px;
+  width: 280px;
+  flex: 0 1 auto;
+  flex-basis: calc(
+    509px / 1195 * 100%
+  ); /* Set flex-basis to proportion of left box */
+  min-width: 150px;
+  overflow-x: auto; /* Allows horizontal scrolling if content overflows */
+}
+
+.fundraiser-card {
   border: solid black 1px;
   width: 100%;
   display: flex;
@@ -60,13 +66,14 @@
   border-radius: 15px;
 }
 
-.event-detail-table {
+.fundraiser-detail-table {
   width: 100%;
-  border-spacing: 15px;
+  border-collapse: separate; 
+  border-spacing: 35px;
 }
 
-.event-label,
-.event-data {
+.fundraiser-label, 
+.fundraiser-data {
   font-family: "Source Serif 4", serif;
   font-weight: 400;
   color: #464f60;
@@ -74,36 +81,35 @@
   margin: 0;
 }
 
-.name-font {
+.name-font{
   font-weight: 700px;
 }
 
-.event-card-font {
+.fundraiser-card-font{
   font-size: 8px;
   font-weight: 600px;
 }
 
-.event-label.small {
+.fundraiser-label.small{
   font-size: 14px;
 }
 
-.underline {
+
+
+.underline{
   border-bottom: solid black 1px;
 }
 
-.event-notes {
-  background-color: #d9d9d94d;
+.member-notes{
+  background-color: #D9D9D94D;
   width: 60%;
   height: 20%;
   border-radius: 15px;
 }
 
-.PNAA_Logo {
-  width: 72px;
-  height: 72px;
-}
 
-.event-card-left {
+
+.fundraiser-card-left{
   text-align: center;
   align-items: center;
   display: flex;
@@ -113,10 +119,10 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-  width: 50%;
+  width:50%;
 }
 
-.event-card-right {
+.fundraiser-card-right{
   text-align: right;
   align-items: right;
   display: flex;
@@ -124,41 +130,27 @@
   justify-content: space-between;
 }
 
-.other-details {
-  background-color: #d9d9d94d;
-  border-radius: 15px;
-  min-width: 50%;
-}
-
-.error-message {
-  color: red;
-  font-size: 12px;
-  margin-left: 8px;
-}
-
-@media (max-width: 1200px) {
-  .event-header {
-    font-size: 35px;
-  }
-
-  .event-header-input {
-    font-size: 31px;
-  }
+#logo {
+    position: fixed;
+    width: 490px;
+    height: 490px;
+    z-index: -1;
+    max-width: calc(100% + 50px);
+    opacity: 50%;
+    transform: rotate(9.36deg);
+    left: 50%;
+    top: 25%;
 }
 
 /* Half screen width */
 @media (max-width: 800px) {
-  .event-detail-content {
+  .fundraiser-detail-content {
     min-width: calc(100% - 80px);
     padding: 16px 20px;
   }
 
-  .event-header {
+  .fundraiser-header {
     font-size: 30px;
-  }
-
-  .event-header-input {
-    font-size: 26px;
   }
 
   .action-button-group .MuiButton-label {
@@ -166,12 +158,12 @@
   }
 
   /* Make info boxes vertical */
-  .event-detail-information-container {
+  .fundraiser-detail-information-container {
     flex-direction: column;
   }
 
-  .event-detail-information-container-left,
-  .event-detail-information-container-right {
+  .fundraiser-detail-information-container-left,
+  .fundraiser-detail-information-container-right {
     width: 100%;
     min-width: 0;
     overflow-x: auto;
@@ -179,3 +171,28 @@
     box-sizing: border-box;
   }
 }
+
+
+.fundraising-header {
+    font-family: "Source Serif 4", serif;
+    font-weight: 600;
+    color: #464f60;
+    font-size: 40px;
+    margin: 0;
+    letter-spacing: 0.05em;
+  }
+  
+  .fundraising-header-input {
+    font-family: "Source Serif 4", serif;
+    font-weight: 600;
+    color: #464f60;
+    font-size: 36px;
+    margin: 0;
+    letter-spacing: 0.05em;
+  }
+  
+  .fundraising-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }

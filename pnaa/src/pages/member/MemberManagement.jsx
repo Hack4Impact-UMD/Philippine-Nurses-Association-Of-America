@@ -16,6 +16,7 @@ const MemberManagement = () => {
   //Fetches all member data within chapter
   useEffect(() => {
     if (currentUser?.chapterId) {
+      console.log(currentUser.chapterId);
       const fetchMembers = async () => {
         const db = getFirestore();
         const membersRef = collection(
@@ -29,6 +30,7 @@ const MemberManagement = () => {
           const snapshot = await getDocs(membersRef);
           const membersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           console.log(membersList);
+          console.log("Lol no");
           setMembers(membersList);
         } catch (error) {
           console.error("Error fetching members:", error);

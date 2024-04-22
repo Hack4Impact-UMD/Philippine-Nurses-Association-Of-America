@@ -6,15 +6,7 @@ const fs = require('fs'); //Wont need this in final build
 const { initializeApp } = require('firebase/app');
 const { getFirestore, collection, doc, setDoc } = require('firebase/firestore');
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAef0b2KDrdWCcKJBmOW88PX4FZLtrn8Co",
-    authDomain: "pnaa-8b56f.firebaseapp.com",
-    projectId: "pnaa-8b56f",
-    storageBucket: "pnaa-8b56f.appspot.com",
-    messagingSenderId: "1072615861967",
-    appId: "1:1072615861967:web:8ed5ad49a18b5a2b0651ba",
-    measurementId: "G-HW8Z1LHJSM"
-  };
+//Paste firebaseConfig here:
 
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
@@ -23,10 +15,8 @@ const db = getFirestore(firebaseApp);
 const app = express();
 app.use(cors());
 
- //Neel use firebase env vars here
-const apiKey = 'cnpoZW5nMjU6eW1tazdmb2plZnV0aTQwcnNzZnFmOGZyd3VtNGVy'; 
-const body = 'grant_type=password&username=rzheng25@terpmail.umd.edu&password=XYt$wCjvV5h8gAA&scope=auto'
-const accountId = '213319';
+//Paste API info here:
+
 
 async function getAccessToken() {
     const url = 'https://oauth.wildapricot.org/auth/token';

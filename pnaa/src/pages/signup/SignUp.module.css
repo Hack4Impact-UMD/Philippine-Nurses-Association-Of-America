@@ -3,7 +3,7 @@
     position: fixed;
     top: 5%;
     left: 5%;
-    width: 721px;
+    width: 550px;
     height: 604px;
     font-size: 20px;
     gap: 0px;
@@ -27,15 +27,15 @@
   
   #logo {
     position: fixed;
-    width: 1123px;
-    height: 1123px;
+    width: 590px;
+    height: 590px;
     z-index: -1;
     max-width: calc(100% + 50px);
     opacity: 50%;
     transform: rotate(9.36deg);
-    left: 33%;
+    left: 50%;
     top: 5%;
-  }
+}
   
   #orgname {
     position: fixed;

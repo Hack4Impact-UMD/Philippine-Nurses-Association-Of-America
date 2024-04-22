@@ -29,3 +29,4 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const functions = getFunctions(app, 'us-east4');
 export default app;
+

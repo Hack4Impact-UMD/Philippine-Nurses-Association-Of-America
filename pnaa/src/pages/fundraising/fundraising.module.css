@@ -1,3 +1,10 @@
-p {
-    background-color: red;
+
+
+#filterlabel {
+    padding: 5px;
+    font-weight: bold;
+}
+
+#chapterSelect{
+    width: 180px;
 }

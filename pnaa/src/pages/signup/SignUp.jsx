@@ -1,20 +1,47 @@
-import React, { useState } from 'react';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import styles from './SignUp.module.css';
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
+import { createUser } from '../../backend/authFunctions';
+import { useState, useEffect } from 'react';
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [region, setRegion] = useState('');
+  const [chapterName, setChapterName] = useState('');
   const [accountType, setAccountType] = useState('user');
+  const [chapters, setChapters] = useState([]);
+  const [userChapter, setUserChapter] = useState(true);
+
+
+
+
+  useEffect(() => {
+    const fetchChapters = async () => {
+      const db = getFirestore();
+      const chaptersRef = collection(db, 'chapters');
+      try {
+        const snapshot = await getDocs(chaptersRef);
+        const chapterNames = snapshot.docs.map(doc => doc.data().name);
+        setChapters(chapterNames);
+      } catch (error) {
+        console.error("Error fetching chapters: ", error);
+      }
+    }
+    fetchChapters();
+  }, []);
 
   const handleSignUp = () => {
-    // Your sign-up logic here
+    createUser(email, accountType, firstName, chapterName, phoneNumber);
   };
 
+  const handleChangeType = (userType) => {
+    setUserChapter(!userChapter);
+    setAccountType(userType);
+
+  }
   return (
     <div id={styles["background"]}>
       <p id={styles["orgname"]}>Philippine Nurses Association of America</p>
@@ -28,18 +55,23 @@ const SignUp = () => {
         <div className={styles.form}>
           <div className={styles.nameFields}>
             <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First Name" />
-            <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last Name" />
           </div>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email Address" />
           <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Phone Number" />
-          <select value={region} onChange={(e) => setRegion(e.target.value)}>
-            <option value="">Select Region</option>
-            {/* Add your region options here */}
-          </select>
-          <select value={accountType} onChange={(e) => setAccountType(e.target.value)} placeholder="Account Type" >
+          <select value={accountType} onChange={(e) => handleChangeType(e.target.value)} placeholder="Account Type" >
             <option value="user">Chapter</option>
             <option value="admin">National</option>
           </select>
+
+          {userChapter && <h5>Select your chapter:</h5>}
+          {userChapter && <select value={chapterName} onChange={(e) => setChapterName(e.target.value)} >
+          {chapters.map((chapter, index) => (
+                
+                <option key={index} value={chapter}>{chapter}</option>
+              ))}
+           
+          </select>}
+          
           <button onClick={handleSignUp}>Create Account</button>
         </div>
         <p className={styles.backToLogin}>

@@ -77,7 +77,10 @@ exports.createUser = onCall(
                       await db.collection("users").doc(userRecord.uid).set({
                         auth_id: userRecord.uid,
                         email: data.email,
+                        phone: data.phone,
+                        name: data.firstName + " "+ data.lastName,
                         userType: data.role.toLowerCase(),
+                        chapterId: data.chapterName,
                     }).
                       then(async () => {
                           resolve({ reason: "Success", text: "Success" });

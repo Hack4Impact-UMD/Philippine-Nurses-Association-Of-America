@@ -218,7 +218,7 @@ const MemberDetail = () => {
                       </p>
                       <div className={styles["membership-card-data"]}>
                       <p className={`${styles['membership-data']} ${styles['membership-card-font']}`}>
-                        CHAPTER NAME: {member.ChapterName}
+                        Chapter: {member.chapterName}
                       </p>
                       <p className={`${styles['membership-data']} ${styles['membership-card-font']}`}>
                         Renwal Due: {member.renewalDueDate}
@@ -242,48 +242,36 @@ const MemberDetail = () => {
               <tr>
                 <td>
                   <p className={styles["membership-label"]}>
-                    REGISTRATION
+                    RENEWAL DUE DATE
                   </p>
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    01.01.0001
+                   {member.renewalDueDate}
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
                   <p className={styles["membership-label"]}>
-                    RENEWAL
+                    Wild Apricot Member ID
                   </p>
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    01.01.0001
+                    {member.membershipLevelId}
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
                   <p className={styles["membership-label"]}>
-                    RENEWAL DUE
+                    Email
                   </p>
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    01.01.0001
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={styles["membership-label"]}>
-                    LEVEL LAST UPDATED
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    01.01.0001
+                    {member.email}
                   </p>
                 </td>
               </tr>

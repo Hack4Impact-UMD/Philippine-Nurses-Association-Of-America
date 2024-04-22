@@ -147,8 +147,6 @@ const ChapterDetailsNational = () => {
             pageSize={5}
             rowsPerPageOptions={[5, 10, 20]}
             checkboxSelections
-            //Keep this out, we would rather click on name than entire row
-            // onRowClick={handleRowClick} // Add the onRowClick event handler 
             columnHeaderHeight={100}
             sx={{
                 border: 10,

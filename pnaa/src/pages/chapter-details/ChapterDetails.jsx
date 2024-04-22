@@ -89,7 +89,7 @@ const ChapterDetails = () => {
       {
         field: 'name',
         headerName: <div style={{paddingLeft: '20px'}}>NAME</div>,
-        width: 200,
+        width: 220,
         renderCell: (params) => (
           <div
             style={{ cursor: 'pointer', paddingLeft: '20px' }}
@@ -99,19 +99,19 @@ const ChapterDetails = () => {
           </div>
         ),
       },
-      { field: 'email', headerName: 'EMAIL', width: 250, 
-      renderCell: (params) => ( 
-        <div>{params.row.email}</div>
-      ) 
-      },
       { field: 'status', headerName: 'STATUS', width: 150, 
         renderCell: (params) => ( 
           <Status text={params.row.activeStatus} backgroundColor={"#E1FCEF"} textColor="green" width="58px" height="20px"/> 
         ) 
       },
-      { field: 'renewal-due', headerName: 'RENEWAL DUE', width: 250, 
+      { field: 'renewal-due', headerName: 'RENEWAL DUE', width: 150, 
       renderCell: (params) => ( 
         <div>{params.row.renewalDueDate}</div>
+      ) 
+      },
+      { field: 'email', headerName: 'EMAIL', width: 250, 
+      renderCell: (params) => ( 
+        <div>{params.row.email}</div>
       ) 
       },
     ];
@@ -169,7 +169,7 @@ const ChapterDetails = () => {
                       </p>
                     </td>
                     <td>
-                      <p className={styles["chapter-data"]}>###{value.toString()}</p>
+                      <p className={styles["chapter-data"]}>{chapter.name}{value.toString()}</p>
                     </td>
                   </tr>
                 );

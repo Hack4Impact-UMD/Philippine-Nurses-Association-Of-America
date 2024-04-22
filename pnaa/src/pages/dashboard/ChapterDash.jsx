@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink, useNavigate, Outlet } from 'react-router-dom';
 import { auth } from '../../config/firebase';
 import { useUser } from '../../config/UserContext';
@@ -46,9 +45,9 @@ const ChapterDashboard = () => {
           </li>
           <li className={styles.tabItem}>
             <NavLink
-              to="members"
+              to="chapter-details-nat"
               className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
-              Members
+              Chapter Details
             </NavLink>
           </li>
           <li className={styles.tabItem}>
@@ -64,14 +63,6 @@ const ChapterDashboard = () => {
               to="fundraising"
               className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
               Fundraising
-            </NavLink>
-          </li>
-
-          <li className={styles.tabItem}>
-            <NavLink
-              to="chapter-details-nat"
-              className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
-              Chapter Details
             </NavLink>
           </li>
         </ul>

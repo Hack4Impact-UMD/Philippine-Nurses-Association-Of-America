@@ -53,11 +53,21 @@ const ChapterDetails = () => {
     }
   
     //Generic component definition to create the icons for the "status" column
-    const Status = ({ text, backgroundColor, textColor, width, height }) => {
+    const Status = ({ text, width, height }) => {
+      const getColorStyles = (status) => {
+        switch (status) {
+          case 'Active':
+            return { backgroundColor: '#E1FCEF', color: 'green' };
+          case 'Lapsed':
+            return { backgroundColor: '#FCE4E4', color: 'red' };
+          default:
+            return { backgroundColor: '#EBF0FA', color: 'black' };
+        }
+      };
+    
       const styles = {
         status: {
-          backgroundColor: backgroundColor,
-          color: textColor,
+          ...getColorStyles(text),
           width: width,
           height: height,
           display: 'flex',
@@ -66,33 +76,44 @@ const ChapterDetails = () => {
           borderRadius: '10px',
         },
       };
-  
+    
       return (
         <div style={styles.status}>
           {text}
         </div>
       );
-    }
+    };
 
-    
 
     const columns = [
-      { field: '#', headerName: '#', width: 50 },
       {
         field: 'name',
-        headerName: 'NAME',
-        width: 175,
+        headerName: <div style={{paddingLeft: '20px'}}>NAME</div>,
+        width: 220,
         renderCell: (params) => (
           <div
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', paddingLeft: '20px' }}
             onClick={() => navigateToMemberDetails(params.row)}
           >
-            {params.row.FirstName + " " + params.row.LastName}
+            {params.row.name}
           </div>
         ),
       },
-      { field: 'membership-level', headerName: 'MEMBERSHIP LEVEL', width: 250, renderCell: (params) => ( <Status text="Active Member (1 year)" backgroundColor={"#EBF0FA"} textColor="blue" width="163px" height="20px"/> ) },
-      { field: 'status', headerName: 'STATUS', width: 150, renderCell: (params) => ( <Status text="Active" backgroundColor={"#E1FCEF"} textColor="green" width="58px" height="20px"/> ) },
+      { field: 'status', headerName: 'STATUS', width: 150, 
+        renderCell: (params) => ( 
+          <Status text={params.row.activeStatus} backgroundColor={"#E1FCEF"} textColor="green" width="58px" height="20px"/> 
+        ) 
+      },
+      { field: 'renewal-due', headerName: 'RENEWAL DUE', width: 150, 
+      renderCell: (params) => ( 
+        <div>{params.row.renewalDueDate}</div>
+      ) 
+      },
+      { field: 'email', headerName: 'EMAIL', width: 250, 
+      renderCell: (params) => ( 
+        <div>{params.row.email}</div>
+      ) 
+      },
     ];
   
     const handleSelectionChange = (newSelection) => {
@@ -148,7 +169,7 @@ const ChapterDetails = () => {
                       </p>
                     </td>
                     <td>
-                      <p className={styles["chapter-data"]}>###{value.toString()}</p>
+                      <p className={styles["chapter-data"]}>{chapter.name}{value.toString()}</p>
                     </td>
                   </tr>
                 );
@@ -164,11 +185,10 @@ const ChapterDetails = () => {
               columns={columns}
               pageSize={5}
               rowsPerPageOptions={[5, 10, 20]}
-              checkboxSelection
               onRowSelectionModelChange={handleSelectionChange}
               columnHeaderHeight={100}
               sx={{
-                border: 13,
+                border: 10,
                 borderColor: '#d9d9d9',
                 borderRadius: 2,
                 '& .MuiDataGrid-row:nth-child(even)': {

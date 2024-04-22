@@ -19,6 +19,8 @@ const MemberDetail = () => {
   const location = useLocation();
   const { member } = location.state;
 
+  console.log("whiskey", member);
+
   // Collect screen width for responsive design
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
@@ -31,7 +33,7 @@ const MemberDetail = () => {
   const open = Boolean(anchorEl);
 
   // Extract active status from member data for conditional rendering
-  const [memberActive, setMemberActive] = useState(member.active);
+  const [memberActive, setMemberActive] = useState(member.activeStatus);
 
   // Screen width breakpoints
   const mediumScreenWidth = 1000;
@@ -212,17 +214,14 @@ const MemberDetail = () => {
                     </div>
                     <div className={styles["membership-card-right"]}>
                       <p className={`${styles['membership-data']} ${styles['name-font']}`}>
-                        {member.FirstName} {member.LastName}
+                        {member.name}
                       </p>
                       <div className={styles["membership-card-data"]}>
                       <p className={`${styles['membership-data']} ${styles['membership-card-font']}`}>
-                        CHAPTER NAME: {member.ChapterName}
+                        Chapter: {member.chapterName}
                       </p>
                       <p className={`${styles['membership-data']} ${styles['membership-card-font']}`}>
-                        Member ID: {member.id}
-                      </p>
-                      <p className={`${styles['membership-data']} ${styles['membership-card-font']}`}>
-                        Renwal Due: {member.RenewalDue}
+                        Renwal Due: {member.renewalDueDate}
                       </p>
                       {/* ... Example Fields ... */}
                     </div>
@@ -237,54 +236,42 @@ const MemberDetail = () => {
                   </p>
                 </td>
                 <td>
-                  <p className={styles["membership-data"]}>Active</p>
+                  <p className={styles["membership-data"]}>{member.activeStatus}</p>
                 </td>
               </tr>
               <tr>
                 <td>
                   <p className={styles["membership-label"]}>
-                    REGISTRATION
+                    RENEWAL DUE DATE
                   </p>
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    01.01.0001
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={styles["membership-label"]}>
-                    RENEWAL
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    01.01.0001
+                   {member.renewalDueDate}
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
                   <p className={styles["membership-label"]}>
-                    RENEWAL DUE
+                    Wild Apricot Member ID
                   </p>
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    01.01.0001
+                    {member.membershipLevelId}
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
                   <p className={styles["membership-label"]}>
-                    LEVEL LAST UPDATED
+                    Email
                   </p>
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    01.01.0001
+                    {member.email}
                   </p>
                 </td>
               </tr>

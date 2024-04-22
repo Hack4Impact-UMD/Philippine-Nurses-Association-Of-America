@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import { useUser } from "../../config/UserContext";
 import { getFirestore, collection, doc, getDoc, getDocs } from "firebase/firestore";
@@ -67,30 +67,35 @@ const ChapterDetailsNational = () => {
       }
 
       const columns = [
-        //{ field: 'name', headerName: 'NAME', width: 250, cellClassName:'event-cell' },
         {
           field: 'name',
-          headerName: 'NAME',
+          headerName: <div style={{paddingLeft: '20px'}}>NAME</div>,
           width: 275,
           renderCell: (params) => (
             <div
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', paddingLeft: '20px' }}
               onClick={() => navigateToChapterDetails(params.row)}
             >
               {params.row.name}
             </div>
           ),
         },
-        { field: 'president', headerName: 'PRESIDENT', width: 250, cellClassName:'cell' },
-        { field: 'member-count', headerName: 'MEMBER COUNT', width: 300, cellClassName:'cell'},
-        { field: 'contact hrs', headerName: 'CONTACT HRS', width: 300, cellClassName:'cell'},
-        { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 341, cellClassName:'cell'},
-        { field: 'participants_served', headerName: 'PARTICIPANTS SERVED', width: 300, cellClassName:'cell'},
+        { field: 'member-count', headerName: 'MEMBER COUNT', width: 200, 
+          renderCell: (params) => (
+            <div>{params.row.totalActive + params.row.totalLapsed}</div>
+          ),
+        },
+        { field: 'active-count', headerName: 'ACTIVE #', width: 150, 
+          renderCell: (params) => (
+            <div>{params.row.totalActive}</div>
+          ),
+        },
+        { field: 'lapsed-count', headerName: 'LAPSED #', width: 2000, 
+          renderCell: (params) => (
+            <div>{params.row.totalLapsed}</div>
+          ),
+        },
       ];
-
-      const handleSelectionChange = (newSelection) => {
-        setSelectedRows(newSelection);
-      };
 
       const navigateToChapterDetails = (chapter) => {
         console.log("chapter", chapter);
@@ -131,24 +136,17 @@ const ChapterDetailsNational = () => {
   
     
   return (
-    <div className={styles["chapter-details-container"]}>
       <div>
-        <h1>Chapters</h1>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '10px' }}>
+        <h1>Chapter Details</h1>
+        {/* <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '10px' }}>
             {ArchiveChapter}
-        </div>
-        <div className={styles["chapter-details-inner"]}>
-          <div className={styles["chapter-details-data"]}>
-          
-          <DataGrid
+        </div> */}
+        <DataGrid
             rows={chapters}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5, 10, 20]}
             checkboxSelections
-            onRowSelectionModelChange={handleSelectionChange}
-            //Keep this out, we would rather click on name than entire row
-            // onRowClick={handleRowClick} // Add the onRowClick event handler 
             columnHeaderHeight={100}
             sx={{
                 border: 10,
@@ -169,10 +167,8 @@ const ChapterDetailsNational = () => {
                 }
             }}
             />
-          </div>
-        </div>
+       
       </div>
-    </div>
   );
 };
 

@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useUser } from "../../config/UserContext";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { db } from "../../config/firebase.ts";
-import { Link, useNavigate } from "react-router-dom";
-
+import {  useNavigate } from "react-router-dom";
 import { DataGrid } from '@mui/x-data-grid';
-import { Select, MenuItem, Button } from '@mui/material';
-import Styles from "./Events.module.css";
-
 
 const Events = () => {
   const { currentUser, loading: userLoading } = useUser();
@@ -200,7 +195,6 @@ const Events = () => {
   };
 
   const handleRowClick = (params) => {
-    console.log("FAESF", params);
     navigate("/chapter-dashboard/event-details", { state: { event: params.row } });
   };
 
@@ -280,7 +274,6 @@ const Events = () => {
             rowsPerPageOptions={[5, 10, 20]}
             checkboxSelection
             onRowSelectionModelChange={handleSelectionChange}
-            // onRowClick={handleRowClick} // Add the onRowClick event handler
             columnHeaderHeight={100}
             sx={{
               border: 10,

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./EventDetails.module.css";
 import { useUser } from '../../config/UserContext';
 
-import { getFirestore, doc, updateDoc, setDoc, collection } from "firebase/firestore";
+import { doc, updateDoc, setDoc, collection } from "firebase/firestore";
 import { db } from "../../config/firebase.ts";
 import EventDialogBox from "./EventDialogBox";
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
-import { db } from "../../config/firebase.ts";
+import { httpsCallable } from 'firebase/functions';
+import { functions } from "../../config/firebase.ts";
+
 
 const Members = () => {
   const [members, setMembers] = useState([]);
@@ -10,15 +10,14 @@ const Members = () => {
 
   useEffect(() => {
     const fetchMembers = async () => {
+      const url = 'http://localhost:5001/api/events';
       try {
-        const response = await fetch('http://localhost:5001/api/members');
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Failed to fetch members');
         }
         const data = await response.json();
         console.log("DATA", data);
-
-        // updateData(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -28,31 +27,6 @@ const Members = () => {
 
     fetchMembers();
   }, []);
-
-  async function updateData(data) {
-    const chaptersCollection = collection(db, 'chapters');
-  
-    for (const [chapterName, chapterData] of Object.entries(data)) {
-        const chapterDoc = doc(chaptersCollection, chapterName);
-  
-        // Set or update main chapter data with total counts and the chapter's name
-        await setDoc(chapterDoc, {
-            name: chapterData.name, 
-            totalActive: chapterData.totalActive,
-            totalLapsed: chapterData.totalLapsed
-        }, { merge: true });
-  
-        const membersCollection = collection(chapterDoc, 'members');
-  
-        // Upload all members with merge option
-        for (const member of chapterData.members) {
-            const memberDoc = doc(membersCollection); // Creating a new document for each member
-            await setDoc(memberDoc, member, { merge: true });
-        }
-    }
-  }
-
-
 
 
   if (isLoading) {

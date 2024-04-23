@@ -1,9 +1,10 @@
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import styles from './SignUp.module.css';
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
 import { createUser } from '../../backend/authFunctions';
 import { useState, useEffect } from 'react';
+
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState('');
@@ -14,6 +15,8 @@ const SignUp = () => {
   const [accountType, setAccountType] = useState('user');
   const [chapters, setChapters] = useState([]);
   const [userChapter, setUserChapter] = useState(true);
+  const navigate = useNavigate(); 
+  let err = false;
 
 
 
@@ -34,8 +37,20 @@ const SignUp = () => {
   }, []);
 
   const handleSignUp = () => {
-    createUser(email, accountType, firstName, chapterName, phoneNumber);
-  };
+    createUser(email, accountType, firstName, chapterName, phoneNumber).catch((error) => {
+    window.alert("An account has already been created with that email!");
+    err = true;
+  }).then(() => {
+    if(!err){
+      navigate('/signin');
+      window.alert("An account has successfully been created! You may now sign in after resetting your password");
+      
+    }
+    err = false;
+
+  }
+      
+)};
 
   const handleChangeType = (userType) => {
     setUserChapter(!userChapter);

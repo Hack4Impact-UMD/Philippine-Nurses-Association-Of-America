@@ -11,7 +11,7 @@
 }
 
 .tabLink, .activeTabLink {
-  padding: 10px 30px; 
+  padding: 15px 40px; 
   text-decoration: none;
   font-size: 16px; /* Text size */
   background-color: #ffffff; 
@@ -31,6 +31,27 @@
   background-color: #d0d0d0; /* Slightly darker background on hover */
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px; /* Add padding around the header */
+}
+
+.signOutButton {
+  padding: 5px 15px; /* Adjust padding as needed */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.signOutButton:hover {
+  background-color: #08529e; /* Darker red on hover */
+}
+
 .tabContent {
-  /* Styles for the content displayed by the tab */
+  padding-left: 40px;  /* Padding on the left */
+  padding-right: 40px; /* Padding on the right */
 }

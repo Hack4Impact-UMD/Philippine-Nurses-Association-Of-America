@@ -169,7 +169,7 @@ const ChapterDetails = () => {
                       </p>
                     </td>
                     <td>
-                      <p className={styles["chapter-data"]}>{chapter.name}{value.toString()}</p>
+                      <p className={styles["chapter-data"]}>#{value.toString()}</p>
                     </td>
                   </tr>
                 );

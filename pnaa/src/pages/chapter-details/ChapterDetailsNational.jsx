@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import { useUser } from "../../config/UserContext";
 import { getFirestore, collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { db } from "../../config/firebase.ts";
 import { Link, useNavigate } from "react-router-dom";
 
 import { DataGrid } from '@mui/x-data-grid';
@@ -26,7 +25,6 @@ const ChapterDetailsNational = () => {
           try {
             const snapshot = await getDocs(chaptersRef);
             const chaptersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-            console.log("chaopterslist", chaptersList);
             setChapters(chaptersList);
           } catch (error) {
             console.error("Error fetching chapters: ", error);
@@ -70,7 +68,7 @@ const ChapterDetailsNational = () => {
         {
           field: 'name',
           headerName: <div style={{paddingLeft: '20px'}}>NAME</div>,
-          width: 275,
+          width: 300,
           renderCell: (params) => (
             <div
               style={{ cursor: 'pointer', paddingLeft: '20px' }}
@@ -80,7 +78,7 @@ const ChapterDetailsNational = () => {
             </div>
           ),
         },
-        { field: 'member-count', headerName: 'MEMBER COUNT', width: 200, 
+        { field: 'member-count', headerName: 'MEMBER COUNT', width: 150, 
           renderCell: (params) => (
             <div>{params.row.totalActive + params.row.totalLapsed}</div>
           ),
@@ -90,11 +88,21 @@ const ChapterDetailsNational = () => {
             <div>{params.row.totalActive}</div>
           ),
         },
-        { field: 'lapsed-count', headerName: 'LAPSED #', width: 2000, 
+        { field: 'lapsed-count', headerName: 'LAPSED #', width: 150, 
           renderCell: (params) => (
             <div>{params.row.totalLapsed}</div>
           ),
         },
+        { field: 'event-count', headerName: 'EVENTS #', width: 150, 
+          renderCell: (params) => (
+            <div></div>
+          ),
+        },
+        { field: 'volunteer-hours', headerName: 'VOLUNTEER HOURS', width: 2000, 
+        renderCell: (params) => (
+          <div></div>
+        ),
+      },
       ];
 
       const navigateToChapterDetails = (chapter) => {

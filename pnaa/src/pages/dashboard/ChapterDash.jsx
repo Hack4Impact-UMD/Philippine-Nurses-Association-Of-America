@@ -25,8 +25,10 @@ const ChapterDashboard = () => {
 
   return (
     <div>
-      <h1>Welcome To Chapter Dashboard</h1>
-      <button onClick={signOut}>Sign Out</button>
+      <div className={styles.header}>
+        <h1>Welcome To Chapter Dashboard</h1>
+        <button onClick={signOut} className={styles.signOutButton}>Sign Out</button>
+      </div>
       <div className={styles.navTabs}>
         <ul>
           <li className={styles.tabItem}>

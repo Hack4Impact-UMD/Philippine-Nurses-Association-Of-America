@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./EventDetails.module.css";
-import { useUser } from '../../config/UserContext';
+import { useUser } from "../../config/UserContext";
 
 import { doc, updateDoc, setDoc, collection } from "firebase/firestore";
 import { db } from "../../config/firebase.ts";
@@ -41,8 +41,8 @@ const EventDetails = () => {
       time: "",
       location: "",
       status: "Chapter", //Default status
-      chapter: currentUser.chapterData.name, //Automatically fills in chapter of the user
-      region: currentUser.chapterData.region || "Not Specified",
+      chapter: currentUser.chapterData.name || "", //Automatically fills in chapter of the user
+      region: currentUser.chapterData.region || "",
       attendee: "",
       about: "",
       event_poster: "",
@@ -71,20 +71,29 @@ const EventDetails = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      localStorage.removeItem("editedEvent");
+    };
   }, []);
 
   useEffect(() => {
-    if (event) {
+    const storedEvent = localStorage.getItem("editedEvent");
+    if (storedEvent) {
+      setEditedEvent(JSON.parse(storedEvent));
+      setEventArchived(JSON.parse(storedEvent).archived);
+    } else if (event) {
       setEditedEvent(event);
       setEventArchived(event.archived);
     } else {
       setIsEditMode(true);
-      setEditedEvent((prev) => ({ ...prev, chapter: currentUser.chapterData.name }));
+      setEditedEvent((prev) => ({
+        ...prev,
+        chapter: currentUser.chapterData.name,
+      }));
       setEventArchived(false);
     }
   }, [event, currentUser.chapterData.name]);
-
   // Handle action button clicks
   const handleBackClick = () => {
     navigate(-1);
@@ -114,6 +123,7 @@ const EventDetails = () => {
         const newEventRef = doc(eventsCol);
         await setDoc(newEventRef, editedEvent);
         setIsEditMode(false);
+        localStorage.setItem("editedEvent", JSON.stringify(editedEvent));
         navigate("/chapter-dashboard/events");
       } catch (error) {
         console.error("Error creating event: ", error);
@@ -124,6 +134,7 @@ const EventDetails = () => {
       try {
         await updateDoc(eventRef, editedEvent);
         setIsEditMode(false);
+        localStorage.setItem("editedEvent", JSON.stringify(editedEvent));
       } catch (error) {
         console.error("Error updating document: ", error);
       }
@@ -261,7 +272,10 @@ const EventDetails = () => {
     "location",
     "status",
     "chapter",
-    "attendee#",
+    "region",
+    "attendee #",
+    "volunteer #",
+    "participants served",
     "about",
     "event poster",
     "contact hrs",
@@ -269,19 +283,23 @@ const EventDetails = () => {
   ];
 
   const fieldTypes = {
-    date: { type: "date", validate: (value) => !isNaN(Date.parse(value)) },
+    date: { type: "date" },
     time: {
       type: "time",
-      validate: (value) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(value),
     },
-    location: { type: "text", validate: () => true },
-    status: { type: "text", validate: () => true },
-    chapter: { type: "text", validate: () => true },
-    "attendee#": { type: "number", validate: (value) => !isNaN(value) },
-    about: { type: "text", validate: () => true },
-    "event poster": { type: "text", validate: () => true },
-    "contact hrs": { type: "number", validate: (value) => !isNaN(value) },
-    other_details: { type: "text", validate: () => true },
+    location: { type: "text" },
+    status: { type: "text" },
+    location: { type: "text" },
+    chapter: { type: "text" },
+    "attendee #": { type: "number" },
+    "volunteer #": { type: "number" },
+    "participants served": {
+      type: "number",
+    },
+    about: { type: "text" },
+    "event poster": { type: "text" },
+    "contact hrs": { type: "number" },
+    other_details: { type: "text" },
   };
 
   const statusOptions = ["National", "Chapter", "Non-Chapter"];
@@ -337,7 +355,39 @@ const EventDetails = () => {
                     </p>
                   </td>
                   <td>
-                    {isEditMode && fieldName === "status" ? (
+                    {isEditMode && fieldName === "time" ? (
+                      <>
+                        <input
+                          type="time"
+                          value={value.split(" - ")[0]}
+                          onChange={(e) => {
+                            const [_, endTime] = value.split(" - ");
+                            const newValue = `${e.target.value} - ${
+                              endTime || ""
+                            }`;
+                            setEditedEvent({
+                              ...editedEvent,
+                              [fieldName]: newValue,
+                            });
+                          }}
+                          className={styles["edit-input"]}
+                        />
+                        <span> - </span>
+                        <input
+                          type="time"
+                          value={value.split(" - ")[1]}
+                          onChange={(e) => {
+                            const [startTime] = value.split(" - ");
+                            const newValue = `${startTime} - ${e.target.value}`;
+                            setEditedEvent({
+                              ...editedEvent,
+                              [fieldName]: newValue,
+                            });
+                          }}
+                          className={styles["edit-input"]}
+                        />
+                      </>
+                    ) : isEditMode && fieldName === "status" ? (
                       <select
                         value={value}
                         onChange={(e) => {
@@ -349,7 +399,7 @@ const EventDetails = () => {
                         }}
                         className={styles["edit-input"]}
                       >
-                        {statusOptions.map(option => (
+                        {statusOptions.map((option) => (
                           <option key={option} value={option}>
                             {option}
                           </option>
@@ -363,7 +413,10 @@ const EventDetails = () => {
                           if (readOnly) return;
                           const newValue = e.target.value;
                           if (validate && !validate(newValue)) {
-                            console.error("Invalid value for field: ", fieldName);
+                            console.error(
+                              "Invalid value for field: ",
+                              fieldName
+                            );
                             return;
                           }
                           setEditedEvent({
@@ -392,7 +445,6 @@ const EventDetails = () => {
         dialogAction={dialogAction}
         onActionSuccess={() => setEventArchived(!eventArchived)}
       />{" "}
-
     </div>
   );
 };

@@ -3,6 +3,8 @@ import { useUser } from "../../config/UserContext";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import {  useNavigate } from "react-router-dom";
 import { DataGrid } from '@mui/x-data-grid';
+import Papa from 'papaparse';
+
 
 const Events = () => {
   const { currentUser, loading: userLoading } = useUser();
@@ -138,6 +140,33 @@ const Events = () => {
     );
   }
 
+  const handleExport = () => {
+    // Retrieve full event details for each selected row
+    const selectedEvents = selectedRows.map(rowId => events.find(event => event.id === rowId));
+    console.log("ev", selectedEvents);
+    const fields = ['name', 'chapter', 'date', 'time', 'location', 'status', 'attendee#', 'contact hrs', 'volunteer#', 'participants_served', 'region', 'about', 'other_details'];
+    // Convert selected events to CSV using Papaparse
+    const csvData = Papa.unparse({
+      fields: fields,
+      data: selectedEvents
+    });
+
+    if (csvData) {
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+
+      // Create a link and trigger the download
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "events.csv");
+      document.body.appendChild(link); // Required for FF
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      alert("Nothing Selected");
+    }
+  }
+
   const exportRegistration = (
     <div style={{ marginRight: '10px' }}>
       <MemberButton
@@ -145,6 +174,7 @@ const Events = () => {
         backgroundColor={"#53A67E"}
         width="182px"
         height="32px"
+        onClick={handleExport}
       />
     </div>
   );

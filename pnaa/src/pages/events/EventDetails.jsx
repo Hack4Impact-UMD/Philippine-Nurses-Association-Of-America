@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./EventDetails.module.css";
 import { useUser } from "../../config/UserContext";
 
-import { doc, updateDoc, setDoc, collection } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, collection } from "firebase/firestore";
 import { db } from "../../config/firebase.ts";
 import EventDialogBox from "./EventDialogBox";
 
@@ -34,6 +34,7 @@ const EventDetails = () => {
 
   // edit mode state
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isEventTimeChanged, setIsEventTimeChanged] = useState(false);
   const [editedEvent, setEditedEvent] = useState(
     event || {
       name: "",
@@ -71,29 +72,34 @@ const EventDetails = () => {
     };
 
     window.addEventListener("resize", handleResize);
+
     return () => {
       window.removeEventListener("resize", handleResize);
-      localStorage.removeItem("editedEvent");
     };
   }, []);
 
   useEffect(() => {
-    const storedEvent = localStorage.getItem("editedEvent");
-    if (storedEvent) {
-      setEditedEvent(JSON.parse(storedEvent));
-      setEventArchived(JSON.parse(storedEvent).archived);
-    } else if (event) {
-      setEditedEvent(event);
-      setEventArchived(event.archived);
-    } else {
-      setIsEditMode(true);
-      setEditedEvent((prev) => ({
-        ...prev,
-        chapter: currentUser.chapterData.name,
-      }));
-      setEventArchived(false);
-    }
+    const fetchEventData = async () => {
+      if (event && event.id) {
+        const eventRef = doc(db, "events", event.id);
+        const eventSnap = await getDoc(eventRef);
+        if (eventSnap.exists()) {
+          setEditedEvent(eventSnap.data());
+          setEventArchived(eventSnap.data().archived);
+        }
+      } else {
+        setIsEditMode(true);
+        setEditedEvent((prev) => ({
+          ...prev,
+          chapter: currentUser.chapterData.name,
+        }));
+        setEventArchived(false);
+      }
+    };
+
+    fetchEventData();
   }, [event, currentUser.chapterData.name]);
+
   // Handle action button clicks
   const handleBackClick = () => {
     navigate(-1);
@@ -123,18 +129,36 @@ const EventDetails = () => {
         const newEventRef = doc(eventsCol);
         await setDoc(newEventRef, editedEvent);
         setIsEditMode(false);
-        localStorage.setItem("editedEvent", JSON.stringify(editedEvent));
         navigate("/chapter-dashboard/events");
       } catch (error) {
         console.error("Error creating event: ", error);
       }
     } else {
       // Update existing event
-      const eventRef = doc(db, "events", editedEvent.id);
       try {
+        const eventRef = doc(db, "events", event.id); // Use event.id instead of editedEvent.id
+        if (isEventTimeChanged) {
+          // Calculate contact hours based on start and end time
+          const [startTime, endTime] = editedEvent.time.split(" - ");
+          const startDate = new Date(`2000-01-01T${startTime}`);
+          const endDate = new Date(`2000-01-01T${endTime}`);
+          const contactHours = (endDate - startDate) / 3600000; // Convert milliseconds to hours
+          let roundedContactHours = Math.round(contactHours * 1000) / 1000; // Round to two decimal places
+          if (roundedContactHours < 0) {
+            roundedContactHours = 24 + roundedContactHours;
+          }
+          editedEvent.contact_hrs = roundedContactHours.toString();
+          setIsEventTimeChanged(false);
+        }
+        if (editedEvent["volunteer_#"] && editedEvent.contact_hrs) {
+          const fullTimeNum =
+            (editedEvent.contact_hrs * editedEvent["volunteer_#"]) / 8;
+          const roundedFullTimeNum = Math.round(fullTimeNum * 1000) / 1000;
+          editedEvent["full_time_#"] = roundedFullTimeNum.toString();
+        }
+
         await updateDoc(eventRef, editedEvent);
         setIsEditMode(false);
-        localStorage.setItem("editedEvent", JSON.stringify(editedEvent));
       } catch (error) {
         console.error("Error updating document: ", error);
       }
@@ -273,13 +297,14 @@ const EventDetails = () => {
     "status",
     "chapter",
     "region",
-    "attendee #",
-    "volunteer #",
-    "participants served",
     "about",
-    "event poster",
-    "contact hrs",
-    "other details",
+    "event_poster",
+    "attendee_#",
+    "volunteer_#",
+    "participants_served",
+    "contact_hrs",
+    "full_time_#",
+    "other_details",
   ];
 
   const fieldTypes = {
@@ -289,16 +314,16 @@ const EventDetails = () => {
     },
     location: { type: "text" },
     status: { type: "text" },
-    location: { type: "text" },
     chapter: { type: "text" },
-    "attendee #": { type: "number" },
-    "volunteer #": { type: "number" },
-    "participants served": {
+    "attendee_#": { type: "number" },
+    "volunteer_#": { type: "number" },
+    participants_served: {
       type: "number",
     },
+    "full_time_#": { type: "number" },
     about: { type: "text" },
-    "event poster": { type: "text" },
-    "contact hrs": { type: "number" },
+    event_poster: { type: "text" },
+    contact_hrs: { type: "number" },
     other_details: { type: "text" },
   };
 
@@ -346,12 +371,14 @@ const EventDetails = () => {
             {fieldsToShow.map((fieldName) => {
               const value = editedEvent[fieldName] || "";
               const { type, validate } = fieldTypes[fieldName] || {};
-              const readOnly = fieldName === "chapter" && event;
+              const readOnly =
+                (fieldName === "chapter" || fieldName === "full_time_#") &&
+                event;
               return (
                 <tr key={fieldName}>
                   <td>
                     <p className={styles["event-label"]}>
-                      {fieldName.toUpperCase()}
+                      {fieldName.toUpperCase().split("_").join(" ")}
                     </p>
                   </td>
                   <td>
@@ -383,6 +410,7 @@ const EventDetails = () => {
                               ...editedEvent,
                               [fieldName]: newValue,
                             });
+                            setIsEventTimeChanged(true);
                           }}
                           className={styles["edit-input"]}
                         />

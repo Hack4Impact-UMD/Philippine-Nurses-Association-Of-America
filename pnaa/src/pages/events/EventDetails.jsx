@@ -1,29 +1,36 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
 import styles from "./EventDetails.module.css";
 import { useUser } from "../../config/UserContext";
-
 import { doc, getDoc, updateDoc, setDoc, collection } from "firebase/firestore";
 import { db } from "../../config/firebase.ts";
 import EventDialogBox from "./EventDialogBox";
 
 // Material UI Components
 import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
+import {
+  Unarchive,
+  Archive,
+  KeyboardArrowLeft,
+  ModeEdit,
+} from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const EventDetails = () => {
+  /*****************************************************************************
+   * Variables and States
+   *****************************************************************************/
   const { currentUser } = useUser();
-  console.log("currentUser", currentUser);
+  const navigate = useNavigate();
+  // console.log("currentUser", currentUser);
 
   // Pass in event data from previous state
   const location = useLocation();
   const { event } = location.state;
-
-  const navigate = useNavigate();
 
   // Collect screen width for responsive design
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -53,6 +60,7 @@ const EventDetails = () => {
       other_details: "",
     }
   );
+
   // Menu anchor for mobile view
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -62,6 +70,7 @@ const EventDetails = () => {
     event ? event.archived : false
   );
 
+  // Error handling for event name validation
   const [nameError, setNameError] = useState("");
 
   // Screen width breakpoints
@@ -69,6 +78,9 @@ const EventDetails = () => {
   const halfScreenWidth = 800;
   const mobileScreenWidth = 660;
 
+  /*****************************************************************************
+   * UseEffect
+   *****************************************************************************/
   // Update screen width on resize
   useEffect(() => {
     const handleResize = () => {
@@ -82,6 +94,7 @@ const EventDetails = () => {
     };
   }, []);
 
+  // Fetch event data from Firestore and save
   useEffect(() => {
     const fetchEventData = async () => {
       if (event && event.id) {
@@ -104,6 +117,9 @@ const EventDetails = () => {
     fetchEventData();
   }, [event, currentUser.chapterData.name]);
 
+  /*****************************************************************************
+   * Action Buttons (Back, Edit/Save, Archive/Unarchive)
+   *****************************************************************************/
   // Handle action button clicks
   const handleBackClick = () => {
     navigate(-1);
@@ -209,6 +225,7 @@ const EventDetails = () => {
 
   // Function for creating different Material UI action buttons
   const createMaterialButton = (
+    icon,
     color,
     text,
     onClick,
@@ -216,7 +233,7 @@ const EventDetails = () => {
     isArchiveButton = false
   ) => (
     <Button
-      startIcon={<AddIcon />}
+      startIcon={icon}
       style={{
         backgroundColor: disabled ? "#ccc" : color,
         color: disabled ? "#666" : "#fff",
@@ -238,18 +255,21 @@ const EventDetails = () => {
   const actionButtons = () => (
     <div className={styles["action-button-group"]}>
       {createMaterialButton(
+        <KeyboardArrowLeft />,
         "#4D69BE",
         "Back to main page",
         handleBackClick,
         isEditMode
       )}
       {createMaterialButton(
+        <ModeEdit />,
         "#05208B",
         isEditMode ? "Save event" : "Edit event",
         handleEditClick,
         false
       )}
       {createMaterialButton(
+        eventArchived ? <Unarchive /> : <Archive />,
         eventArchived ? "#14804A" : "#91201A",
         "",
         handleArchiveClick,
@@ -307,6 +327,9 @@ const EventDetails = () => {
     </Menu>
   );
 
+  /*****************************************************************************
+   * Display Fields
+   *****************************************************************************/
   const fieldsToShow = [
     "date",
     "time",
@@ -348,7 +371,9 @@ const EventDetails = () => {
 
   const statusOptions = ["National", "Chapter", "Non-Chapter"];
 
-  // Else, display normal screen
+  /*****************************************************************************
+   * Page Layout
+   *****************************************************************************/
   return (
     <div className={styles["event-detail-container"]}>
       <div className={styles["event-detail-content"]}>

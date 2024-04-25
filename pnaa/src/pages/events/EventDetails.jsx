@@ -143,7 +143,7 @@ const EventDetails = () => {
           const startDate = new Date(`2000-01-01T${startTime}`);
           const endDate = new Date(`2000-01-01T${endTime}`);
           const contactHours = (endDate - startDate) / 3600000; // Convert milliseconds to hours
-          let roundedContactHours = Math.round(contactHours * 1000) / 1000; // Round to two decimal places
+          let roundedContactHours = Math.round(contactHours * 100) / 100; // Round to two decimal places
           if (roundedContactHours < 0) {
             roundedContactHours = 24 + roundedContactHours;
           }
@@ -151,10 +151,16 @@ const EventDetails = () => {
           setIsEventTimeChanged(false);
         }
         if (editedEvent["volunteer_#"] && editedEvent.contact_hrs) {
-          const fullTimeNum =
-            (editedEvent.contact_hrs * editedEvent["volunteer_#"]) / 8;
-          const roundedFullTimeNum = Math.round(fullTimeNum * 1000) / 1000;
-          editedEvent["full_time_#"] = roundedFullTimeNum.toString();
+          //   const fullTimeNum =
+          //     (editedEvent.contact_hrs * editedEvent["volunteer_#"]) / 8;
+          //   const roundedFullTimeNum = Math.round(fullTimeNum * 1000) / 1000;
+          //   editedEvent["full_time_#"] = roundedFullTimeNum.toString();
+          const totalVolunteerHours =
+            editedEvent.contact_hrs * editedEvent["volunteer_#"];
+          const roundedTotalVolunteerHours =
+            Math.round(totalVolunteerHours * 100) / 100;
+          editedEvent.total_volunteer_hours =
+            roundedTotalVolunteerHours.toString();
         }
 
         await updateDoc(eventRef, editedEvent);
@@ -303,7 +309,8 @@ const EventDetails = () => {
     "volunteer_#",
     "participants_served",
     "contact_hrs",
-    "full_time_#",
+    // "full_time_#",
+    "total_volunteer_hours",
     "other_details",
   ];
 
@@ -320,7 +327,8 @@ const EventDetails = () => {
     participants_served: {
       type: "number",
     },
-    "full_time_#": { type: "number" },
+    // "full_time_#": { type: "number" },
+    total_volunteer_hours: { type: "number" },
     about: { type: "text" },
     event_poster: { type: "text" },
     contact_hrs: { type: "number" },

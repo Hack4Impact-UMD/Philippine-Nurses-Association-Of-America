@@ -38,6 +38,8 @@ const EventDetails = () => {
   const [editedEvent, setEditedEvent] = useState(
     event || {
       name: "",
+      id: "",
+      archived: false,
       date: "",
       time: "",
       location: "",
@@ -159,6 +161,9 @@ const EventDetails = () => {
       try {
         const eventsCol = collection(db, "events");
         const newEventRef = doc(eventsCol);
+        const newEventId = newEventRef.id;
+        // set newly created doc id as a field
+        editedEvent.id = newEventId;
         await setDoc(newEventRef, editedEvent);
         setIsEditMode(false);
         // navigate("/chapter-dashboard/events");

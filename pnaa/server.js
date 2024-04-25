@@ -35,11 +35,38 @@ async function fetchEvents(accessToken) {
     }
   });
 
-  return response.data.Events;
+  return response.data.Contacts; //Returns only the contacts
 }
 
+async function acceptTermsOfUse(accessToken) {
+  const url = `https://api.wildapricot.com/v2.1/rpc/${accountId}/acceptTermsOfUse`;
+  const headers = {
+    'Authorization': `Bearer ${accessToken}`,
+    'Content-Type': 'application/json'
+  };
 
-app.get('/api/events', async (req, res) => {
+  const response = await axios.post(url, {}, { headers: headers });
+
+  if (response.status !== 200) {
+    throw new Error('Failed to accept terms of use');
+  }
+
+  console.log('Terms of use accepted');
+}
+
+function cleanEventData(data) {
+  //sara
+}
+
+function processEventData(data) {
+  //shreya
+}
+
+function updateEventDate(data) {
+  //sathya
+}
+
+app.get('/api/members', async (req, res) => {
   try {
     const accessToken = await getAccessToken();
 
@@ -48,6 +75,9 @@ app.get('/api/events', async (req, res) => {
     }
 
     const eventData = await fetchEvents(accessToken);
+    const cleanedData = cleanEventData(eventData);
+    const processedData = processEventData(cleanedData);
+    await updateEventDate(processedData);
     // console.log('EVENT DATA', eventData);
     res.json(eventData);
   } catch (error) {

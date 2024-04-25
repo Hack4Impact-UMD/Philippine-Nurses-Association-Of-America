@@ -60,6 +60,8 @@ const EventDetails = () => {
     event ? event.archived : false
   );
 
+  const [nameError, setNameError] = useState("");
+
   // Screen width breakpoints
   const mediumScreenWidth = 1200;
   const halfScreenWidth = 800;
@@ -117,11 +119,41 @@ const EventDetails = () => {
   const handleEditClick = () => {
     if (isEditMode) {
       handleSaveClick();
+    } else {
+      setIsEditMode(true);
     }
-    setIsEditMode(!isEditMode);
   };
 
   const handleSaveClick = async () => {
+    if (!editedEvent.name || editedEvent.name.trim() === "") {
+      setNameError("Please enter a valid event name.");
+      return;
+    }
+    setNameError("");
+    if (isEventTimeChanged) {
+      // Calculate contact hours based on start and end time
+      const [startTime, endTime] = editedEvent.time.split(" - ");
+      const startDate = new Date(`2000-01-01T${startTime}`);
+      const endDate = new Date(`2000-01-01T${endTime}`);
+      const contactHours = (endDate - startDate) / 3600000; // Convert milliseconds to hours
+      let roundedContactHours = Math.round(contactHours * 100) / 100; // Round to two decimal places
+      if (roundedContactHours < 0) {
+        roundedContactHours = 24 + roundedContactHours;
+      }
+      editedEvent.contact_hrs = roundedContactHours.toString();
+      setIsEventTimeChanged(false);
+    }
+    if (editedEvent["volunteer_#"] && editedEvent.contact_hrs) {
+      //   const fullTimeNum =
+      //     (editedEvent.contact_hrs * editedEvent["volunteer_#"]) / 8;
+      //   const roundedFullTimeNum = Math.round(fullTimeNum * 1000) / 1000;
+      //   editedEvent["full_time_#"] = roundedFullTimeNum.toString();
+      const totalVolunteerHours =
+        editedEvent.contact_hrs * editedEvent["volunteer_#"];
+      const roundedTotalVolunteerHours =
+        Math.round(totalVolunteerHours * 100) / 100;
+      editedEvent.total_volunteer_hours = roundedTotalVolunteerHours.toString();
+    }
     if (event === null) {
       // Create a new event
       try {
@@ -129,7 +161,7 @@ const EventDetails = () => {
         const newEventRef = doc(eventsCol);
         await setDoc(newEventRef, editedEvent);
         setIsEditMode(false);
-        navigate("/chapter-dashboard/events");
+        // navigate("/chapter-dashboard/events");
       } catch (error) {
         console.error("Error creating event: ", error);
       }
@@ -137,32 +169,6 @@ const EventDetails = () => {
       // Update existing event
       try {
         const eventRef = doc(db, "events", event.id); // Use event.id instead of editedEvent.id
-        if (isEventTimeChanged) {
-          // Calculate contact hours based on start and end time
-          const [startTime, endTime] = editedEvent.time.split(" - ");
-          const startDate = new Date(`2000-01-01T${startTime}`);
-          const endDate = new Date(`2000-01-01T${endTime}`);
-          const contactHours = (endDate - startDate) / 3600000; // Convert milliseconds to hours
-          let roundedContactHours = Math.round(contactHours * 100) / 100; // Round to two decimal places
-          if (roundedContactHours < 0) {
-            roundedContactHours = 24 + roundedContactHours;
-          }
-          editedEvent.contact_hrs = roundedContactHours.toString();
-          setIsEventTimeChanged(false);
-        }
-        if (editedEvent["volunteer_#"] && editedEvent.contact_hrs) {
-          //   const fullTimeNum =
-          //     (editedEvent.contact_hrs * editedEvent["volunteer_#"]) / 8;
-          //   const roundedFullTimeNum = Math.round(fullTimeNum * 1000) / 1000;
-          //   editedEvent["full_time_#"] = roundedFullTimeNum.toString();
-          const totalVolunteerHours =
-            editedEvent.contact_hrs * editedEvent["volunteer_#"];
-          const roundedTotalVolunteerHours =
-            Math.round(totalVolunteerHours * 100) / 100;
-          editedEvent.total_volunteer_hours =
-            roundedTotalVolunteerHours.toString();
-        }
-
         await updateDoc(eventRef, editedEvent);
         setIsEditMode(false);
       } catch (error) {
@@ -342,21 +348,30 @@ const EventDetails = () => {
     <div className={styles["event-detail-container"]}>
       <div className={styles["event-detail-content"]}>
         <div className={styles["event-header-container"]}>
-          {isEditMode ? (
-            <input
-              type="text"
-              value={editedEvent.name}
-              onChange={(e) =>
-                setEditedEvent({
-                  ...editedEvent,
-                  ["name"]: e.target.value,
-                })
-              }
-              className={styles["event-header-input"]}
-            />
-          ) : (
-            <p className={styles["event-header"]}>{editedEvent.name}</p>
-          )}
+          <div className={styles["event-header-name"]}>
+            {isEditMode ? (
+              <>
+                <input
+                  type="text"
+                  value={editedEvent.name}
+                  onChange={(e) =>
+                    setEditedEvent({
+                      ...editedEvent,
+                      ["name"]: e.target.value,
+                    })
+                  }
+                  className={styles["event-header-input"]}
+                />
+                {nameError && (
+                  <p className={styles["event-header-error-message"]}>
+                    {nameError}
+                  </p>
+                )}
+              </>
+            ) : (
+              <p className={styles["event-header"]}>{editedEvent.name}</p>
+            )}
+          </div>
           {screenWidth < mobileScreenWidth ? (
             <>
               <IconButton

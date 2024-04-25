@@ -4,6 +4,10 @@ import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 
+import styles from "./Events.module.css";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../../config/firebase.ts";
+
 const Events = () => {
   const { currentUser, loading: userLoading } = useUser();
 
@@ -154,6 +158,36 @@ const Events = () => {
     navigate("/chapter-dashboard/event-details", { state: { event: null } });
   };
 
+  const handleDeleteEvent = async () => {
+    if (selectedRows.length === 0) {
+      alert("No events selected. Please select events to delete.");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete the selected events?"
+    );
+
+    if (confirmDelete) {
+      const eventsRef = collection(db, "events");
+      try {
+        for (const eventId of selectedRows) {
+          const eventRef = doc(eventsRef, eventId);
+          await deleteDoc(eventRef);
+        }
+        const updatedEvents = events.filter(
+          (event) => !selectedRows.includes(event.id)
+        );
+        setEvents(updatedEvents);
+        setSelectedRows([]);
+        alert("Selected events deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting events: ", error);
+        alert("An error occurred while deleting events. Please try again.");
+      }
+    }
+  };
+
   const recordRegistration = (
     <div style={{ marginRight: "10px" }}>
       <MemberButton
@@ -285,8 +319,23 @@ const Events = () => {
   return (
     <div>
       <div>
-        <h1>Events</h1>
-        <button onClick={handleAddEvent}>Add Event</button>
+        <div className={styles["events-header"]}>
+          <h1>Events</h1>
+          <button
+            onClick={handleDeleteEvent}
+            className={`${styles["events-delete-btn"]} ${
+              selectedRows.length === 0
+                ? styles["events-delete-btn-disabled"]
+                : ""
+            }`}
+            disabled={selectedRows.length === 0}
+          >
+            Delete Events
+          </button>
+          <button onClick={handleAddEvent} className={styles["events-add-btn"]}>
+            Add Event
+          </button>
+        </div>
         <div style={{ display: "flex", alignItems: "center" }}>
           <div style={{ marginRight: "auto", padding: "10px" }}>
             <label id="filterlabel" htmlFor="chapterSelect">

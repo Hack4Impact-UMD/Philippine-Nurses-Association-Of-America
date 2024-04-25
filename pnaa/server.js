@@ -7,7 +7,9 @@ const app = express();
 app.use(cors());
 
 //Paste API info here:
-
+const apiKey = 'bTh3ZzRiaGM3NTo5cmlrZmpxMWEwcm9kNm92eTFsOXNzNXh0ZWFrOTA='; 
+const body = 'grant_type=password&username=rzheng25@terpmail.umd.edu&password=XYt$wCjvV5h8gAA&scope=auto'
+const accountId = '213319';
 
 
 async function getAccessToken() {
@@ -35,7 +37,7 @@ async function fetchEvents(accessToken) {
     }
   });
 
-  return response.data.Contacts; //Returns only the contacts
+  return response.data.Events; //Returns only the contacts
 }
 
 async function acceptTermsOfUse(accessToken) {
@@ -66,18 +68,19 @@ function updateEventDate(data) {
   //sathya
 }
 
-app.get('/api/members', async (req, res) => {
+app.get('/api/events', async (req, res) => {
   try {
     const accessToken = await getAccessToken();
+
 
     if (!accessToken) {
       return res.status(500).send('Failed to obtain access token');
     }
 
     const eventData = await fetchEvents(accessToken);
-    const cleanedData = cleanEventData(eventData);
-    const processedData = processEventData(cleanedData);
-    await updateEventDate(processedData);
+    // const cleanedData = cleanEventData(eventData);
+    // const processedData = processEventData(cleanedData);
+    // await updateEventDate(processedData);
     // console.log('EVENT DATA', eventData);
     res.json(eventData);
   } catch (error) {

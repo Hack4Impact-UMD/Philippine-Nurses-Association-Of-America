@@ -12,6 +12,7 @@ import Events from "./pages/events/Events";
 import Fundraising from "./pages/fundraising/Fundraising";
 import EventDetail from "./pages/events/EventDetails";
 import FundraisingDetail from "./pages/fundraising/FundraisingDetails";
+import AddFundraising from "./pages/fundraising/AddFundraising";
 import ChapterDetails from "./pages/chapter-details/ChapterDetails";
 import ChapterDetailsNational from "./pages/chapter-details/ChapterDetailsNational";
 
@@ -35,6 +36,7 @@ function App() {
             <Route path="event-details" element={<EventDetail />} />
             <Route path="fundraising" element={<Fundraising />} />
             <Route path="fundraising-detail" element={<FundraisingDetail />} />
+            <Route path="add-fundraising" element={<AddFundraising/>} />
             <Route path="chapter-details-nat" element={<ChapterDetailsNational />} />
             <Route path="chapter-details" element={<ChapterDetails />} />
           </Route>

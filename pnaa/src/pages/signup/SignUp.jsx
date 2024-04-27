@@ -43,7 +43,7 @@ const SignUp = () => {
     err = true;
   }).then(() => {
     if(!err){
-      navigate('/signin');
+      navigate('/');
       window.alert("An account has successfully been created! You may now sign in after resetting your password");
       
     }

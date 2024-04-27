@@ -86,7 +86,7 @@ const FundraisingDetail = () => {
         const newFundRef = doc(fundraiserCol);
         await setDoc(newFundRef, editedFund);
         setEditMode(false);
-        navigate("/chapter-dashboard/fundraising");
+        navigate(-1);
       } catch (error) {
         console.error("Error creating fundraiser: ", error);
       }

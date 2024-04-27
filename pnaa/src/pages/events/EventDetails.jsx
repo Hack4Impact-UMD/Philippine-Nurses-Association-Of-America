@@ -41,7 +41,7 @@ const EventDetails = () => {
       time: "",
       location: "",
       status: "Chapter", //Default status
-      chapter: currentUser.chapterData.name, //Automatically fills in chapter of the user
+      chapter: currentUser.chapterData.name || "National", //Automatically fills in chapter of the user
       region: currentUser.chapterData.region || "Not Specified",
       attendee: "",
       about: "",
@@ -114,7 +114,8 @@ const EventDetails = () => {
         const newEventRef = doc(eventsCol);
         await setDoc(newEventRef, editedEvent);
         setIsEditMode(false);
-        navigate("/chapter-dashboard/events");
+        navigate(-1);
+       // navigate("/chapter-dashboard/events");
       } catch (error) {
         console.error("Error creating event: ", error);
       }

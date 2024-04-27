@@ -50,7 +50,7 @@ const ForgotPassword = () => {
             className={styles.emailInput} // Apply CSS class for styling
         />
         <button onClick={handleResetPassword} className={styles.submitButton}>Submit</button>
-        <button onClick={() => navigate("/signin")} className={styles.backToLogin}>Back to login</button>
+        <button onClick={() => navigate("/")} className={styles.backToLogin}>Back to login</button>
 
     </div>      
       <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]} />

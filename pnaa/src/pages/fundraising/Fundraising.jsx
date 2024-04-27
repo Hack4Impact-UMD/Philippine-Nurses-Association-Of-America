@@ -19,7 +19,7 @@ const Fundraising = () => {
   const [chapters, setChapters] = useState([]);
 
   useEffect(() => {
-    if (currentUser?.chapterId) {
+    
       const fetchDonations = async () => {
         const db = getFirestore();
         const donations = collection(db, 'fundraisers');
@@ -50,7 +50,7 @@ const Fundraising = () => {
       };
 
       fetchDonations();
-    }
+    
   }, [currentUser]);
 
 
@@ -85,7 +85,7 @@ const Fundraising = () => {
   }, []);
 
   const handleAddFundraising = () => {
-    navigate("/chapter-dashboard/add-fundraising");
+    navigate("add-fundraising");
     console.log("ok");
   }
 
@@ -321,7 +321,7 @@ const Fundraising = () => {
   }
 
   const navigateToFundraiserDetails = (fundraiser) => {
-    navigate(`/chapter-dashboard/fundraising-detail/`, { state: { fundraiser } });
+    navigate(`fundraising-detail`, { state: { fundraiser } });
   };
 
   return (

@@ -85,7 +85,7 @@ const AddFundraising = () => {
             ...editedFund,
             ChapterName: currentUser.chapterId,
           });
-        navigate("/chapter-dashboard/fundraising");
+        navigate(-1);
       } catch (error) {
         console.error("Error creating fundraiser: ", error);
       } 

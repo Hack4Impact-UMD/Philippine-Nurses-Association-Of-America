@@ -1,6 +1,8 @@
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Outlet } from 'react-router-dom';
 import { auth } from '../../config/firebase';
 import { useUser } from '../../config/UserContext';
+
+import styles from './NationalDash.module.css';
 
 const Home = () => {
   const { currentUser } = useUser();
@@ -14,18 +16,65 @@ const Home = () => {
 
 
   const signin = () => {
-    navigate('/national-dashboard/signup');
+    navigate('/signup');
   }
   
+
   return (
     <div>
-      <h1>Welcome To National Dashboard</h1>
-      <p>You can now fetch the user id from anywhere in the app now!!! {currentUser.uid}</p>
-
-      <button onClick={signOut}>Sign Out</button>
+      <div className={styles.header}>
+        <h1>Welcome To National Dashboard</h1>
+       
+        <button onClick={signOut} className={styles.signOutButton}>Sign Out</button>
+      </div>
       <button onClick={signin}>Make an account for another user</button>
+      <div className={styles.navTabs}>
+        <ul>
+          <li className={styles.tabItem}>
+            <NavLink
+              to=""
+              className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
+              Dashboard
+            </NavLink>
+          </li>
+          <li className={styles.tabItem}>
+            <NavLink
+              to="about"
+              className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
+              About
+            </NavLink>
+          </li>
+          <li className={styles.tabItem}>
+            <NavLink
+              to="chapter-details-nat"
+              className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
+              Chapter Details
+            </NavLink>
+          </li>
+          <li className={styles.tabItem}>
+            <NavLink
+              to="events"
+              className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
+              Events
+            </NavLink>
+          </li>
+
+          <li className={styles.tabItem}>
+            <NavLink
+              to="fundraising"
+              className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
+              Fundraising
+            </NavLink>
+          </li>
+        </ul>
+      </div>
+      <div className={styles.tabContent}>
+        <Outlet />
+      </div>
     </div>
+
   );
+  
 };
 
 export default Home;

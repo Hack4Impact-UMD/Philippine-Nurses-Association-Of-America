@@ -181,7 +181,7 @@ const Events = () => {
 
   const handleAddEvent = () => {
     console.log("afsdf");
-    navigate("/chapter-dashboard/event-details", { state: { event: null } });
+    navigate("event-details", { state: { event: null } });
   };
 
   const recordRegistration = (

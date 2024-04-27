@@ -36,21 +36,7 @@ const SignIn = () => {
       });
   };
 
-  const handleGoogleSignIn = () => {
-    signInWithGoogle()
-      .then(async (user) => {
-        const userType = await getUserType(user.uid); // Fetch user type
-        setError("");
-        // console.log("User signed in with Google:", user, "User Type:", userType);
-        navigate(
-          userType === "admin" ? "/national-dashboard" : "/chapter-dashboard"
-        );
-      })
-      .catch((error) => {
-        setError("Failed to sign in with Google. Please try again.");
-        console.error("Error signing in with Google:", error.message);
-      });
-  };
+ 
 
   const getUserType = async (uid) => {
     const db = getFirestore();
@@ -94,10 +80,10 @@ const SignIn = () => {
           Show Password
       </label>
       <button id={styles["loginbutton"]} onClick={handleSignIn}>Login</button>
-      {/* <button onClick={handleGoogleSignIn}>Sign in with Google</button> */}
       {error && <p id={styles["error"]} style={{ color: "red" }}>{error}</p>}{" "}
       
       </div>
+      
       <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]}/>
     </div>
   );

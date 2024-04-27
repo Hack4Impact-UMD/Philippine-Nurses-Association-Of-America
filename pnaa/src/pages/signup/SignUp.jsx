@@ -91,9 +91,7 @@ const SignUp = () => {
           
           <button onClick={handleSignUp}>Create Account</button>
         </div>
-        <p className={styles.backToLogin}>
-          Already have an account? <Link to="/signin">Sign In</Link>
-        </p>
+       
       </div>
       <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]} />
     </div>

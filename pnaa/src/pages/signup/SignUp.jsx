@@ -38,7 +38,7 @@ const SignUp = () => {
 
   const handleSignUp = () => {
     // lastName is necessary, phone Number is not necessary
-    createUser(email, accountType, firstName, chapterName, phoneNumber).catch((error) => {
+    createUser(email, accountType, firstName, chapterName, lastName).catch((error) => {
     window.alert("An account has already been created with that email!");
     err = true;
   }).then(() => {

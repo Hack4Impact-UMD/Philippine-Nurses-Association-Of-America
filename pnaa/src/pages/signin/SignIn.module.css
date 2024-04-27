@@ -87,8 +87,8 @@
 
 #error {
     position: fixed;
-    top: 23%;
-    left: 8%;
+    top: 120px;
+    left: 45px;
 }
 
 #showPassword {

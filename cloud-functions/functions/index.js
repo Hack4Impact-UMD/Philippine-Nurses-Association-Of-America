@@ -37,6 +37,7 @@ exports.generalCloudFunction = onCall(
  *            name: string, the user's name
  *            role: string, (Options: "ADMIN", "TEACHER")
  */
+
 exports.createUser = onCall(
   { region: "us-east4", cors: true },
   async ({ auth, data }) => {
@@ -77,7 +78,9 @@ exports.createUser = onCall(
                       await db.collection("users").doc(userRecord.uid).set({
                         auth_id: userRecord.uid,
                         email: data.email,
+                        name: data.firstName + " "+ data.lastName,
                         userType: data.role.toLowerCase(),
+                        chapterId: data.chapterName,
                     }).
                       then(async () => {
                           resolve({ reason: "Success", text: "Success" });
@@ -156,7 +159,6 @@ exports.createUser = onCall(
     });
   }
 );
-
 
 /**
  * Deletes the user

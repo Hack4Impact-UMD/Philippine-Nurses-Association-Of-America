@@ -19,8 +19,8 @@ const Home = () => {
   
   return (
     <div>
-      <h1>Welcome To National Dashboard</h1>
-      <p>You can now fetch the user id from anywhere in the app now!!! {currentUser.uid}</p>
+      <h1>Welcome To National Dashboard!</h1>
+      { /* <p>You can now fetch the user id from anywhere in the app now!!! {currentUser.uid}</p> */}
 
       <button onClick={signOut}>Sign Out</button>
       <button onClick={signin}>Make an account for another user</button>

@@ -84,6 +84,11 @@ const Fundraising = () => {
     fetchChapters();
   }, []);
 
+  const handleAddFundraising = () => {
+    navigate("/chapter-dashboard/add-fundraising");
+    console.log("ok");
+  }
+
   
 
 
@@ -135,7 +140,7 @@ const Fundraising = () => {
     };
 
     return (
-      <div style={styles.DonationButton}>
+      <div style={styles.DonationButton} onClick={handleAddFundraising}>
         {text}
       </div>
     );
@@ -149,6 +154,7 @@ const Fundraising = () => {
         backgroundColor={"#05208B"}
         width="139px"
         height="32px"
+        onClick={handleAddFundraising}
       />
     </div>
   );
@@ -288,6 +294,8 @@ const Fundraising = () => {
   const handleSelectionChange = (newSelection) => {
     setSelectedRows(newSelection);
   };
+
+
 
   const handleFilterByChapter = (selectedChapter) => {
     setSelectedChapter(selectedChapter);

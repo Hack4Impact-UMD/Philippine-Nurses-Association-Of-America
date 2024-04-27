@@ -37,6 +37,7 @@ const SignUp = () => {
   }, []);
 
   const handleSignUp = () => {
+    // lastName is necessary, phone Number is not necessary
     createUser(email, accountType, firstName, chapterName, phoneNumber).catch((error) => {
     window.alert("An account has already been created with that email!");
     err = true;
@@ -70,9 +71,10 @@ const SignUp = () => {
         <div className={styles.form}>
           <div className={styles.nameFields}>
             <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First Name" />
+            <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last Name" />
           </div>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email Address" />
-          <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Phone Number" />
+          
           <select value={accountType} onChange={(e) => handleChangeType(e.target.value)} placeholder="Account Type" >
             <option value="user">Chapter</option>
             <option value="admin">National</option>

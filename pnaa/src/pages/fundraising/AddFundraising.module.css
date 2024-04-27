@@ -46,10 +46,10 @@
 
 .fundraiser-detail-information-container-left {
   border: solid black 1px;
-  width: 55%;
+  width: 70%;
   padding: 16px 36px;
-  height: 390px;
-  width: 280px;
+  height: 460px;
+  width: 400px;
   flex: 0 1 auto;
   flex-basis: calc(
     509px / 1195 * 100%
@@ -132,8 +132,8 @@
 
 #logo {
     position: fixed;
-    width: 490px;
-    height: 490px;
+    width: 530px;
+    height: 530px;
     z-index: -1;
     max-width: calc(100% + 50px);
     opacity: 90%;

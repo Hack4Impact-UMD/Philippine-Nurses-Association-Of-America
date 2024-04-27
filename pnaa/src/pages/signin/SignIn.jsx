@@ -68,7 +68,7 @@ const SignIn = () => {
       <p id={styles["orgname"]}>Philippine Nurses Association of America</p>
       <p id={styles["mantra"]}><span style={{color:'#0533F3'}}>Shine</span><span style={{color:'#AB2218'}}> PNAA </span><span style={{color:'#FFC000'}}>Shine</span></p>
       <div id={styles["container"]}>
-      <h2 id="login">Login</h2>
+      <h2 >Login</h2>
       <input
         id={styles["email"]}
         type="email"

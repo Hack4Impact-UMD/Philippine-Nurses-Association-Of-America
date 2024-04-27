@@ -12,6 +12,7 @@ import Events from "./pages/events/Events";
 import Fundraising from "./pages/fundraising/Fundraising";
 import EventDetail from "./pages/events/EventDetails";
 import FundraisingDetail from "./pages/fundraising/FundraisingDetails";
+import AddFundraising from "./pages/fundraising/AddFundraising";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="event-details" element={<EventDetail />} />
             <Route path="fundraising" element={<Fundraising />} />
             <Route path="fundraising-detail" element={<FundraisingDetail />} />
+            <Route path="add-fundraising" element={<AddFundraising/>} />
           </Route>
           <Route path="/" element={<SignIn />} />
         </Routes>

@@ -16,12 +16,13 @@ const Fundraising = () => {
   const { currentUser, loading: userLoading } = useUser();
 
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    if (searchTerm === '') {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (value === '') {
       setDonations(originalDonations);
     } else {
-      const filteredDonations = donations.filter(event => 
-        event.Name.toLowerCase().includes(e.target.value.toLowerCase())
+      const filteredDonations = originalDonations.filter(donation => 
+        donation.Name.toLowerCase().includes(value.toLowerCase())
       );
       setDonations(filteredDonations);
     }

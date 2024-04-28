@@ -10,8 +10,22 @@ import { useState, useEffect } from 'react';
 
 const Fundraising = () => {
   const [donations, setDonations] = useState([]);
+  const [originalDonations, setOriginalDonations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const { currentUser, loading: userLoading } = useUser();
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    if (searchTerm === '') {
+      setDonations(originalDonations);
+    } else {
+      const filteredDonations = donations.filter(event => 
+        event.Name.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+      setDonations(filteredDonations);
+    }
+  };
 
   useEffect(() => {
     if (currentUser?.chapterId) {
@@ -25,6 +39,7 @@ const Fundraising = () => {
           console.log(donationsList);
           console.log("Lol");
           setDonations(donationsList);
+          setOriginalDonations(donationsList);
         } catch (error) {
           console.error("Donations not found error:", error);
         } finally {
@@ -235,6 +250,12 @@ const Fundraising = () => {
     <div>
       <div style={{ height: '80%', width: '100%', margin: '0 auto' }}> 
         <h1> Total Amount: $34,783 </h1>
+        <input
+          type="text"
+          placeholder="Search by donation name"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '10px', marginRight: '50px' }}>
           {selectedRows.length === 0 && AddDonation}
           {selectedRows.length !== 0 && DetailsMember}

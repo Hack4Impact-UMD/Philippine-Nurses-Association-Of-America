@@ -287,6 +287,7 @@ const Events = () => {
           placeholder="Search by event name or location"
           value={searchTerm}
           onChange={handleSearch}
+          style={{ width: '250px' }}
         />
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ marginRight: 'auto', padding: '10px' }}>

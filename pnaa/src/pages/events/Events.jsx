@@ -23,7 +23,7 @@ const Events = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    const filteredEvents = originalEvents.filter(event => 
+    const filteredEvents = originalEvents.filter(event =>
       event.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
       event.location.toLowerCase().includes(e.target.value.toLowerCase())
     );
@@ -291,6 +291,22 @@ const Events = () => {
         />
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ marginRight: 'auto', padding: '10px' }}>
+            <label id="filterlabel" htmlFor="chapterSelect">Filter By Chapter or Archived: </label>
+            <select id="chapterSelect" value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
+              <option value="">All Events</option>
+              <option value="Unarchived Events">Unarchived Events</option>
+              <option value="Archived Events">Archived Events</option>
+              {chapters.map((chapter, index) => (
+                <option key={index} value={chapter}>{chapter}</option>
+              ))}
+            </select>
+            <label id="filterRegion" htmlFor='regionSelect'> Select Region: </label>
+            <select id='regionSelect' value={selectedRegion} onChange={(e) => handleFilterByRegion(e.target.value)}>
+              <option value="">All Regions</option>
+              {originalRegions.map((region, index) => (
+                <option key={index} value={region}>{region}</option>
+              ))}
+            </select>
           </div>
           <div style={{ display: 'flex', padding: '5px' }}>
             {exportRegistration}

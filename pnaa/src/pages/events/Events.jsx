@@ -4,7 +4,9 @@ import { getFirestore, collection, getDocs } from "firebase/firestore";
 import {  useNavigate } from "react-router-dom";
 import { DataGrid } from '@mui/x-data-grid';
 import Papa from 'papaparse';
-
+import styles from "./Events.module.css";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../../config/firebase.ts";
 
 const Events = () => {
   const { currentUser, loading: userLoading } = useUser();
@@ -15,50 +17,56 @@ const Events = () => {
   const [originalEvents, setOriginalEvents] = useState([]);
   const [originalRegions, setOriginalRegions] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [selectedChapter, setSelectedChapter] = useState(''); // State to hold the selected chapter
-  const [selectedRegion, setSelectedRegion] = useState('');
+  const [selectedChapter, setSelectedChapter] = useState(""); // State to hold the selected chapter
+  const [selectedRegion, setSelectedRegion] = useState("");
   const [chapters, setChapters] = useState([]); // State to hold the list of chapters
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvents = async () => {
       const db = getFirestore();
-      const eventsRef = collection(db, 'events');
+      const eventsRef = collection(db, "events");
       try {
         const snapshot = await getDocs(eventsRef);
-        const eventsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+        const eventsList = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
         setEvents(eventsList);
         setOriginalEvents(eventsList);
-        const uniqueRegions = [...new Set(eventsList.filter(event => event.region != null).map(event => event.region))];
+        const uniqueRegions = [
+          ...new Set(
+            eventsList
+              .filter((event) => event.region != null)
+              .map((event) => event.region)
+          ),
+        ];
         setOriginalRegions(uniqueRegions);
-
       } catch (error) {
         console.error("Error fetching events: ", error);
       } finally {
         setLoading(false);
-      };
-    }
+      }
+    };
     fetchEvents();
   }, [currentUser]);
 
   useEffect(() => {
     const fetchChapters = async () => {
       const db = getFirestore();
-      const chaptersRef = collection(db, 'chapters');
+      const chaptersRef = collection(db, "chapters");
       try {
         const snapshot = await getDocs(chaptersRef);
-        const chapterNames = snapshot.docs.map(doc => doc.data().name);
+        const chapterNames = snapshot.docs.map((doc) => doc.data().name);
         setChapters(chapterNames);
       } catch (error) {
         console.error("Error fetching chapters: ", error);
       }
-    }
+    };
     fetchChapters();
   }, []);
 
-
   if (loading || userLoading) {
-
     return <div>Loading...</div>;
   }
 
@@ -69,20 +77,15 @@ const Events = () => {
         color: textColor,
         width: width,
         height: height,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '10px',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: "10px",
       },
     };
 
-
-    return (
-      <div style={styles.status}>
-        {text}
-      </div>
-    );
-  }
+    return <div style={styles.status}>{text}</div>;
+  };
 
   const renderStatus = (status, chapter) => {
     if (status === "National") {
@@ -104,17 +107,17 @@ const Events = () => {
           width="132px"
           height="20px"
         />
-      )
+      );
     } else {
       return (
         <Status
           text="Non-Chapter"
           backgroundColor="#FAF0F3"
-          textColor='red'
+          textColor="red"
           width="132px"
           height="20px"
         />
-      )
+      );
     }
   };
 
@@ -122,14 +125,14 @@ const Events = () => {
     const styles = {
       memberButton: {
         backgroundColor: backgroundColor,
-        color: 'white',
+        color: "white",
         width: width,
         height: height,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '6px',
-        cursor: 'pointer'
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: "6px",
+        cursor: "pointer",
       },
     };
 
@@ -168,7 +171,7 @@ const Events = () => {
   }
 
   const exportRegistration = (
-    <div style={{ marginRight: '10px' }}>
+    <div style={{ marginRight: "10px" }}>
       <MemberButton
         text="+ Export Registration"
         backgroundColor={"#53A67E"}
@@ -180,44 +183,97 @@ const Events = () => {
   );
 
   const handleAddEvent = () => {
-    console.log("afsdf");
     navigate("event-details", { state: { event: null } });
   };
 
-  const recordRegistration = (
-    <div style={{ marginRight: '10px' }}>
-      <MemberButton
-        text="+ Record Event Registration"
-        backgroundColor={"#05208B"}
-        width="229px"
-        height="32px"
-        onClick={handleAddEvent} // Pass handleAddEvent function as an onClick prop
-      />
-    </div>
-  );
+  const handleDeleteEvent = async () => {
+    if (selectedRows.length === 0) {
+      alert("No events selected. Please select events to delete.");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete the selected events?"
+    );
+
+    if (confirmDelete) {
+      const eventsRef = collection(db, "events");
+      try {
+        for (const eventId of selectedRows) {
+          const eventRef = doc(eventsRef, eventId);
+          await deleteDoc(eventRef);
+        }
+        const updatedEvents = events.filter(
+          (event) => !selectedRows.includes(event.id)
+        );
+        setEvents(updatedEvents);
+        setSelectedRows([]);
+        alert("Selected events deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting events: ", error);
+        alert("An error occurred while deleting events. Please try again.");
+      }
+    }
+  };
 
   const columns = [
     {
-      field: 'name',
-      headerName: 'EVENT NAME',
+      field: "name",
+      headerName: "EVENT NAME",
       width: 250,
       renderCell: (params) => (
         <div
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: "pointer" }}
           onClick={() => handleRowClick(params)}
         >
           {params.value}
         </div>
       ),
     },
-    { field: 'date', headerName: 'DATE', width: 100, cellClassName: 'cell' },
-    { field: 'time', headerName: 'TIME', width: 125, cellClassName: 'cell' },
-    { field: 'location', headerName: 'LOCATION', width: 150, cellClassName: 'cell' },
-    { field: 'status', headerName: 'STATUS', width: 200, renderCell: (params) => (renderStatus(params.value, params.row.chapter)) },
-    { field: 'attendee#', headerName: 'ATTENDEE #', width: 125, cellClassName: 'cell' },
-    { field: 'contact hrs', headerName: 'CONTACT HRS', width: 125, cellClassName: 'cell' },
-    { field: 'volunteer#', headerName: 'VOLUNTEER #', width: 125, cellClassName: 'cell' },
-    { field: 'participants_served', headerName: 'PARTICIPANTS SERVED', width: 200, cellClassName: 'cell' },
+    { field: "date", headerName: "DATE", width: 100, cellClassName: "cell" },
+    { field: "time", headerName: "TIME", width: 125, cellClassName: "cell" },
+    {
+      field: "location",
+      headerName: "LOCATION",
+      width: 150,
+      cellClassName: "cell",
+    },
+    {
+      field: "status",
+      headerName: "STATUS",
+      width: 200,
+      renderCell: (params) => renderStatus(params.value, params.row.chapter),
+    },
+    {
+      field: "attendee_#",
+      headerName: "ATTENDEE #",
+      width: 125,
+      cellClassName: "cell",
+    },
+    {
+      field: "contact_hrs",
+      headerName: "CONTACT HRS",
+      width: 125,
+      cellClassName: "cell",
+    },
+    {
+      field: "volunteer_#",
+      headerName: "VOLUNTEER #",
+      width: 125,
+      cellClassName: "cell",
+    },
+    {
+      field: "participants_served",
+      headerName: "PARTICIPANTS SERVED",
+      width: 200,
+      cellClassName: "cell",
+    },
+    {
+      field: "total_volunteer_hours",
+      headerName: "TOTAL HOURS",
+      width: 200,
+      cellClassName: "cell",
+    },
   ];
 
   const handleSelectionChange = (newSelection) => {
@@ -225,7 +281,9 @@ const Events = () => {
   };
 
   const handleRowClick = (params) => {
-    navigate("/chapter-dashboard/event-details", { state: { event: params.row } });
+    navigate("/chapter-dashboard/event-details", {
+      state: { event: params.row },
+    });
   };
 
   const handleFilterByChapter = (selectedChapter) => {
@@ -233,17 +291,25 @@ const Events = () => {
 
     if (!selectedChapter || selectedChapter === "All Chapters") {
       setEvents(originalEvents);
-      setSelectedRegion('');
+      setSelectedRegion("");
     } else if (selectedChapter === "Unarchived Events") {
-      setEvents(originalEvents.filter(event => event.archived === false || event.archived == null));
+      setEvents(
+        originalEvents.filter(
+          (event) => event.archived === false || event.archived == null
+        )
+      );
     } else if (selectedChapter === "Archived Events") {
-      setEvents(originalEvents.filter(event => event.archived === true));
+      setEvents(originalEvents.filter((event) => event.archived === true));
     } else {
-      let filteredEvents = originalEvents.filter(event => event.chapter === selectedChapter);
+      let filteredEvents = originalEvents.filter(
+        (event) => event.chapter === selectedChapter
+      );
 
       // If a region is selected, further filter the events based on the selected region
       if (selectedRegion) {
-        filteredEvents = filteredEvents.filter(event => event.region === selectedRegion);
+        filteredEvents = filteredEvents.filter(
+          (event) => event.region === selectedRegion
+        );
       }
 
       setEvents(filteredEvents);
@@ -255,13 +321,17 @@ const Events = () => {
 
     if (!selectedRegion) {
       setEvents(originalEvents);
-      setSelectedChapter('')
+      setSelectedChapter("");
     } else {
-      let filteredEvents = originalEvents.filter(event => event.region === selectedRegion);
+      let filteredEvents = originalEvents.filter(
+        (event) => event.region === selectedRegion
+      );
 
       // If a chapter is selected, further filter the events based on the selected chapter
       if (selectedChapter) {
-        filteredEvents = filteredEvents.filter(event => event.chapter === selectedChapter);
+        filteredEvents = filteredEvents.filter(
+          (event) => event.chapter === selectedChapter
+        );
       }
 
       setEvents(filteredEvents);
@@ -271,29 +341,61 @@ const Events = () => {
   return (
     <div>
       <div>
-        <h1>Events</h1>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{ marginRight: 'auto', padding: '10px' }}>
-            <label id="filterlabel" htmlFor="chapterSelect">Filter By Chapter or Archived: </label>
-            <select id="chapterSelect" value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
+        <div className={styles["events-header"]}>
+          <h1>Events</h1>
+        </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ marginRight: "auto", padding: "10px" }}>
+            <label id="filterlabel" htmlFor="chapterSelect">
+              Filter By Chapter or Archived:{" "}
+            </label>
+            <select
+              id="chapterSelect"
+              value={selectedChapter}
+              onChange={(e) => handleFilterByChapter(e.target.value)}
+            >
               <option value="">All Events</option>
               <option value="Unarchived Events">Unarchived Events</option>
               <option value="Archived Events">Archived Events</option>
               {chapters.map((chapter, index) => (
-                <option key={index} value={chapter}>{chapter}</option>
+                <option key={index} value={chapter}>
+                  {chapter}
+                </option>
               ))}
             </select>
-            <label id="filterRegion" htmlFor='regionSelect'> Select Region: </label>
-            <select id='regionSelect' value={selectedRegion} onChange={(e) => handleFilterByRegion(e.target.value)}>
+            <label id="filterRegion" htmlFor="regionSelect">
+              {" "}
+              Select Region:{" "}
+            </label>
+            <select
+              id="regionSelect"
+              value={selectedRegion}
+              onChange={(e) => handleFilterByRegion(e.target.value)}
+            >
               <option value="">All Regions</option>
               {originalRegions.map((region, index) => (
-                <option key={index} value={region}>{region}</option>
+                <option key={index} value={region}>
+                  {region}
+                </option>
               ))}
             </select>
           </div>
-          <div style={{ display: 'flex', padding: '5px' }}>
+          <div style={{ display: "flex", padding: "5px" }}>
             {exportRegistration}
-            {recordRegistration}
+            <button
+            onClick={handleDeleteEvent}
+            className={`${styles["events-delete-btn"]} ${
+              selectedRows.length === 0
+                ? styles["events-delete-btn-disabled"]
+                : ""
+            }`}
+            disabled={selectedRows.length === 0}
+          >
+            Delete Events
+          </button>
+          <button onClick={handleAddEvent} className={styles["events-add-btn"]}>
+            Add Event
+          </button>
           </div>
         </div>
         <div id="table-background">
@@ -307,32 +409,26 @@ const Events = () => {
             columnHeaderHeight={100}
             sx={{
               border: 10,
-              borderColor: 'rgba(189,189,189,0.75)',
+              borderColor: "rgba(189,189,189,0.75)",
               borderRadius: 4,
-              '& .MuiDataGrid-row:nth-child(even)': {
-                backgroundColor: "rgba(224, 224, 224, 0.75)"
-
+              "& .MuiDataGrid-row:nth-child(even)": {
+                backgroundColor: "rgba(224, 224, 224, 0.75)",
               },
-              '& .MuiDataGrid-columnHeader': {
-                backgroundColor: "rgba(224, 224, 224, 0.75)"
+              "& .MuiDataGrid-columnHeader": {
+                backgroundColor: "rgba(224, 224, 224, 0.75)",
               },
-              '& .MuiDataGrid-row:nth-child(odd)': {
-                backgroundColor: '#FFFFFF'
+              "& .MuiDataGrid-row:nth-child(odd)": {
+                backgroundColor: "#FFFFFF",
               },
-              '& .MuiDataGrid-footerContainer': {
-                backgroundColor: "rgba(224, 224, 224, 0.75)"
-              }
+              "& .MuiDataGrid-footerContainer": {
+                backgroundColor: "rgba(224, 224, 224, 0.75)",
+              },
             }}
           />
         </div>
-
       </div>
     </div>
   );
 };
 
-
 export default Events;
-
-
-

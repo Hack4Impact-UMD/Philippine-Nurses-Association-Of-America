@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&display=swap");
 
 .event-detail-container {
+  padding-top: 50px;
   display: flex;
   justify-content: center;
   padding-bottom: 71px;
@@ -37,6 +38,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.event-header-name {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.event-header-error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 .action-button-group {

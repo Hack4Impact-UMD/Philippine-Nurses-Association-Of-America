@@ -1,29 +1,36 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import styles from "./EventDetails.module.css";
-import { useUser } from '../../config/UserContext';
 
-import { doc, updateDoc, setDoc, collection } from "firebase/firestore";
+import styles from "./EventDetails.module.css";
+import { useUser } from "../../config/UserContext";
+import { doc, getDoc, updateDoc, setDoc, collection } from "firebase/firestore";
 import { db } from "../../config/firebase.ts";
 import EventDialogBox from "./EventDialogBox";
 
 // Material UI Components
 import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
+import {
+  Unarchive,
+  Archive,
+  KeyboardArrowLeft,
+  ModeEdit,
+} from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const EventDetails = () => {
+  /*****************************************************************************
+   * Variables and States
+   *****************************************************************************/
   const { currentUser } = useUser();
-  console.log("currentUser", currentUser);
+  const navigate = useNavigate();
+  // console.log("currentUser", currentUser);
 
   // Pass in event data from previous state
   const location = useLocation();
   const { event } = location.state;
-
-  const navigate = useNavigate();
 
   // Collect screen width for responsive design
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -34,9 +41,12 @@ const EventDetails = () => {
 
   // edit mode state
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isEventTimeChanged, setIsEventTimeChanged] = useState(false);
   const [editedEvent, setEditedEvent] = useState(
     event || {
       name: "",
+      id: "",
+      archived: false,
       date: "",
       time: "",
       location: "",
@@ -50,6 +60,7 @@ const EventDetails = () => {
       other_details: "",
     }
   );
+
   // Menu anchor for mobile view
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -59,11 +70,17 @@ const EventDetails = () => {
     event ? event.archived : false
   );
 
+  // Error handling for event name validation
+  const [nameError, setNameError] = useState("");
+
   // Screen width breakpoints
   const mediumScreenWidth = 1200;
   const halfScreenWidth = 800;
   const mobileScreenWidth = 660;
 
+  /*****************************************************************************
+   * UseEffect
+   *****************************************************************************/
   // Update screen width on resize
   useEffect(() => {
     const handleResize = () => {
@@ -71,20 +88,38 @@ const EventDetails = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
+  // Fetch event data from Firestore and save
   useEffect(() => {
-    if (event) {
-      setEditedEvent(event);
-      setEventArchived(event.archived);
-    } else {
-      setIsEditMode(true);
-      setEditedEvent((prev) => ({ ...prev, chapter: currentUser.chapterData.name }));
-      setEventArchived(false);
-    }
+    const fetchEventData = async () => {
+      if (event && event.id) {
+        const eventRef = doc(db, "events", event.id);
+        const eventSnap = await getDoc(eventRef);
+        if (eventSnap.exists()) {
+          setEditedEvent(eventSnap.data());
+          setEventArchived(eventSnap.data().archived);
+        }
+      } else {
+        setIsEditMode(true);
+        setEditedEvent((prev) => ({
+          ...prev,
+          chapter: currentUser.chapterData.name,
+        }));
+        setEventArchived(false);
+      }
+    };
+
+    fetchEventData();
   }, [event, currentUser.chapterData.name]);
 
+  /*****************************************************************************
+   * Action Buttons (Back, Edit/Save, Archive/Unarchive)
+   *****************************************************************************/
   // Handle action button clicks
   const handleBackClick = () => {
     navigate(-1);
@@ -102,27 +137,59 @@ const EventDetails = () => {
   const handleEditClick = () => {
     if (isEditMode) {
       handleSaveClick();
+    } else {
+      setIsEditMode(true);
     }
-    setIsEditMode(!isEditMode);
   };
 
   const handleSaveClick = async () => {
+    if (!editedEvent.name || editedEvent.name.trim() === "") {
+      setNameError("Please enter a valid event name.");
+      return;
+    }
+    setNameError("");
+    if (isEventTimeChanged) {
+      // Calculate contact hours based on start and end time
+      const [startTime, endTime] = editedEvent.time.split(" - ");
+      const startDate = new Date(`2000-01-01T${startTime}`);
+      const endDate = new Date(`2000-01-01T${endTime}`);
+      const contactHours = (endDate - startDate) / 3600000; // Convert milliseconds to hours
+      let roundedContactHours = Math.round(contactHours * 100) / 100; // Round to two decimal places
+      if (roundedContactHours < 0) {
+        roundedContactHours = 24 + roundedContactHours;
+      }
+      editedEvent.contact_hrs = roundedContactHours.toString();
+      setIsEventTimeChanged(false);
+    }
+    if (editedEvent["volunteer_#"] && editedEvent.contact_hrs) {
+      //   const fullTimeNum =
+      //     (editedEvent.contact_hrs * editedEvent["volunteer_#"]) / 8;
+      //   const roundedFullTimeNum = Math.round(fullTimeNum * 1000) / 1000;
+      //   editedEvent["full_time_#"] = roundedFullTimeNum.toString();
+      const totalVolunteerHours =
+        editedEvent.contact_hrs * editedEvent["volunteer_#"];
+      const roundedTotalVolunteerHours =
+        Math.round(totalVolunteerHours * 100) / 100;
+      editedEvent.total_volunteer_hours = roundedTotalVolunteerHours.toString();
+    }
     if (event === null) {
       // Create a new event
       try {
         const eventsCol = collection(db, "events");
         const newEventRef = doc(eventsCol);
+        const newEventId = newEventRef.id;
+        // set newly created doc id as a field
+        editedEvent.id = newEventId;
         await setDoc(newEventRef, editedEvent);
         setIsEditMode(false);
-        navigate(-1);
-       // navigate("/chapter-dashboard/events");
+        // navigate("/chapter-dashboard/events");
       } catch (error) {
         console.error("Error creating event: ", error);
       }
     } else {
       // Update existing event
-      const eventRef = doc(db, "events", editedEvent.id);
       try {
+        const eventRef = doc(db, "events", event.id); // Use event.id instead of editedEvent.id
         await updateDoc(eventRef, editedEvent);
         setIsEditMode(false);
       } catch (error) {
@@ -158,6 +225,7 @@ const EventDetails = () => {
 
   // Function for creating different Material UI action buttons
   const createMaterialButton = (
+    icon,
     color,
     text,
     onClick,
@@ -165,7 +233,7 @@ const EventDetails = () => {
     isArchiveButton = false
   ) => (
     <Button
-      startIcon={<AddIcon />}
+      startIcon={icon}
       style={{
         backgroundColor: disabled ? "#ccc" : color,
         color: disabled ? "#666" : "#fff",
@@ -187,18 +255,21 @@ const EventDetails = () => {
   const actionButtons = () => (
     <div className={styles["action-button-group"]}>
       {createMaterialButton(
+        <KeyboardArrowLeft />,
         "#4D69BE",
         "Back to main page",
         handleBackClick,
         isEditMode
       )}
       {createMaterialButton(
+        <ModeEdit />,
         "#05208B",
         isEditMode ? "Save event" : "Edit event",
         handleEditClick,
         false
       )}
       {createMaterialButton(
+        eventArchived ? <Unarchive /> : <Archive />,
         eventArchived ? "#14804A" : "#91201A",
         "",
         handleArchiveClick,
@@ -256,57 +327,81 @@ const EventDetails = () => {
     </Menu>
   );
 
+  /*****************************************************************************
+   * Display Fields
+   *****************************************************************************/
   const fieldsToShow = [
     "date",
     "time",
     "location",
     "status",
     "chapter",
-    "attendee#",
+    "region",
     "about",
-    "event poster",
-    "contact hrs",
-    "other details",
+    "event_poster",
+    "attendee_#",
+    "volunteer_#",
+    "participants_served",
+    "contact_hrs",
+    // "full_time_#",
+    "total_volunteer_hours",
+    "other_details",
   ];
 
   const fieldTypes = {
-    date: { type: "date", validate: (value) => !isNaN(Date.parse(value)) },
+    date: { type: "date" },
     time: {
       type: "time",
-      validate: (value) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(value),
     },
-    location: { type: "text", validate: () => true },
-    status: { type: "text", validate: () => true },
-    chapter: { type: "text", validate: () => true },
-    "attendee#": { type: "number", validate: (value) => !isNaN(value) },
-    about: { type: "text", validate: () => true },
-    "event poster": { type: "text", validate: () => true },
-    "contact hrs": { type: "number", validate: (value) => !isNaN(value) },
-    other_details: { type: "text", validate: () => true },
+    location: { type: "text" },
+    status: { type: "text" },
+    chapter: { type: "text" },
+    "attendee_#": { type: "number" },
+    "volunteer_#": { type: "number" },
+    participants_served: {
+      type: "number",
+    },
+    // "full_time_#": { type: "number" },
+    total_volunteer_hours: { type: "number" },
+    about: { type: "text" },
+    event_poster: { type: "text" },
+    contact_hrs: { type: "number" },
+    other_details: { type: "text" },
   };
 
   const statusOptions = ["National", "Chapter", "Non-Chapter"];
 
-  // Else, display normal screen
+  /*****************************************************************************
+   * Page Layout
+   *****************************************************************************/
   return (
     <div className={styles["event-detail-container"]}>
       <div className={styles["event-detail-content"]}>
         <div className={styles["event-header-container"]}>
-          {isEditMode ? (
-            <input
-              type="text"
-              value={editedEvent.name}
-              onChange={(e) =>
-                setEditedEvent({
-                  ...editedEvent,
-                  ["name"]: e.target.value,
-                })
-              }
-              className={styles["event-header-input"]}
-            />
-          ) : (
-            <p className={styles["event-header"]}>{editedEvent.name}</p>
-          )}
+          <div className={styles["event-header-name"]}>
+            {isEditMode ? (
+              <>
+                <input
+                  type="text"
+                  value={editedEvent.name}
+                  onChange={(e) =>
+                    setEditedEvent({
+                      ...editedEvent,
+                      ["name"]: e.target.value,
+                    })
+                  }
+                  className={styles["event-header-input"]}
+                />
+                {nameError && (
+                  <p className={styles["event-header-error-message"]}>
+                    {nameError}
+                  </p>
+                )}
+              </>
+            ) : (
+              <p className={styles["event-header"]}>{editedEvent.name}</p>
+            )}
+          </div>
           {screenWidth < mobileScreenWidth ? (
             <>
               <IconButton
@@ -329,16 +424,51 @@ const EventDetails = () => {
             {fieldsToShow.map((fieldName) => {
               const value = editedEvent[fieldName] || "";
               const { type, validate } = fieldTypes[fieldName] || {};
-              const readOnly = fieldName === "chapter" && event;
+              const readOnly =
+                (fieldName === "chapter" || fieldName === "full_time_#") &&
+                event;
               return (
                 <tr key={fieldName}>
                   <td>
                     <p className={styles["event-label"]}>
-                      {fieldName.toUpperCase()}
+                      {fieldName.toUpperCase().split("_").join(" ")}
                     </p>
                   </td>
                   <td>
-                    {isEditMode && fieldName === "status" ? (
+                    {isEditMode && fieldName === "time" ? (
+                      <>
+                        <input
+                          type="time"
+                          value={value.split(" - ")[0]}
+                          onChange={(e) => {
+                            const [_, endTime] = value.split(" - ");
+                            const newValue = `${e.target.value} - ${
+                              endTime || ""
+                            }`;
+                            setEditedEvent({
+                              ...editedEvent,
+                              [fieldName]: newValue,
+                            });
+                          }}
+                          className={styles["edit-input"]}
+                        />
+                        <span> - </span>
+                        <input
+                          type="time"
+                          value={value.split(" - ")[1]}
+                          onChange={(e) => {
+                            const [startTime] = value.split(" - ");
+                            const newValue = `${startTime} - ${e.target.value}`;
+                            setEditedEvent({
+                              ...editedEvent,
+                              [fieldName]: newValue,
+                            });
+                            setIsEventTimeChanged(true);
+                          }}
+                          className={styles["edit-input"]}
+                        />
+                      </>
+                    ) : isEditMode && fieldName === "status" ? (
                       <select
                         value={value}
                         onChange={(e) => {
@@ -350,7 +480,7 @@ const EventDetails = () => {
                         }}
                         className={styles["edit-input"]}
                       >
-                        {statusOptions.map(option => (
+                        {statusOptions.map((option) => (
                           <option key={option} value={option}>
                             {option}
                           </option>
@@ -364,7 +494,10 @@ const EventDetails = () => {
                           if (readOnly) return;
                           const newValue = e.target.value;
                           if (validate && !validate(newValue)) {
-                            console.error("Invalid value for field: ", fieldName);
+                            console.error(
+                              "Invalid value for field: ",
+                              fieldName
+                            );
                             return;
                           }
                           setEditedEvent({
@@ -393,7 +526,6 @@ const EventDetails = () => {
         dialogAction={dialogAction}
         onActionSuccess={() => setEventArchived(!eventArchived)}
       />{" "}
-
     </div>
   );
 };

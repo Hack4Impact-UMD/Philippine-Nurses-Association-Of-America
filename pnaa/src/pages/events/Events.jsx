@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../../config/UserContext";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DataGrid } from '@mui/x-data-grid';
 import Papa from 'papaparse';
 import styles from "./Events.module.css";
@@ -13,14 +13,25 @@ const Events = () => {
 
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
-
   const [originalEvents, setOriginalEvents] = useState([]);
   const [originalRegions, setOriginalRegions] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [selectedChapter, setSelectedChapter] = useState(""); // State to hold the selected chapter
-  const [selectedRegion, setSelectedRegion] = useState("");
-  const [chapters, setChapters] = useState([]); // State to hold the list of chapters
+  const [selectedChapter, setSelectedChapter] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState('');
+  const [chapters, setChapters] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
   const navigate = useNavigate();
+
+  // Existing code for fetching events and chapters
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    const filteredEvents = originalEvents.filter(event =>
+      event.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      event.location.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setEvents(filteredEvents);
+  };
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -341,19 +352,18 @@ const Events = () => {
   return (
     <div>
       <div>
-        <div className={styles["events-header"]}>
-          <h1>Events</h1>
-        </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <div style={{ marginRight: "auto", padding: "10px" }}>
-            <label id="filterlabel" htmlFor="chapterSelect">
-              Filter By Chapter or Archived:{" "}
-            </label>
-            <select
-              id="chapterSelect"
-              value={selectedChapter}
-              onChange={(e) => handleFilterByChapter(e.target.value)}
-            >
+        <h1>Events</h1>
+        <input
+          type="text"
+          placeholder="Search by event name or location"
+          value={searchTerm}
+          onChange={handleSearch}
+          style={{ width: '250px' }}
+        />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ marginRight: 'auto', padding: '10px' }}>
+            <label id="filterlabel" htmlFor="chapterSelect">Filter By Chapter or Archived: </label>
+            <select id="chapterSelect" value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
               <option value="">All Events</option>
               <option value="Unarchived Events">Unarchived Events</option>
               <option value="Archived Events">Archived Events</option>

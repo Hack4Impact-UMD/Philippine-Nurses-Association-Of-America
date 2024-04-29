@@ -11,6 +11,7 @@ import styles from './fundraising.module.css';
 
 const Fundraising = () => {
   const [donations, setDonations] = useState([]);
+
   const [origDonations, setOrigDonations] = useState([]);
   const [displayDonations, setDisplayDonations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,6 +60,7 @@ const Fundraising = () => {
   }
   };
 
+
   useEffect(() => {
     
       const fetchDonations = async () => {
@@ -71,6 +73,7 @@ const Fundraising = () => {
           console.log(donationsList);
           console.log("Lol");
           setDonations(donationsList);
+
           setOrigDonations(donationsList);
           let i = 0;
           let total = 0;
@@ -381,11 +384,14 @@ const Fundraising = () => {
   return (
     <div>
       <div style={{ height: '80%', width: '100%', margin: '0 auto' }}> 
+
+
         <h1> Total Amount: ${totalDonations} </h1>
         <label>Search by fundraising event name: </label>
         <input
           type="text"
           id = {styles.searchBar}
+
           placeholder="Search by donation name"
           value={searchTerm}
           onChange={handleSearch}

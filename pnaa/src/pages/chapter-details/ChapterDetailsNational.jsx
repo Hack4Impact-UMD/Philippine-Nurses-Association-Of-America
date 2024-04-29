@@ -16,6 +16,13 @@ const ChapterDetailsNational = () => {
   const [loading, setLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredChapters = chapters.filter(chapter => chapter.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
     //Fetches all member data within chapter
     useEffect(() => {
@@ -131,6 +138,8 @@ const ChapterDetailsNational = () => {
         );
       }
 
+     
+
       const ArchiveChapter = (
         <div style={{ marginRight: '10px'}}>
           <ChapterButton
@@ -146,16 +155,36 @@ const ChapterDetailsNational = () => {
   return (
       <div>
         <h1>Chapter Details</h1>
+        <input
+          type="text"
+          placeholder="Search by chapter name"
+          value={searchTerm}
+          onChange={handleSearch}
+          style={{ marginBottom: '10px' }}
+        />
         {/* <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '10px' }}>
             {ArchiveChapter}
         </div> */}
         <DataGrid
-            rows={chapters}
+            rows={filteredChapters}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5, 10, 20]}
             checkboxSelections
             columnHeaderHeight={100}
+            slotProps={{
+              header: () => (
+                <div style={{ marginBottom: '10px' }}>
+                  Filter by chapter name:
+                  <input
+                    type="text"
+                    placeholder="Search by chapter name"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                </div>
+              ),
+            }}
             sx={{
                 border: 10,
                 borderColor: 'rgba(189,189,189,0.75)',

@@ -1,12 +1,10 @@
-
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../config/firebase";
-import { signInWithGoogle } from "../../auth/AuthService";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import styles from "./SignIn.module.css"
-import PNAA_Logo from "../../assets/PNAA_Logo.png"; 
+import PNAA_Logo from "../../assets/PNAA_Logo.png";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -15,10 +13,6 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  const handleForgotPassword = () => {
-    navigate("/forgotpassword"); // Navigate to ForgotPassword page
-  };
 
   const handleSignIn = async () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -37,8 +31,6 @@ const SignIn = () => {
       });
   };
 
- 
-
   const getUserType = async (uid) => {
     const db = getFirestore();
     const userRef = doc(db, "users", uid);
@@ -53,39 +45,42 @@ const SignIn = () => {
   return (
     <div id={styles["background"]}>
       <p id={styles["orgname"]}>Philippine Nurses Association of America</p>
-      <p id={styles["mantra"]}><span style={{color:'#0533F3'}}>Shine</span><span style={{color:'#AB2218'}}> PNAA </span><span style={{color:'#FFC000'}}>Shine</span></p>
+      <p id={styles["mantra"]}>
+        <span style={{ color: "#0533F3" }}>Shine</span>
+        <span style={{ color: "#AB2218" }}> PNAA </span>
+        <span style={{ color: "#F4D44C" }}>Shine</span>
+      </p>
       <div id={styles["container"]}>
-      <h2 >Login</h2>
-      <input
-        id={styles["email"]}
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Member ID / Email Address"
-      />
-      <p id={styles["forgot"]} onClick={handleForgotPassword}>Forgot Password?</p> {/* Click event to navigate to ForgotPassword page */}
-      <input
-        id={styles["password"]}
-        type={showPassword ? "text" : "password"}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <label id={styles["passwordLabel"]} htmlFor="showPassword">
+        <h2 id="login">Login</h2>
+        <div className={styles.form}>
           <input
-            id={styles["showPassword"]}
-            type="checkbox"
-            checked={showPassword}
-            onChange={() => setShowPassword(!showPassword)}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Member ID / Email Address"
           />
-          Show Password
-      </label>
-      <button id={styles["loginbutton"]} onClick={handleSignIn}>Login</button>
-      {error && <p id={styles["error"]} style={{ color: "red" }}>{error}</p>}{" "}
-      
+          <input
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
+          <label>
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            />
+            Show Password
+          </label>
+          <button onClick={handleSignIn}>Login</button>
+          {error && <p id={styles["error"]} style={{ color: "red" }}>{error}</p>}
+        </div>
+        <p className={styles.backToLogin}>
+          Dont Remember Your Password? <Link to="/forgotpassword">Forgot Password</Link>
+        </p>
       </div>
-      
-      <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]}/>
+      <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]} />
     </div>
   );
 };

@@ -188,18 +188,6 @@ const Events = () => {
     }
   };
 
-  const recordRegistration = (
-    <div style={{ marginRight: "10px" }}>
-      <MemberButton
-        text="+ Record Event Registration"
-        backgroundColor={"#05208B"}
-        width="229px"
-        height="32px"
-        onClick={handleAddEvent} // Pass handleAddEvent function as an onClick prop
-      />
-    </div>
-  );
-
   const columns = [
     {
       field: "name",
@@ -229,19 +217,19 @@ const Events = () => {
       renderCell: (params) => renderStatus(params.value, params.row.chapter),
     },
     {
-      field: "attendee#",
+      field: "attendee_#",
       headerName: "ATTENDEE #",
       width: 125,
       cellClassName: "cell",
     },
     {
-      field: "contact hrs",
+      field: "contact_hrs",
       headerName: "CONTACT HRS",
       width: 125,
       cellClassName: "cell",
     },
     {
-      field: "volunteer#",
+      field: "volunteer_#",
       headerName: "VOLUNTEER #",
       width: 125,
       cellClassName: "cell",
@@ -252,6 +240,12 @@ const Events = () => {
       width: 200,
       cellClassName: "cell",
     },
+    {
+      field: "total_volunteer_hours",
+      headerName: "TOTAL HOURS",
+      width: 200,
+      cellClassName: "cell",
+    },
   ];
 
   const handleSelectionChange = (newSelection) => {
@@ -259,6 +253,7 @@ const Events = () => {
   };
 
   const handleRowClick = (params) => {
+    console.log("ev", params);
     navigate("/chapter-dashboard/event-details", {
       state: { event: params.row },
     });
@@ -321,20 +316,6 @@ const Events = () => {
       <div>
         <div className={styles["events-header"]}>
           <h1>Events</h1>
-          <button
-            onClick={handleDeleteEvent}
-            className={`${styles["events-delete-btn"]} ${
-              selectedRows.length === 0
-                ? styles["events-delete-btn-disabled"]
-                : ""
-            }`}
-            disabled={selectedRows.length === 0}
-          >
-            Delete Events
-          </button>
-          <button onClick={handleAddEvent} className={styles["events-add-btn"]}>
-            Add Event
-          </button>
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
           <div style={{ marginRight: "auto", padding: "10px" }}>
@@ -374,7 +355,20 @@ const Events = () => {
           </div>
           <div style={{ display: "flex", padding: "5px" }}>
             {exportRegistration}
-            {recordRegistration}
+            <button
+            onClick={handleDeleteEvent}
+            className={`${styles["events-delete-btn"]} ${
+              selectedRows.length === 0
+                ? styles["events-delete-btn-disabled"]
+                : ""
+            }`}
+            disabled={selectedRows.length === 0}
+          >
+            Delete Events
+          </button>
+          <button onClick={handleAddEvent} className={styles["events-add-btn"]}>
+            Add Event
+          </button>
           </div>
         </div>
         <div id="table-background">

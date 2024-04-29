@@ -51,8 +51,8 @@ const EventDetails = () => {
       time: "",
       location: "",
       status: "Chapter", //Default status
-      chapter: currentUser.chapterData.name || "", //Automatically fills in chapter of the user
-      region: currentUser.chapterData.region || "",
+      chapter: currentUser.chapterData.name || "National", //Automatically fills in chapter of the user
+      region: currentUser.chapterData.region || "Not Specified",
       attendee: "",
       about: "",
       event_poster: "",

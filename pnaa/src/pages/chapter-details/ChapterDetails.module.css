@@ -6,7 +6,7 @@ div {
     border: 10px solid #AA5B0059;
     border-radius: 10px;
     padding: 0px 20px 20px 20px; /* top right bottom left */
-    margin: 30px;
+    margin-top: 50px;
     display: flex; /* Use flexbox to arrange children */
     flex-direction: column; /* Arrange children vertically */
 }

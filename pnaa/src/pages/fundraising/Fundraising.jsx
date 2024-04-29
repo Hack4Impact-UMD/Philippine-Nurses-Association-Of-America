@@ -7,14 +7,19 @@ import InfoIcon from '@mui/icons-material/Info';
 import ModeIcon from '@mui/icons-material/Mode';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import { useState, useEffect } from 'react';
+import styles from './fundraising.module.css';
 
 const Fundraising = () => {
   const [donations, setDonations] = useState([]);
+  const [origDonations, setOrigDonations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { currentUser, loading: userLoading } = useUser();
+  const [totalDonations, setTotalDonations] = useState(0);
+  const {currentUser, loading: userLoading } = useUser();
+  const [selectedChapter, setSelectedChapter] = useState("");
+  const [chapters, setChapters] = useState([]);
 
   useEffect(() => {
-    if (currentUser?.chapterId) {
+    
       const fetchDonations = async () => {
         const db = getFirestore();
         const donations = collection(db, 'fundraisers');
@@ -25,6 +30,18 @@ const Fundraising = () => {
           console.log(donationsList);
           console.log("Lol");
           setDonations(donationsList);
+          setOrigDonations(donationsList);
+          let i = 0;
+          let total = 0;
+          while(i < donationsList.length){
+            total = total + Number(donationsList[i].Amount);
+            console.log(total);
+            i++;
+          }
+          setTotalDonations(total);
+
+         
+
         } catch (error) {
           console.error("Donations not found error:", error);
         } finally {
@@ -33,10 +50,47 @@ const Fundraising = () => {
       };
 
       fetchDonations();
-    }
+    
   }, [currentUser]);
 
+
+
+  const calculateTotal = (donations) => {
+    let i = 0;
+    let total = 0;
+    while(i < donations.length){
+      total = total + Number(donations[i].Amount);
+      console.log(total);
+      i++;
+    }
+    setTotalDonations(total);
+   
+    
+  };
+
+
+  useEffect(() => {
+    const fetchChapters = async () => {
+      const db = getFirestore();
+      const chaptersRef = collection(db, 'chapters');
+      try {
+        const snapshot = await getDocs(chaptersRef);
+        const chapterNames = snapshot.docs.map(doc => doc.data().name);
+        setChapters(chapterNames);
+      } catch (error) {
+        console.error("Error fetching chapters: ", error);
+      }
+    }
+    fetchChapters();
+  }, []);
+
+  const handleAddFundraising = () => {
+    navigate("add-fundraising");
+    console.log("ok");
+  }
+
   
+
 
   const [selectedRows, setSelectedRows] = useState([]);
   const navigate = useNavigate();
@@ -86,7 +140,7 @@ const Fundraising = () => {
     };
 
     return (
-      <div style={styles.DonationButton}>
+      <div style={styles.DonationButton} onClick={handleAddFundraising}>
         {text}
       </div>
     );
@@ -100,6 +154,7 @@ const Fundraising = () => {
         backgroundColor={"#05208B"}
         width="139px"
         height="32px"
+        onClick={handleAddFundraising}
       />
     </div>
   );
@@ -219,6 +274,19 @@ const Fundraising = () => {
         {params.row.Note}
       </div> 
       ) 
+    },
+    { 
+      field: 'Chapter Name', 
+      headerName: 'Chapter Name', 
+      width: 250, 
+      renderCell: (params) => ( 
+        <div
+        style={{ cursor: 'pointer' }}
+        onClick={() => navigateToFundraiserDetails(params.row)}
+      >
+        {params.row.ChapterName}
+      </div> 
+      ) 
     }
   ];
   
@@ -227,20 +295,52 @@ const Fundraising = () => {
     setSelectedRows(newSelection);
   };
 
+
+
+  const handleFilterByChapter = (selectedChapter) => {
+    setSelectedChapter(selectedChapter);
+    // if there is no filter applied
+    
+    if (!selectedChapter) {
+      setDonations(origDonations);
+      calculateTotal(origDonations);
+      
+      
+    } else {
+    
+      let filteredDonations = origDonations.filter(donation => donation.ChapterName === selectedChapter);
+      
+     
+      
+      setDonations(filteredDonations);
+      calculateTotal(filteredDonations);
+      
+    }
+    
+
+  }
+
   const navigateToFundraiserDetails = (fundraiser) => {
-    navigate(`/chapter-dashboard/fundraising-detail/`, { state: { fundraiser } });
+    navigate(`fundraising-detail`, { state: { fundraiser } });
   };
 
   return (
     <div>
       <div style={{ height: '80%', width: '100%', margin: '0 auto' }}> 
-        <h1> Total Amount: $34,783 </h1>
+        <h1> Total Amount: ${totalDonations} </h1>
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '10px', marginRight: '50px' }}>
           {selectedRows.length === 0 && AddDonation}
           {selectedRows.length !== 0 && DetailsMember}
           {selectedRows.length !== 0 && EditMember}
           {selectedRows.length !== 0 && ArchiveMember}
         </div>
+        <label  id={styles.filterlabel} htmlFor="chapterSelect">Filter by Chapter Name:</label>
+            <select id={styles.chapterSelect} value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
+              <option value="">All Chapters</option>
+              {chapters.map((chapter, index) => (
+                <option key={index} value={chapter}>{chapter}</option>
+              ))}
+            </select>
         <div style={{ margin: '0 50px' }}>
           <DataGrid
             header = {"Total Amount: $1000"}

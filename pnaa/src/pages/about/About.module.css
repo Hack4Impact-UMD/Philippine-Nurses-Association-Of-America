@@ -1,0 +1,47 @@
+.textStyle {
+    font-family: 'Source Serif 4';
+    font-size: 40px;
+    line-height: 16px;
+    color: #4F4F4F;
+  }
+  
+  .headingStyle {
+    font-family: 'Source Serif 4';
+    color: #4F4F4F;
+  }
+  
+  .statistics {
+    display: flex;
+    justify-content: space-around;
+    color: #4F4F4F;
+    align-items: center;
+  }
+  
+  .verticalLine {
+    width: 0%;
+    border: 2px solid #4F4F4F;
+    height: 80px;
+  }
+  
+  .divStyle {
+    width: 15%;
+    padding: 50px;
+  }
+  
+  .containerStyle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .mainBoxStyle {
+    border: 13px solid #d9d9d9;
+    border-radius: 8px;
+    width: 1272px;
+    height: 740px;
+    margin-top: 50px;
+    background-color: #FFFFFF;
+    padding: 0px 20px 20px 20px; /* top right bottom left */
+    overflow: auto;
+  }
+  

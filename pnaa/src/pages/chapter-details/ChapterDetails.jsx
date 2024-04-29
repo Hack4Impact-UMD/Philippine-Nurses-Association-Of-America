@@ -125,14 +125,9 @@ const ChapterDetails = () => {
     };
 
     const fieldsToShow = [
-      "Active Member 1 Year",
-      "Active Member 2 Years",
-      "Active Member Lifetime",
-      "Associate Member 1 Year",
-      "Associate Member 2 Years",
-      "Member At Large",
-      "Student",
-      "Lapsed Member",
+      "Total Members",
+      "Total Events",
+      "Total Volunteers Hours",
     ];
   
   return (
@@ -140,12 +135,6 @@ const ChapterDetails = () => {
       <div>
         <h1>{chapter.name}</h1>
         <p>{chapter.region}</p>
-
-
-      <div className = {styles["chapter-details-container-right"]}>
-          <h2>{chapter.name}</h2>
-          <p>{chapter.name}</p>
-      </div>
 
         <div className={styles["chapter-details-inner"]}>
           <div className={styles["chapter-details-left"]}>
@@ -155,18 +144,7 @@ const ChapterDetails = () => {
                 return (
                   <tr key={fieldName}>
                     <td>
-                      <p>
-                        {fieldName.split(" ").map((word, index) => {
-                          const isSpecialWord = ["1", "2", "Lifetime", "Year", "Years"].some(phrase => word.includes(phrase));
-                          return (
-                            <React.Fragment key={index}>
-                              <span className={isSpecialWord ? styles["special-word"] : ""}>
-                                {word}
-                              </span>{" "}
-                            </React.Fragment>
-                          );
-                        })}
-                      </p>
+                      <strong>{fieldName}</strong>
                     </td>
                     <td>
                       <p className={styles["chapter-data"]}>#{value.toString()}</p>

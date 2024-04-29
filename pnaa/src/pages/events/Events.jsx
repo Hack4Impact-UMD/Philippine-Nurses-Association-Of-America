@@ -147,21 +147,21 @@ const Events = () => {
     // Retrieve full event details for each selected row
     const selectedEvents = selectedRows.map(rowId => events.find(event => event.id === rowId));
     console.log("ev", selectedEvents);
-    const fields = ['name', 'chapter', 'date', 'time', 'location', 'status', 'attendee#', 'contact hrs', 'volunteer#', 'participants_served', 'region', 'about', 'other_details'];
+    const fields = ['name', 'chapter', 'date', 'time', 'location', 'status', 'attendee_#', 'contact_hrs', 'volunteer_#', 'participants_served', 'total_volunteer_hours', 'region', 'about', 'other_details'];
     // Convert selected events to CSV using Papaparse
     const csvData = Papa.unparse({
       fields: fields,
       data: selectedEvents
     });
 
-    if (csvData) {
+    if (selectedEvents.length > 0) {
       const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
 
       // Create a link and trigger the download
       const link = document.createElement("a");
       const url = URL.createObjectURL(blob);
       link.setAttribute("href", url);
-      link.setAttribute("download", "events.csv");
+      link.setAttribute("download", "chapter_events.csv");
       document.body.appendChild(link); // Required for FF
       link.click();
       document.body.removeChild(link);

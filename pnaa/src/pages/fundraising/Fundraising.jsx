@@ -12,11 +12,52 @@ import styles from './fundraising.module.css';
 const Fundraising = () => {
   const [donations, setDonations] = useState([]);
   const [origDonations, setOrigDonations] = useState([]);
+  const [displayDonations, setDisplayDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalDonations, setTotalDonations] = useState(0);
   const {currentUser, loading: userLoading } = useUser();
   const [selectedChapter, setSelectedChapter] = useState("");
   const [chapters, setChapters] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+
+  
+
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if(value === '' && !selectedChapter){
+      setDonations(origDonations);
+      calculateTotal(origDonations);
+    }
+    else if (value === '') {
+      let filteredDonations = origDonations.filter(donation => donation.ChapterName === selectedChapter);
+      setDonations(filteredDonations);
+      calculateTotal(filteredDonations);
+      
+    } else {
+      const filteredDonations = origDonations.filter(donation => 
+        donation.Name.toLowerCase().includes(value.toLowerCase())
+      );
+
+      if(selectedChapter){
+
+      
+      const finalFiltered = filteredDonations.filter(
+        donation => donation.ChapterName === selectedChapter
+      );
+
+      setDonations(finalFiltered);
+      calculateTotal(finalFiltered);
+    }else{
+      setDonations(filteredDonations);
+      calculateTotal(filteredDonations);
+
+    }
+
+  }
+  };
 
   useEffect(() => {
     
@@ -301,19 +342,32 @@ const Fundraising = () => {
     setSelectedChapter(selectedChapter);
     // if there is no filter applied
     
-    if (!selectedChapter) {
+    if (!selectedChapter && searchTerm === '') {
       setDonations(origDonations);
       calculateTotal(origDonations);
       
       
-    } else {
-    
-      let filteredDonations = origDonations.filter(donation => donation.ChapterName === selectedChapter);
-      
-     
-      
+    } else if(!selectedChapter){
+      const filteredDonations = origDonations.filter(donation => 
+        donation.Name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
       setDonations(filteredDonations);
       calculateTotal(filteredDonations);
+
+
+    }
+    
+    else {
+    
+      let filteredDonations = origDonations.filter(donation => donation.ChapterName === selectedChapter);
+      const finalDonations = filteredDonations.filter(donation => 
+        donation.Name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setDonations(finalDonations);
+      calculateTotal(finalDonations);
+
+      
+     
       
     }
     
@@ -328,6 +382,14 @@ const Fundraising = () => {
     <div>
       <div style={{ height: '80%', width: '100%', margin: '0 auto' }}> 
         <h1> Total Amount: ${totalDonations} </h1>
+        <label>Search by fundraising event name: </label>
+        <input
+          type="text"
+          id = {styles.searchBar}
+          placeholder="Search by donation name"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '10px', marginRight: '50px' }}>
           {selectedRows.length === 0 && AddDonation}
           {selectedRows.length !== 0 && DetailsMember}

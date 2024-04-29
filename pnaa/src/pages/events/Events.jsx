@@ -253,7 +253,6 @@ const Events = () => {
   };
 
   const handleRowClick = (params) => {
-    console.log("ev", params);
     navigate("/chapter-dashboard/event-details", {
       state: { event: params.row },
     });

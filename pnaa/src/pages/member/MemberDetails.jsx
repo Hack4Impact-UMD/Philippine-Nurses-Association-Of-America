@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styles from "./MemberDetails.module.css";
 
-import MemberDialogBox from "./MemberDialogBox";
-import db from "../../config/firebase.ts";
 import logo from "../../assets/PNAA_Logo.png"
 
 // Material UI Components
@@ -176,21 +174,6 @@ const MemberDetail = () => {
       <div className={styles["member-detail-content"]}>
         <div className={styles["membership-header-container"]}>
           <p className={styles["membership-header"]}>MEMBERSHIP</p>
-          {screenWidth < mobileScreenWidth ? (
-            <>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={handleClick}
-              >
-                <MenuIcon />
-              </IconButton>
-              {actionMenuItems()}
-            </>
-          ) : (
-            actionButtons()
-          )}
         </div>
 
         <div className={styles["member-detail-information-container"]}>
@@ -221,7 +204,7 @@ const MemberDetail = () => {
                         Chapter: {member.chapterName}
                       </p>
                       <p className={`${styles['membership-data']} ${styles['membership-card-font']}`}>
-                        Renwal Due: {member.renewalDueDate}
+                        ID: {member.memberId}
                       </p>
                       {/* ... Example Fields ... */}
                     </div>
@@ -259,19 +242,7 @@ const MemberDetail = () => {
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    {member.membershipLevelId}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={styles["membership-label"]}>
-                    Email
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    {member.email}
+                    {member.memberId}
                   </p>
                 </td>
               </tr>
@@ -281,44 +252,8 @@ const MemberDetail = () => {
             <table className={styles["member-detail-table"]}>
               <tr>
                 <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    GENDER
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.Gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    AGE
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.age}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    DONATED/SERVED HOURS
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
                   <p className={`${styles['membership-label']} ${styles['underline']}`}>
-                    NURSING EDUCATION
+                    MORE INFORMATION
                   </p>
                 </td>
                 <td></td>
@@ -326,188 +261,43 @@ const MemberDetail = () => {
               <tr>
                 <td>
                   <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    SCHOOL NAME
+                    MEMBERSHIP LEVEL
                   </p>
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
+                    {member.membershipLevel}
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
                   <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    YEAR GRADUATED
+                    EMAIL
                   </p>
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
+                    {member.email}
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
                   <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    COUNTRY
+                    EDUCATION
                   </p>
                 </td>
                 <td>
                   <p className={styles["membership-data"]}>
-                    placeholder {member.country}
+                    {member.highestEducation}
                   </p>
                 </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    DEGREE RECEIVED
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    HIGHEST LEVEL OF EDUCATION
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['underline']}`}>
-                    WORK INFORMATION
-                  </p>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    STATUS
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    EMPLOYER
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.employer}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    TYPE OF INSTITUTION
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    PRIMARY NURSING PRACTICE
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    ADVANCED PRACTICE NURSES
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    YEAR OF NURSING EXPERIENCES
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    NATIONAL CERTIFICATION
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['small']}`}>
-                    YEARS AS PNAA CHAPTER MEMBER
-                  </p>
-                </td>
-                <td>
-                  <p className={styles["membership-data"]}>
-                    placeholder {member.gender}
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p className={`${styles['membership-label']} ${styles['underline']}`}>
-                    NOTES
-                  </p>
-                </td>
-                <td></td>
               </tr>
             </table>
-            <p className={styles["member-notes"]}>{member.notes}</p>
           </div>
         </div>
       </div>
-      <MemberDialogBox
-        open={isDialogOpen}
-        handleClose={() => setDialogOpen(false)}
-        memberName={member ? `${member.FirstName} ${member.LastName}` : ""}
-        memberId={member ? member.id : ""}
-        dialogAction={dialogAction}
-        onActionSuccess={() => setMemberActive(!memberActive)}
-      />
     </div>
   );
 };

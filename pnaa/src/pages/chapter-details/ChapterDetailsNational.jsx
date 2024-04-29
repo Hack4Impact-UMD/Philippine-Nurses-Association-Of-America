@@ -105,7 +105,7 @@ const ChapterDetailsNational = () => {
             <div></div>
           ),
         },
-        { field: 'volunteer-hours', headerName: 'VOLUNTEER HOURS', width: 1000, 
+        { field: 'volunteer-hours', headerName: 'VOLUNTEER HOURS', width: 700, 
         renderCell: (params) => (
           <div></div>
         ),

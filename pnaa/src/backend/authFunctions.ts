@@ -63,7 +63,7 @@ import {
   /*
    * Creates a user and sends a password reset email to that user.
    */
-  export function createUser(newEmail: string, newRole: string): Promise<void> {
+  export function createUser(newEmail: string, newRole: string, firstName: string, chapterName: string, lastName: string): Promise<void> {
     return new Promise((resolve, reject) => {
       /* If role isn't one of the expected ones, reject it.*/
       if (newRole != 'admin' && newRole != 'user') {
@@ -72,7 +72,7 @@ import {
       const createUserCloudFunction = httpsCallable(functions, 'createUser');
       const auth = getAuth(app);
   
-      createUserCloudFunction({ email: newEmail, role: newRole })
+      createUserCloudFunction({ email: newEmail, role: newRole, firstName: firstName, chapterName: chapterName, lastName:lastName })
         .then(async () => {
           await sendPasswordResetEmail(auth, newEmail)
             .then(() => {
@@ -87,6 +87,7 @@ import {
         });
     });
   }
+
   
   /*
    * Creates a user and sends a password reset email to that user.

@@ -74,7 +74,7 @@ const SignIn = () => {
             Show Password
           </label>
           <button onClick={handleSignIn}>Login</button>
-          {error && <p id={styles["error"]} style={{ color: "red" }}>{error}</p>}{" "}
+          {error && <p id={styles["error"]} style={{ color: "red" }}>{error}</p>}
         </div>
         <p className={styles.backToLogin}>
           Dont Remember Your Password? <Link to="/forgotpassword">Forgot Password</Link>

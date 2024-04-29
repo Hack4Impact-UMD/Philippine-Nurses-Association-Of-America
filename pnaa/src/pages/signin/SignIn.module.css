@@ -1,144 +1,150 @@
 
 #container {
-    box-shadow: 0px 4px 4px 4px #05208B80;
-    position: fixed;
-    top: 5%;
-    left: 5%;
-    width: 721px;
-    height: 604px;
-    font-size: 20px;
-    gap: 0px;
-    border-radius: 15px;
-    opacity: 1; /* Changed from 0px to 1 for visibility */
-    border: 1px solid #2264E559;
-    z-index: 2;
-    background-color: white;
-    padding: 20px; /* Added padding for spacing within the container */
-  }
+  box-shadow: 0px 4px 4px 4px #05208B80;
+  position: fixed;
+  top: 5%;
+  left: 5%;
+  width: 721px;
+  height: 604px;
+  font-size: 20px;
+  gap: 0px;
+  border-radius: 15px;
+  opacity: 1; /* Changed from 0px to 1 for visibility */
+  border: 1px solid #2264E559;
+  z-index: 2;
+  background-color: white;
+  padding: 20px; /* Added padding for spacing within the container */
+}
 
-  .form {
-    display: flex;
-    flex-direction: column;
-  }
+.form {
+  display: flex;
+  flex-direction: column;
+}
 
 
 #login {
-    position: fixed;
-    left: 8%;
-    height: 62px;
-    width: 137px;
-    gap: 0px;
-    opacity: 0px;
-    font-family: 'Source-Serif 4', serif;
-    font-size: 56px;
-    font-weight: 700;
-    line-height: 61.6px;
+  position: fixed;
+  left: 8%;
+  height: 62px;
+  width: 137px;
+  gap: 0px;
+  opacity: 0px;
+  font-family: 'Source-Serif 4', serif;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 61.6px;
 }
 
 label {
-    font-size: 14px; 
-    margin-bottom: 20px;
-    font-family: 'Source Serif 4', serif;  
-    color: inherit;  
-    cursor: pointer;  
+  font-size: 14px; 
+  margin-bottom: 20px;
+  font-family: 'Source Serif 4', serif;  
+  color: inherit;  
+  cursor: pointer;  
 }
 
 #email {
-    position: fixed;
-    top: 30%;
-    left: 4%;
-    border: 3px solid #99B0DD;
-    width: 596px;
-    height: 64px;
-    gap: 0px;
-    border-radius: 8px;
-    opacity: 0px;
-    background: linear-gradient(90deg, rgba(152, 175, 221, 0.21) 0%, rgba(217, 217, 217, 0.04) 100%);
-    font-size: 20px;
+  position: fixed;
+  top: 30%;
+  left: 4%;
+  border: 3px solid #99B0DD;
+  width: 596px;
+  height: 64px;
+  gap: 0px;
+  border-radius: 8px;
+  opacity: 0px;
+  background: linear-gradient(90deg, rgba(152, 175, 221, 0.21) 0%, rgba(217, 217, 217, 0.04) 100%);
+  font-size: 20px;
 }
 
 #password {
-    position: fixed;
-    top: 30%;
-    left: 4%;
-    border: 3px solid #99B0DD;
-    width: 596px;
-    height: 64px;
-    gap: 0px;
-    border-radius: 8px;
-    opacity: 0px;
-    background: linear-gradient(90deg, rgba(152, 175, 221, 0.21) 0%, rgba(217, 217, 217, 0.04) 100%);
-    font-size: 20px;
+  position: fixed;
+  top: 30%;
+  left: 4%;
+  border: 3px solid #99B0DD;
+  width: 596px;
+  height: 64px;
+  gap: 0px;
+  border-radius: 8px;
+  opacity: 0px;
+  background: linear-gradient(90deg, rgba(152, 175, 221, 0.21) 0%, rgba(217, 217, 217, 0.04) 100%);
+  font-size: 20px;
 }
 
 button {
-    background-color: #2264e5;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
+  background-color: #2264e5;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 
 #error {
-    position: fixed;
-    top: 23%;
-    left: 8%;
+  position: absolute;
+  top: 80%; /* Adjusted for better visibility */
+  left: 50%;
+  transform: translateX(-50%); /* Centers the error message */
+  width: 100%;
+  text-align: center;
+  color: red; /* Ensures the error text is red */
+  font-size: 16px; /* Makes text larger */
+  z-index: 3; /* Ensures it is on top of other elements */
 }
 
 #showPassword {
-    position: fixed;
-    left: 8%;
-    top: 65%;
-    background: linear-gradient(90deg, rgba(152, 175, 221, 0.21) 0%, rgba(217, 217, 217, 0.04) 100%);
-    width: 29px;
-    height: 29px;
+  position: fixed;
+  left: 8%;
+  top: 65%;
+  background: linear-gradient(90deg, rgba(152, 175, 221, 0.21) 0%, rgba(217, 217, 217, 0.04) 100%);
+  width: 29px;
+  height: 29px;
 }
 
 #logo {
-    position: fixed;
-    width: 1123px;
-    height: 1123px;
-    z-index: -1;
-    max-width: calc(100% + 50px);
-    opacity: 50%;
-    transform: rotate(9.36deg);
-    left: 33%;
-    top: 5%;
-  }
+  position: fixed;
+  width: 530px;
+  height: 530px;
+  z-index: -1;
+  max-width: calc(100% + 50px);
+  opacity: 90%;
+  transform: rotate(9.36deg);
+  left: 50%;
+  top: 5%;
+}
 
-  input[type='text'],
-  input[type='password'],
-  select {
-    margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+input[type='text'],
+input[type='password'],
+select {
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
 #orgname {
-    position: fixed;
-    right: 1%;
-    top: 0%;
-    font-family: 'Source Serif 4', serif;
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 27.42px;
-    text-align: right;
-    color: #4F4F4F;
+  position: fixed;
+  right: 1%;
+  top: 0%;
+  font-family: 'Source Serif 4', serif;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 27.42px;
+  text-align: right;
+  color: #4F4F4F;
 }
 
 #mantra {
-    position: fixed;
-    right: 1%;
-    top: 3%;
-    font-family: 'Source Serif 4', serif;
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 27.42px;
-    text-align: right;
-  }
+  position: fixed;
+  right: 1%;
+  top: 3%;
+  font-family: 'Source Serif 4', serif;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 27.42px;
+  text-align: right;
+}
 
 .backToLogin {
 margin-top: 20px;

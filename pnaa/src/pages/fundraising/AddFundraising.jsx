@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import styles from "./FundraisingDetails.module.css";
+import styles from "./AddFundraising.module.css";
 
 import {
     getFirestore,
@@ -22,13 +23,17 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import PNAA_Logo from "../../assets/PNAA_Logo.png"; 
+import { useUser} from '../../config/UserContext';
 
-const FundraisingDetail = () => {
-  // Pass in member data from previous state
-  const location = useLocation();
-  const { fundraiser } = location.state;
-  var date = new Date(fundraiser.Date);
-  console.log(date);
+
+
+
+const AddFundraising = () => {
+    const { currentUser, loading: userLoading } = useUser();
+
+    
+  
+  
 
   // Collect screen width for responsive design
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -37,13 +42,12 @@ const FundraisingDetail = () => {
   // Dialog box state
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState("");
-  const [editMode, setEditMode] = useState(false);
   const [editedFund, setEditedFund] = useState(
-    fundraiser || {
+   {
       Name: "",
       Date: "",
       Note: "",
-      Amount: 1,
+      Amount: 0,
     }
   );
   // Menu anchor for mobile view
@@ -69,43 +73,30 @@ const FundraisingDetail = () => {
   }, []);
 
   // Handle action button clicks
-  const handleEditClick = () => {
-    if(editMode){
-        handleSaveClick();
-    }
-    setEditMode(!editMode);
-  };
+  const handleAddClick = async () => {
+
+    if (window.confirm("Are you sure you want to add this new fundraising event?") == true) {
 
 
-  // handle the save button
-  const handleSaveClick = async () => {
-    if (fundraiser === null) {
-      // Create a new event
-      try {
+    try {
         const fundraiserCol = collection(db, "fundraisers");
         const newFundRef = doc(fundraiserCol);
-        await setDoc(newFundRef, editedFund);
-        setEditMode(false);
+        await setDoc(newFundRef,  {
+            ...editedFund,
+            ChapterName: currentUser.chapterId,
+          });
         navigate(-1);
       } catch (error) {
         console.error("Error creating fundraiser: ", error);
-      }
-    } else {
-      // Update existing event
-      const fundRef = doc(db, "fundraisers", editedFund.id);
-      try {
-        await updateDoc(fundRef, editedFund);
-        setEditMode(false);
-      } catch (error) {
-        console.error("Error updating document: ", error);
-      }
+      } 
+
     }
+   
   };
 
-  const handleSuspendClick = () => {
-    setDialogAction("suspend");
-    setDialogOpen(true);
-  };
+
+
+
 
   const handleRenewClick = () => {
     setDialogAction("renew");
@@ -160,8 +151,8 @@ const FundraisingDetail = () => {
       {createMaterialButton("#05208BB2", "Back to Main Fundraising", handleBackClick)}
       {createMaterialButton(
         "#00008B",
-        editMode ? "Save " : "Edit Fundraiser",
-        handleEditClick,
+        "Add Fundraiser" ,
+        handleAddClick,
        
       )}
       {createMaterialButton(
@@ -186,7 +177,7 @@ const FundraisingDetail = () => {
       <MenuItem
         onClick={() => {
           handleClose();
-          handleEditClick();
+          handleAddClick();
         }}
         style={{ color: "#05208BB2", fontFamily: "'Source Serif 4', serif" }}
       >
@@ -197,17 +188,13 @@ const FundraisingDetail = () => {
     </Menu>
   );
 
-  // If no member data is available, display error message
-  if (!fundraiser) {
-    return <div> No fundraising data available. </div>;
-  }
-
+  
   // Else, display normal screen
   return (
     <div className={styles["fundraiser-detail-container"]}>
       <div className={styles["fundraiser-detail-content"]}>
         <div className={styles["fundraiser-header-container"]}>
-          <p className={styles["fundraiser-header"]}>{fundraiser.Name}</p>
+          <p className={styles["fundraiser-header"]}>Enter the fields to add a new fundraising event</p>
           {screenWidth < mobileScreenWidth ? (
             <>
               <IconButton
@@ -236,7 +223,7 @@ const FundraisingDetail = () => {
                   </p>
                 </td>
                 <td>
-                {editMode?  (<input
+                 <input
                         type="text"
                         value={editedFund.Date}
                         onChange={(e) =>
@@ -246,9 +233,27 @@ const FundraisingDetail = () => {
                           })
                         }
                         className={styles["edit-input"]} // Add CSS for this
-                      />):(<p className={styles["fundraiser-data"]}>
-                    {editedFund.Date}
-                  </p>)}
+                      />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p className={styles["fundraiser-label"]}>
+                    Fundraising Name
+                  </p>
+                </td>
+                <td>
+                 <input
+                        type="text"
+                        value={editedFund.Name}
+                        onChange={(e) =>
+                          setEditedFund({
+                            ...editedFund,
+                            Name: e.target.value,
+                          })
+                        }
+                        className={styles["edit-input"]} // Add CSS for this
+                      />
                 </td>
               </tr>
               <tr>
@@ -270,7 +275,7 @@ const FundraisingDetail = () => {
                   </p>
                 </td>
                 <td>
-                  {editMode?  (<input
+                    <input
                         type="text"
                         value={editedFund.Amount}
                         onChange={(e) =>
@@ -280,9 +285,7 @@ const FundraisingDetail = () => {
                           })
                         }
                         className={styles["edit-input"]} // Add CSS for this
-                      />):(<p className={styles["fundraiser-data"]}>
-                    {editedFund.Amount}
-                  </p>)}
+                      />
                 </td>
               </tr>
               <tr>
@@ -292,7 +295,7 @@ const FundraisingDetail = () => {
                   </p>
                 </td>
                 <td>
-                {editMode?  (<input
+                <input
                         type="text"
                         value={editedFund.Note}
                         onChange={(e) =>
@@ -302,9 +305,7 @@ const FundraisingDetail = () => {
                           })
                         }
                         className={styles["edit-input"]} // Add CSS for this
-                      />):(<p className={styles["fundraiser-data"]}>
-                    {editedFund.Note}
-                  </p>)}
+                      />
                 </td>
               </tr>
             </table>
@@ -315,7 +316,9 @@ const FundraisingDetail = () => {
     <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]}/>
 
     </div>
-  );
-};
+  )
 
-export default FundraisingDetail;
+
+    };
+
+export default AddFundraising;

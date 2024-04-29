@@ -1,20 +1,63 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import styles from './SignUp.module.css';
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
+import { createUser } from '../../backend/authFunctions';
+import { useState, useEffect } from 'react';
+
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [region, setRegion] = useState('');
+  const [chapterName, setChapterName] = useState('');
   const [accountType, setAccountType] = useState('user');
+  const [chapters, setChapters] = useState([]);
+  const [userChapter, setUserChapter] = useState(true);
+  const navigate = useNavigate(); 
+  let err = false;
+
+
+
+
+  useEffect(() => {
+    const fetchChapters = async () => {
+      const db = getFirestore();
+      const chaptersRef = collection(db, 'chapters');
+      try {
+        const snapshot = await getDocs(chaptersRef);
+        const chapterNames = snapshot.docs.map(doc => doc.data().name);
+        setChapters(chapterNames);
+      } catch (error) {
+        console.error("Error fetching chapters: ", error);
+      }
+    }
+    fetchChapters();
+  }, []);
 
   const handleSignUp = () => {
-    // Your sign-up logic here
-  };
+    // lastName is necessary, phone Number is not necessary
+    createUser(email, accountType, firstName, chapterName, lastName).catch((error) => {
+    window.alert("An account has already been created with that email!");
+    err = true;
+  }).then(() => {
+    if(!err){
+      navigate('/');
+      window.alert("An account has successfully been created! You may now sign in after resetting your password");
+      
+    }
+    err = false;
 
+  }
+      
+)};
+
+  const handleChangeType = (userType) => {
+    setUserChapter(!userChapter);
+    setAccountType(userType);
+
+  }
   return (
     <div id={styles["background"]}>
       <p id={styles["orgname"]}>Philippine Nurses Association of America</p>
@@ -31,20 +74,24 @@ const SignUp = () => {
             <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last Name" />
           </div>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email Address" />
-          <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Phone Number" />
-          <select value={region} onChange={(e) => setRegion(e.target.value)}>
-            <option value="">Select Region</option>
-            {/* Add your region options here */}
-          </select>
-          <select value={accountType} onChange={(e) => setAccountType(e.target.value)} placeholder="Account Type" >
+          
+          <select value={accountType} onChange={(e) => handleChangeType(e.target.value)} placeholder="Account Type" >
             <option value="user">Chapter</option>
             <option value="admin">National</option>
           </select>
+
+          {userChapter && <h5>Select your chapter:</h5>}
+          {userChapter && <select value={chapterName} onChange={(e) => setChapterName(e.target.value)} >
+          {chapters.map((chapter, index) => (
+                
+                <option key={index} value={chapter}>{chapter}</option>
+              ))}
+           
+          </select>}
+          
           <button onClick={handleSignUp}>Create Account</button>
         </div>
-        <p className={styles.backToLogin}>
-          Already have an account? <Link to="/signin">Sign In</Link>
-        </p>
+       
       </div>
       <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]} />
     </div>

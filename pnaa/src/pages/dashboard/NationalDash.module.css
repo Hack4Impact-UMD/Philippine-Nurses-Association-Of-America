@@ -39,17 +39,32 @@
   }
   
   .signOutButton {
+    position: absolute;
     padding: 5px 15px; /* Adjust padding as needed */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    left: 980px;
   }
+
+  .makeAccountButton {
+    padding: 5px 15px; /* Adjust padding as needed */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  
+  }
+  
   
   .signOutButton:hover {
     background-color: #08529e; /* Darker red on hover */
   }
+
+  
   
   .tabContent {
     padding-left: 40px;  /* Padding on the left */

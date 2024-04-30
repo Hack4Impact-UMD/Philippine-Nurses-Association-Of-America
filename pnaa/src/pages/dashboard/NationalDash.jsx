@@ -26,8 +26,9 @@ const Home = () => {
         <h1>Welcome To National Dashboard</h1>
        
         <button onClick={signOut} className={styles.signOutButton}>Sign Out</button>
+        <button onClick={signin} className={styles.makeAccountButton}>Make an account for another user</button>
       </div>
-      <button onClick={signin}>Make an account for another user</button>
+      
       <div className={styles.navTabs}>
         <ul>
           <li className={styles.tabItem}>

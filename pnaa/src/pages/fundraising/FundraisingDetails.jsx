@@ -44,6 +44,7 @@ const FundraisingDetail = () => {
       Date: "",
       Note: "",
       Amount: 1,
+      chapterName: "",
     }
   );
   // Menu anchor for mobile view
@@ -305,6 +306,18 @@ const FundraisingDetail = () => {
                       />):(<p className={styles["fundraiser-data"]}>
                     {editedFund.Note}
                   </p>)}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p className={styles["fundraiser-label"]}>
+                    Chapter Name
+                  </p>
+                </td>
+                <td>
+               <p className={styles["fundraiser-data"]}>
+                    {editedFund.ChapterName}
+                  </p>
                 </td>
               </tr>
             </table>

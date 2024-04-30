@@ -19,7 +19,7 @@ const RequireAuth: React.FC<Props> = ({ children }) => {
     );
   } else if (!authContext.user) {
     return <Navigate to="/login" state={{ redir: window.location.pathname }} />;
-  } else if (authContext.token?.claims?.role != '' /* <---- Add role here */) {
+  } else if (authContext.token?.claims?.role != 'admin' && authContext.token?.claims?.role != 'user' /* <---- Add role here */) {
     return (
       <div className={styles.loadingContainer}>
         <p className={styles.errorMessage}>

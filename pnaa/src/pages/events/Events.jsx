@@ -282,7 +282,7 @@ const Events = () => {
     {
       field: "total_volunteer_hours",
       headerName: "TOTAL HOURS",
-      width: 200,
+      width: 500,
       cellClassName: "cell",
     },
   ];

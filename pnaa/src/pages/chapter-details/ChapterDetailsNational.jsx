@@ -17,7 +17,9 @@ const ChapterDetailsNational = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const filteredChapters = chapters.filter(chapter => chapter.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredChapters = chapters.filter(chapter => 
+    chapter.name ? chapter.name.toLowerCase().includes(searchTerm.toLowerCase()) : false
+  );
 
 
   const handleSearch = (e) => {

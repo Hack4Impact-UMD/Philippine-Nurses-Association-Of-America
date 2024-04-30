@@ -11,6 +11,8 @@
 # production
 /build
 
+/contactsData
+
 # misc
 .DS_Store
 .env.local

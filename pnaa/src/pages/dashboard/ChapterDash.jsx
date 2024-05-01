@@ -26,7 +26,7 @@ const ChapterDashboard = () => {
   return (
     <div>
       <div className={styles.header}>
-        <h1>Welcome To Chapter Dashboard</h1>
+      {currentUser.name? <h1>Welcome To Chapter Dashboard{", " + currentUser.name}!</h1> : <h1>Welcome To Chapter Dashboard!</h1>}
         <button onClick={signOut} className={styles.signOutButton}>Sign Out</button>
       </div>
       <div className={styles.navTabs}>

@@ -23,7 +23,7 @@ const Home = () => {
   return (
     <div>
       <div className={styles.header}>
-        <h1>Welcome To National Dashboard</h1>
+        {currentUser.name? <h1>Welcome To National Dashboard{", " + currentUser.name}!</h1> : <h1>Welcome To National Dashboard!</h1>}
        
        <div>
 

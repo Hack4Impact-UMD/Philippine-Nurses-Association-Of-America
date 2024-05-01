@@ -484,6 +484,39 @@ const EventDetails = () => {
                           className={styles["edit-input"]}
                         />
                       </>
+                    ) : isEditMode && fieldName === "date" ? (
+                      <>
+                        <input
+                          type="date"
+                          value={value.split(" - ")[0]}
+                          onChange={(e) => {
+                            const [_, endTime] = value.split(" - ");
+                            const newValue = `${e.target.value} - ${
+                              endTime || ""
+                            }`;
+                            setEditedEvent({
+                              ...editedEvent,
+                              [fieldName]: newValue,
+                            });
+                          }}
+                          className={styles["edit-input"]}
+                        />
+                        <span> - </span>
+                        <input
+                          type="date"
+                          value={value.split(" - ")[1]}
+                          onChange={(e) => {
+                            const [startTime] = value.split(" - ");
+                            const newValue = `${startTime} - ${e.target.value}`;
+                            setEditedEvent({
+                              ...editedEvent,
+                              [fieldName]: newValue,
+                            });
+                            setIsEventTimeChanged(true);
+                          }}
+                          className={styles["edit-input"]}
+                        />
+                      </>
                     ) : isEditMode && fieldName === "status" ? (
                       <select
                         value={value}

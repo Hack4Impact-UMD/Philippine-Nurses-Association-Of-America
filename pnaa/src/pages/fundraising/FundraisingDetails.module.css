@@ -48,8 +48,8 @@
   border: solid black 1px;
   width: 55%;
   padding: 16px 36px;
-  height: 390px;
-  width: 280px;
+  height: 460px;
+  width: 420px;
   flex: 0 1 auto;
   flex-basis: calc(
     509px / 1195 * 100%

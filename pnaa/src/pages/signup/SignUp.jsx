@@ -37,6 +37,8 @@ const SignUp = () => {
   }, []);
 
   const handleSignUp = () => {
+
+    if(chapterName !== ''){
     // lastName is necessary, phone Number is not necessary
     createUser(email, accountType, firstName, chapterName, lastName).catch((error) => {
     window.alert("An account has already been created with that email!");
@@ -49,9 +51,30 @@ const SignUp = () => {
     }
     err = false;
 
-  }
+  })
+}else{
+  // lastName is necessary, phone Number is not necessary
+  createUser(email, accountType, firstName, 'National', lastName).catch((error) => {
+    window.alert("An account has already been created with that email!");
+    err = true;
+  }).then(() => {
+    if(!err){
+      navigate('/');
+      window.alert("An account has successfully been created! You may now sign in after resetting your password");
       
-)};
+    }
+    err = false;
+
+  })
+
+
+}
+
+      
+  };
+
+
+
 
   const handleChangeType = (userType) => {
     setUserChapter(!userChapter);

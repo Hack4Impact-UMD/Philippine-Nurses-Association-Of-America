@@ -1,3 +1,31 @@
 #searchBar{
     width: 300px;
 }
+
+#filterlabel {
+position: relative;
+bottom: 60px;
+
+
+}
+
+#chapterSelect {
+position: relative;
+bottom: 60px;
+
+}
+
+.finders {
+
+
+
+}
+
+
+.button {
+    background-color: darkred;
+    display: 'flex';
+    width: 80px;
+    height: 40px;
+    
+}

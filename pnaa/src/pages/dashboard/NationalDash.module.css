@@ -39,23 +39,26 @@
   }
   
   .signOutButton {
-    position: absolute;
+    float: left;
+    position: relative;
     padding: 5px 15px; /* Adjust padding as needed */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    left: 980px;
+    left: 30px;
   }
 
   .makeAccountButton {
+    position: relative;
     padding: 5px 15px; /* Adjust padding as needed */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    left: 40px;
   
   }
   

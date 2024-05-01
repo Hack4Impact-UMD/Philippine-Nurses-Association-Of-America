@@ -8,6 +8,9 @@ import ModeIcon from '@mui/icons-material/Mode';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import { useState, useEffect } from 'react';
 import styles from './fundraising.module.css';
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../../config/firebase.ts";
+import { fetchSignInMethodsForEmail } from 'firebase/auth';
 
 const Fundraising = () => {
   const [donations, setDonations] = useState([]);
@@ -20,6 +23,7 @@ const Fundraising = () => {
   const [selectedChapter, setSelectedChapter] = useState("");
   const [chapters, setChapters] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [del, setDel] = useState(false);
 
 
   
@@ -71,7 +75,6 @@ const Fundraising = () => {
           const snapshot = await getDocs(donations);
           const donationsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           console.log(donationsList);
-          console.log("Lol");
           setDonations(donationsList);
 
           setOrigDonations(donationsList);
@@ -95,7 +98,7 @@ const Fundraising = () => {
 
       fetchDonations();
     
-  }, [currentUser]);
+  }, [currentUser, del]);
 
 
 
@@ -133,6 +136,34 @@ const Fundraising = () => {
     console.log("ok");
   }
 
+  const handleDeleteFundraising = async () => {
+    if (selectedRows.length === 0) {
+      alert("No fundraiser selected. Please select fundraisers to delete.");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete the selected fundraiser events?"
+    );
+
+    if (confirmDelete) {
+      const fundraisersRef = collection(db, "fundraisers");
+      try {
+        for (const fundraiserId of selectedRows) {
+          const fundraiserRef = doc(fundraisersRef, fundraiserId);
+          await deleteDoc(fundraiserRef);
+        }
+    
+        setSelectedRows([]);
+     
+        alert("Selected fundraisers deleted successfully!");
+        setDel(!del);
+      } catch (error) {
+        console.error("Error deleting fundraisers: ", error);
+        alert("An error occurred while deleting fundraisers. Please try again.");
+      }
+    }
+  };
   
 
 
@@ -203,50 +234,18 @@ const Fundraising = () => {
     </div>
   );
 
-  const DetailsMember = (
-    <div style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-      <DonationButton
-         text={
-          <>
-            Details <InfoIcon style={{ marginLeft: '5px', color: 'blue', fontSize: '1rem' }} />
-          </>
-        }
-        backgroundColor={"lightblue"}
-        width="170px"
-        height="32px"
-      />
-    </div>
-  );
 
-  const EditMember = (
+  const DeleteFundraising = (
     <div style={{ marginRight: '10px' }}>
-      <DonationButton
-         text={
-          <>
-            Edit <ModeIcon style={{ marginLeft: '5px', color: 'blue', fontSize: '1rem' }} />
-          </>
-        }
-        backgroundColor={"lightblue"}
-        width="156px"
-        height="32px"
-      />
+      <button
+         class={styles.button}
+      
+        onClick={handleDeleteFundraising}
+        > Delete </button>
     </div>
   )
 
-  const ArchiveMember = (
-    <div style={{ marginRight: '10px' }}>
-      <DonationButton
-        text={
-          <>
-            Archive <ArchiveIcon style={{ marginLeft: '5px', color: 'red', fontSize: '1rem' }} />
-          </>
-        }
-        backgroundColor={"#AB2218"}
-        width="156px"
-        height="32px"
-      />
-    </div>
-  )
+  
 
   const columns = [
     {
@@ -398,10 +397,11 @@ const Fundraising = () => {
         />
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '10px', marginRight: '50px' }}>
           {selectedRows.length === 0 && AddDonation}
-          {selectedRows.length !== 0 && DetailsMember}
-          {selectedRows.length !== 0 && EditMember}
-          {selectedRows.length !== 0 && ArchiveMember}
+          {selectedRows.length !== 0 && DeleteFundraising}
         </div>
+        <div class={styles.finders}>
+
+        
         <label  id={styles.filterlabel} htmlFor="chapterSelect">Filter by Chapter Name:</label>
             <select id={styles.chapterSelect} value={selectedChapter} onChange={(e) => handleFilterByChapter(e.target.value)}>
               <option value="">All Chapters</option>
@@ -409,6 +409,7 @@ const Fundraising = () => {
                 <option key={index} value={chapter}>{chapter}</option>
               ))}
             </select>
+            </div>
         <div style={{ margin: '0 50px' }}>
           <DataGrid
             header = {"Total Amount: $1000"}

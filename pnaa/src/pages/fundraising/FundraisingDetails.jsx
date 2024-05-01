@@ -180,11 +180,10 @@ const FundraisingDetail = () => {
         handleEditClick,
        
       )}
-      {createMaterialButton(
-        "#91201A",
-        "Archive",
-        handleRenewClick,
-      )}
+    
+
+
+     
     </div>
   );
 

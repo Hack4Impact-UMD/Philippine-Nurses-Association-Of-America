@@ -1,39 +1,24 @@
-
-import React, { useState, useEffect } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./AddFundraising.module.css";
 
-import {
-    getFirestore,
-    doc,
-    updateDoc,
-    setDoc,
-    collection,
-  } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 // import MemberDialogBox from "./MemberDialogBox";
-import {db} from "../../config/firebase.ts";
-import logo from "../../assets/PNAA_Logo.png"
+import { db } from "../../config/firebase.ts";
 
 // Material UI Components
-import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import MenuIcon from "@mui/icons-material/Menu";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import MenuIcon from "@mui/icons-material/Menu";
-import PNAA_Logo from "../../assets/PNAA_Logo.png"; 
-import { useUser} from '../../config/UserContext';
-
-
-
+import PNAA_Logo from "../../assets/PNAA_Logo.png";
+import { useUser } from "../../auth/UserContext";
 
 const AddFundraising = () => {
-    const { currentUser, loading: userLoading } = useUser();
-
-    
-  
-  
+  const { currentUser, loading: userLoading } = useUser();
 
   // Collect screen width for responsive design
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -42,14 +27,12 @@ const AddFundraising = () => {
   // Dialog box state
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState("");
-  const [editedFund, setEditedFund] = useState(
-   {
-      Name: "",
-      Date: "",
-      Note: "",
-      Amount: 0,
-    }
-  );
+  const [editedFund, setEditedFund] = useState({
+    Name: "",
+    Date: "",
+    Note: "",
+    Amount: 0,
+  });
   // Menu anchor for mobile view
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -74,29 +57,24 @@ const AddFundraising = () => {
 
   // Handle action button clicks
   const handleAddClick = async () => {
-
-    if (window.confirm("Are you sure you want to add this new fundraising event?") == true) {
-
-
-    try {
+    if (
+      window.confirm(
+        "Are you sure you want to add this new fundraising event?"
+      ) == true
+    ) {
+      try {
         const fundraiserCol = collection(db, "fundraisers");
         const newFundRef = doc(fundraiserCol);
-        await setDoc(newFundRef,  {
-            ...editedFund,
-            ChapterName: currentUser.chapterId,
-          });
+        await setDoc(newFundRef, {
+          ...editedFund,
+          ChapterName: currentUser.chapterId,
+        });
         navigate(-1);
       } catch (error) {
         console.error("Error creating fundraiser: ", error);
-      } 
-
+      }
     }
-   
   };
-
-
-
-
 
   const handleRenewClick = () => {
     setDialogAction("renew");
@@ -110,7 +88,7 @@ const AddFundraising = () => {
 
   const handleBackClick = () => {
     navigate(-1);
-  }
+  };
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -148,18 +126,13 @@ const AddFundraising = () => {
   // Use active status to determine which buttons are available
   const actionButtons = () => (
     <div className={styles["action-button-group"]}>
-      {createMaterialButton("#05208BB2", "Back to Main Fundraising", handleBackClick)}
       {createMaterialButton(
-        "#00008B",
-        "Add Fundraiser" ,
-        handleAddClick,
-       
+        "#05208BB2",
+        "Back to Main Fundraising",
+        handleBackClick
       )}
-      {createMaterialButton(
-        "#91201A",
-        "Archive",
-        handleRenewClick,
-      )}
+      {createMaterialButton("#00008B", "Add Fundraiser", handleAddClick)}
+      {createMaterialButton("#91201A", "Archive", handleRenewClick)}
     </div>
   );
 
@@ -183,18 +156,17 @@ const AddFundraising = () => {
       >
         Edit member
       </MenuItem>
-     
-     
     </Menu>
   );
 
-  
   // Else, display normal screen
   return (
     <div className={styles["fundraiser-detail-container"]}>
       <div className={styles["fundraiser-detail-content"]}>
         <div className={styles["fundraiser-header-container"]}>
-          <p className={styles["fundraiser-header"]}>Enter the fields to add a new fundraising event</p>
+          <p className={styles["fundraiser-header"]}>
+            Enter the fields to add a new fundraising event
+          </p>
           {screenWidth < mobileScreenWidth ? (
             <>
               <IconButton
@@ -213,112 +185,97 @@ const AddFundraising = () => {
         </div>
 
         <div className={styles["fundraiser-detail-information-container"]}>
-          <div className={styles["fundraiser-detail-information-container-left"]}>
+          <div
+            className={styles["fundraiser-detail-information-container-left"]}
+          >
             <table className={styles["fundraiser-detail-table"]}>
-              
               <tr>
                 <td>
-                  <p className={styles["fundraiser-label"]}>
-                    Date
-                  </p>
+                  <p className={styles["fundraiser-label"]}>Date</p>
                 </td>
                 <td>
-                 <input
-                        type="text"
-                        value={editedFund.Date}
-                        onChange={(e) =>
-                          setEditedFund({
-                            ...editedFund,
-                            Date: e.target.value,
-                          })
-                        }
-                        className={styles["edit-input"]} // Add CSS for this
-                      />
+                  <input
+                    type="text"
+                    value={editedFund.Date}
+                    onChange={(e) =>
+                      setEditedFund({
+                        ...editedFund,
+                        Date: e.target.value,
+                      })
+                    }
+                    className={styles["edit-input"]} // Add CSS for this
+                  />
                 </td>
               </tr>
               <tr>
                 <td>
-                  <p className={styles["fundraiser-label"]}>
-                    Fundraising Name
-                  </p>
+                  <p className={styles["fundraiser-label"]}>Fundraising Name</p>
                 </td>
                 <td>
-                 <input
-                        type="text"
-                        value={editedFund.Name}
-                        onChange={(e) =>
-                          setEditedFund({
-                            ...editedFund,
-                            Name: e.target.value,
-                          })
-                        }
-                        className={styles["edit-input"]} // Add CSS for this
-                      />
+                  <input
+                    type="text"
+                    value={editedFund.Name}
+                    onChange={(e) =>
+                      setEditedFund({
+                        ...editedFund,
+                        Name: e.target.value,
+                      })
+                    }
+                    className={styles["edit-input"]} // Add CSS for this
+                  />
                 </td>
               </tr>
               <tr>
                 <td>
-                  <p className={styles["fundraiser-label"]}>
-                    Type
-                  </p>
+                  <p className={styles["fundraiser-label"]}>Type</p>
                 </td>
                 <td>
-                  <p className={styles["fundraiser-data"]}>
-                    Event
-                  </p>
+                  <p className={styles["fundraiser-data"]}>Event</p>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <p className={styles["fundraiser-label"]}>
-                    Amount
-                  </p>
+                  <p className={styles["fundraiser-label"]}>Amount</p>
                 </td>
                 <td>
-                    <input
-                        type="text"
-                        value={editedFund.Amount}
-                        onChange={(e) =>
-                          setEditedFund({
-                            ...editedFund,
-                            Amount: e.target.value,
-                          })
-                        }
-                        className={styles["edit-input"]} // Add CSS for this
-                      />
+                  <input
+                    type="text"
+                    value={editedFund.Amount}
+                    onChange={(e) =>
+                      setEditedFund({
+                        ...editedFund,
+                        Amount: e.target.value,
+                      })
+                    }
+                    className={styles["edit-input"]} // Add CSS for this
+                  />
                 </td>
               </tr>
               <tr>
                 <td>
-                  <p className={styles["fundraiser-label"]}>
-                    Note
-                  </p>
+                  <p className={styles["fundraiser-label"]}>Note</p>
                 </td>
                 <td>
-                <input
-                        type="text"
-                        value={editedFund.Note}
-                        onChange={(e) =>
-                          setEditedFund({
-                            ...editedFund,
-                            Note: e.target.value,
-                          })
-                        }
-                        className={styles["edit-input"]} // Add CSS for this
-                      />
+                  <input
+                    type="text"
+                    value={editedFund.Note}
+                    onChange={(e) =>
+                      setEditedFund({
+                        ...editedFund,
+                        Note: e.target.value,
+                      })
+                    }
+                    className={styles["edit-input"]} // Add CSS for this
+                  />
                 </td>
               </tr>
             </table>
           </div>
-          </div>
-       
+        </div>
+      </div>
+      <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]} />
     </div>
-    <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]}/>
-
-    </div>
-  )
-
-
-    };
+  );
+};
 
 export default AddFundraising;

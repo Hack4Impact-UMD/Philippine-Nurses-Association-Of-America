@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
-import Dialog from "@mui/material/Dialog";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import { useState } from "react";
 import styles from "./MemberDialogBox.module.css";
 
-import { getFirestore, doc, updateDoc } from "firebase/firestore";
-import { useUser } from "../../config/UserContext";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { useUser } from "../../auth/UserContext";
 
 const MemberDialogBox = ({
   open,

@@ -1,14 +1,8 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from '../AuthProvider';
-import styles from './RequireAuth.module.css';
+import { Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "../AuthProvider";
+import styles from "./RequireAuth.module.css";
 
-
-interface Props {
-  children: JSX.Element;
-}
-
-const RequireAuth: React.FC<Props> = ({ children }) => {
+const RequireAuth = ({ children }) => {
   const authContext = useAuth();
   if (authContext.loading) {
     return (
@@ -18,8 +12,13 @@ const RequireAuth: React.FC<Props> = ({ children }) => {
       </div>
     );
   } else if (!authContext.user) {
-    return <Navigate to="/login" state={{ redir: window.location.pathname }} />;
-  } else if (authContext.token?.claims?.role != '' /* <---- Add role here */) {
+    return (
+      <Navigate to="/signin" state={{ redir: window.location.pathname }} />
+    );
+  } else if (
+    authContext.token?.claims?.role.toLowerCase() != "user" &&
+    authContext.token?.claims?.role.toLowerCase() != "admin"
+  ) {
     return (
       <div className={styles.loadingContainer}>
         <p className={styles.errorMessage}>

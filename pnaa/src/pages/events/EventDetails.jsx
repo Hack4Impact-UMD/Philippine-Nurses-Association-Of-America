@@ -1,24 +1,24 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import styles from "./EventDetails.module.css";
-import { useUser } from "../../config/UserContext";
-import { doc, getDoc, updateDoc, setDoc, collection } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { useUser } from "../../auth/UserContext";
 import { db } from "../../config/firebase.ts";
+import styles from "./EventDetails.module.css";
 import EventDialogBox from "./EventDialogBox";
 
 // Material UI Components
-import Button from "@mui/material/Button";
 import {
-  Unarchive,
   Archive,
   KeyboardArrowLeft,
   ModeEdit,
+  Unarchive,
 } from "@mui/icons-material";
+import MenuIcon from "@mui/icons-material/Menu";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import MenuIcon from "@mui/icons-material/Menu";
 
 const EventDetails = () => {
   /*****************************************************************************

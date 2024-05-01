@@ -1,12 +1,17 @@
-import { useState, useEffect } from "react";
-import { useUser } from "../../config/UserContext";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-import {  useNavigate } from "react-router-dom";
-import { DataGrid } from '@mui/x-data-grid';
-import Papa from 'papaparse';
-import styles from "./Events.module.css";
-import { doc, deleteDoc } from "firebase/firestore";
+import { DataGrid } from "@mui/x-data-grid";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  getFirestore,
+} from "firebase/firestore";
+import Papa from "papaparse";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../../auth/UserContext";
 import { db } from "../../config/firebase.ts";
+import styles from "./Events.module.css";
 
 const Events = () => {
   const { currentUser, loading: userLoading } = useUser();
@@ -141,21 +146,37 @@ const Events = () => {
         {text}
       </div>
     );
-  }
+  };
 
   const handleExport = () => {
     // Retrieve full event details for each selected row
-    const selectedEvents = selectedRows.map(rowId => events.find(event => event.id === rowId));
+    const selectedEvents = selectedRows.map((rowId) =>
+      events.find((event) => event.id === rowId)
+    );
     console.log("ev", selectedEvents);
-    const fields = ['name', 'chapter', 'date', 'time', 'location', 'status', 'attendee#', 'contact hrs', 'volunteer#', 'participants_served', 'region', 'about', 'other_details'];
+    const fields = [
+      "name",
+      "chapter",
+      "date",
+      "time",
+      "location",
+      "status",
+      "attendee#",
+      "contact hrs",
+      "volunteer#",
+      "participants_served",
+      "region",
+      "about",
+      "other_details",
+    ];
     // Convert selected events to CSV using Papaparse
     const csvData = Papa.unparse({
       fields: fields,
-      data: selectedEvents
+      data: selectedEvents,
     });
 
     if (csvData) {
-      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
 
       // Create a link and trigger the download
       const link = document.createElement("a");
@@ -168,7 +189,7 @@ const Events = () => {
     } else {
       alert("Nothing Selected");
     }
-  }
+  };
 
   const exportRegistration = (
     <div style={{ marginRight: "10px" }}>
@@ -383,19 +404,22 @@ const Events = () => {
           <div style={{ display: "flex", padding: "5px" }}>
             {exportRegistration}
             <button
-            onClick={handleDeleteEvent}
-            className={`${styles["events-delete-btn"]} ${
-              selectedRows.length === 0
-                ? styles["events-delete-btn-disabled"]
-                : ""
-            }`}
-            disabled={selectedRows.length === 0}
-          >
-            Delete Events
-          </button>
-          <button onClick={handleAddEvent} className={styles["events-add-btn"]}>
-            Add Event
-          </button>
+              onClick={handleDeleteEvent}
+              className={`${styles["events-delete-btn"]} ${
+                selectedRows.length === 0
+                  ? styles["events-delete-btn-disabled"]
+                  : ""
+              }`}
+              disabled={selectedRows.length === 0}
+            >
+              Delete Events
+            </button>
+            <button
+              onClick={handleAddEvent}
+              className={styles["events-add-btn"]}
+            >
+              Add Event
+            </button>
           </div>
         </div>
         <div id="table-background">

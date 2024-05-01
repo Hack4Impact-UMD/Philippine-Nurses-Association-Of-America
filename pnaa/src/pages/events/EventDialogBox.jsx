@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react";
-import Dialog from "@mui/material/Dialog";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import { useState } from "react";
 import styles from "./EventDialogBox.module.css";
 
-import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
+import { useUser } from "../../auth/UserContext";
 import { db } from "../../config/firebase.ts";
-import { useUser } from "../../config/UserContext";
 
 const EventDialogBox = ({
   open,

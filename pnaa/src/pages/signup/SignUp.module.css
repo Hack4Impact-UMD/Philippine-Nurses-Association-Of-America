@@ -1,5 +1,5 @@
 #container {
-  box-shadow: 0px 4px 4px 4px #05208B80;
+  box-shadow: 0px 4px 4px 4px #05208b80;
   position: fixed;
   top: 5%;
   left: 5%;
@@ -9,7 +9,7 @@
   gap: 0px;
   border-radius: 15px;
   opacity: 1; /* Changed from 0px to 1 for visibility */
-  border: 1px solid #2264E559;
+  border: 1px solid #2264e559;
   z-index: 2;
   background-color: white;
   padding: 20px; /* Added padding for spacing within the container */
@@ -41,26 +41,26 @@
   position: fixed;
   right: 1%;
   top: 0%;
-  font-family: 'Source Serif 4', serif;
+  font-family: "Source Serif 4", serif;
   font-size: 20px;
   font-weight: 800;
   line-height: 27.42px;
   text-align: right;
-  color: #4F4F4F;
+  color: #4f4f4f;
 }
 
 #mantra {
   position: fixed;
   right: 1%;
   top: 3%;
-  font-family: 'Source Serif 4', serif;
+  font-family: "Source Serif 4", serif;
   font-size: 20px;
   font-weight: 800;
   line-height: 27.42px;
   text-align: right;
 }
 
-input[type='text'],
+/* input[type='text'],
 input[type='email'],
 input[type='tel'],
 select {
@@ -68,16 +68,16 @@ select {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
+} */
 
-button {
+/* button {
   background-color: #2264e5;
   color: #fff;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
+} */
 
 .backToLogin {
   margin-top: 20px;

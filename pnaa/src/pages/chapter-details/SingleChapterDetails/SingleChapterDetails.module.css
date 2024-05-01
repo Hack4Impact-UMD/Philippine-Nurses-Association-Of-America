@@ -1,0 +1,63 @@
+.paper {
+  width: 80%;
+  height: 500px;
+  border: 4px solid #2264e550;
+  overflow: auto;
+}
+
+.header {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0 0 40px;
+  font-family: "Source-Serif 4", serif;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.body {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.statistics {
+  height: 100%;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  margin: 40px 0 0 40px;
+  gap: 10px;
+}
+
+.members {
+  height: 370px;
+  width: 60%;
+  margin: 10px 20px;
+}
+
+.statistic {
+  display: flex;
+  flex-direction: row;
+}
+
+.statHeader {
+  font-family: "Source-Serif 4", serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-right: 10px;
+  width: 50%;
+}
+
+.value {
+  width: 70px;
+  height: 25px;
+  font-family: "Source-Serif 4", serif;
+  font-size: 1rem;
+  line-height: 17px;
+  background-color: #aec2eb;
+  border-radius: 10px;
+  padding: 5px;
+  text-align: center;
+  color: white;
+}

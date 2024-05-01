@@ -1,69 +1,86 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { UserProvider } from "./config/UserContext";
-import SignUp from "./pages/signup/SignUp";
-import SignIn from "./pages/signin/SignIn";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { AuthProvider } from "./auth/AuthProvider";
+import RequireAuth from "./auth/RequireAuth/RequireAuth";
+import ChapterDetails from "./pages/chapter-details/AllChapterDetails/ChapterDetails";
+import Dashboard from "./pages/dashboard/Dashboard";
 import ForgotPassword from "./pages/forgotpassword/ForgotPassword";
-import NationalDash from "./pages/dashboard/NationalDash";
-import ChapterDash from "./pages/dashboard/ChapterDash";
-import About from "./pages/about/About";
-import MemberManagement from "./pages/member/MemberManagement";
-import MemberDetail from "./pages/member/MemberDetails";
-import Events from "./pages/events/Events";
-import Fundraising from "./pages/fundraising/Fundraising";
-import EventDetail from "./pages/events/EventDetails";
-import FundraisingDetail from "./pages/fundraising/FundraisingDetails";
-import AddFundraising from "./pages/fundraising/AddFundraising";
-import ChapterDetails from "./pages/chapter-details/ChapterDetails";
-import ChapterDetailsNational from "./pages/chapter-details/ChapterDetailsNational";
+import SignIn from "./pages/signin/SignIn";
+import SignUp from "./pages/signup/SignUp";
 
 function App() {
   return (
-    <UserProvider>
-    {" "}
-    {/* Wrap the Router with UserProvider */}
-    <Router>
-      <Routes>
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/forgotpassword" element={<ForgotPassword />} />
-  
-        <Route path="/national-dashboard/*" element={<NationalDash />} >
-            <Route path="about" element={<About />} />
-          <Route path="members" element={<MemberManagement />} />
-          <Route path="member-detail" element={<MemberDetail />} />
-          <Route path="events" element={<Events />} />
-          <Route path="event-details" element={<EventDetail />} />
-          <Route path="fundraising" element={<Fundraising />} />
-          <Route path="fundraising-detail" element={<FundraisingDetail />} />
-          <Route path="add-fundraising" element={<AddFundraising/>} />
-          <Route path="chapter-details-nat" element={<ChapterDetailsNational />} />
-          <Route path="chapter-details" element={<ChapterDetails />} />
-          <Route path="signup" element={<SignUp />} />
-
-        </Route>
-
-
-        <Route path="/chapter-dashboard/*" element={<ChapterDash />}>
-          <Route path="about" element={<About />} />
-          <Route path="members" element={<MemberManagement />} />
-          <Route path="member-detail" element={<MemberDetail />} />
-          <Route path="events" element={<Events />} />
-          <Route path="event-details" element={<EventDetail />} />
-          <Route path="fundraising" element={<Fundraising />} />
-          <Route path="chapter-details-nat" element={<ChapterDetailsNational />} />
-          <Route path="chapter-details" element={<ChapterDetails />} />
-        </Route>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/chapter-dashboard/fundraising/add-fundraising" element={<AddFundraising />}/>
-        <Route path="/national-dashboard/fundraising/add-fundraising" element={<AddFundraising />}/>
-        <Route path="/chapter-dashboard/events/event-details" element={<EventDetail />}/>
-        <Route path="/national-dashboard/events/event-details" element={<EventDetail />}/>
-        <Route path="/chapter-dashboard/fundraising/fundraising-detail" element={<FundraisingDetail />}/>
-        <Route path="/national-dashboard/fundraising/fundraising-detail" element={<FundraisingDetail />}/>
-      </Routes>
-    </Router>
-  </UserProvider>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <Dashboard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <RequireAuth>
+                <Dashboard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/details"
+            element={
+              <RequireAuth>
+                <ChapterDetails />
+              </RequireAuth>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
 export default App;
+
+{
+  /* <Route path="/chapter-dashboard/*" element={<ChapterDash />}>
+            <Route path="members" element={<MemberManagement />} />
+            <Route path="member-detail" element={<MemberDetail />} />
+            <Route path="events" element={<Events />} />
+            <Route path="event-details" element={<EventDetail />} />
+            <Route path="fundraising" element={<Fundraising />} />
+            <Route
+              path="chapter-details-nat"
+              element={<ChapterDetailsNational />}
+            />
+            <Route path="chapter-details" element={<ChapterDetails />} />
+          </Route> */
+}
+{
+  /* <Route
+            path="/details"
+            element={
+              <RequireAuth>
+                <ChapterDetails />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path="/chapter-dashboard/fundraising/add-fundraising"
+            element={<AddFundraising />}
+          />
+          <Route
+            path="/chapter-dashboard/events/event-details"
+            element={<EventDetail />}
+          />
+          <Route
+            path="/chapter-dashboard/fundraising/fundraising-detail"
+            element={<FundraisingDetail />}
+          /> */
+}

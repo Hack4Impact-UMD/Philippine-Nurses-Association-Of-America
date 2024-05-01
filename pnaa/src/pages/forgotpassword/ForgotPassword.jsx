@@ -1,62 +1,87 @@
 // ForgotPassword.js
 
-import React, { useState } from "react";
-import { Link, useNavigate} from "react-router-dom";
-import styles from  "./ForgotPassword.module.css"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { createUser } from '../../backend/authFunctions';
-import { sendResetEmail } from "../../backend/authFunctions";
+import { sendResetEmail } from "../../backend/AuthFunctions.js";
+import styles from "./ForgotPassword.module.css";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
 
   const handleResetPassword = async () => {
     // Implement logic to send reset password link
     // You can use Firebase's password reset functionality here
     // Example: auth.sendPasswordResetEmail(email);
-    sendResetEmail(email);
-    console.log("Reset password link sent to", email);
+    sendResetEmail(email)
+      .then(() => {
+        setSubmitted(true);
+      })
+      .catch((error) => {
+        setError(
+          "*Error sending password reset email. Please try again later."
+        );
+      });
   };
 
   return (
-    <div id={styles["background"]}>
-      <p id={styles["orgname"]}>Philippine Nurses Association of America</p>
-      <p id={styles["mantra"]}>
+    <div>
+      <p className={styles.orgName}>Philippine Nurses Association of America</p>
+      <p className={styles.mantra}>
         <span style={{ color: "#0533F3" }}>Shine</span>
         <span style={{ color: "#AB2218" }}> PNAA </span>
         <span style={{ color: "#F4D44C" }}>Shine</span>
       </p>
-      <div id={styles["container"]}>
-        <h2 className={styles.forgotPasswordTitle}>
-            <span className={styles.titleIcon}></span>
-            Forgot Password
-        </h2>
-        <span className={styles.emailInstructions}>
-            <span className={styles.lockIcon}></span> 
-            Enter your email and we will send you a link to reset your password.
+      <div className={styles.container}>
+        <h2 className={styles.forgetPassword}>Forgot Password</h2>
+
+        <span
+          className={
+            submitted
+              ? `${styles.emailInstructionsLong}`
+              : `${styles.emailInstructions}`
+          }
+        >
+          {submitted
+            ? "Password reset email has been sent."
+            : "Enter your email and we will send you a link to reset your password."}
         </span>
-        <div className={styles.lockIconContainer}>
-            <LockOutlinedIcon className={styles.lockIconStyle} />
+        {submitted ? (
+          <></>
+        ) : (
+          <>
+            <div className={styles.emailContainer}>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter Email Address"
+                className={styles.input}
+              />
+              <div className={styles.centerButton}>
+                <button
+                  onClick={handleResetPassword}
+                  className={styles.submitButton}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+            <p className={styles.errorMessage}>{error}</p>
+          </>
+        )}
+        <div>
+          <button onClick={navigate("/signin")} className={styles.backLogin}>
+            <Link>&#x3c; Back to Login</Link>
+          </button>
         </div>
-
-
-        <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Member ID / Email Address"
-            className={styles.emailInput} // Apply CSS class for styling
-        />
-        <button onClick={handleResetPassword} className={styles.submitButton}>Submit</button>
-        <button onClick={() => navigate("/")} className={styles.backToLogin}>Back to login</button>
-
-    </div>      
-      <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]} />
+      </div>
+      <img src={PNAA_Logo} alt="PNAA Logo" className={styles.logo} />
     </div>
   );
-  
 };
 
 export default ForgotPassword;

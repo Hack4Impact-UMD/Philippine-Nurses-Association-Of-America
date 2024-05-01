@@ -1,63 +1,59 @@
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import styles from './SignUp.module.css';
+import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
-import { createUser } from '../../backend/authFunctions';
-import { useState, useEffect } from 'react';
-
+import { createUser } from "../../backend/AuthFunctions";
+import styles from "./SignUp.module.css";
 
 const SignUp = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [chapterName, setChapterName] = useState('');
-  const [accountType, setAccountType] = useState('user');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [chapterName, setChapterName] = useState("");
+  const [accountType, setAccountType] = useState("user");
   const [chapters, setChapters] = useState([]);
   const [userChapter, setUserChapter] = useState(true);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   let err = false;
-
-
-
 
   useEffect(() => {
     const fetchChapters = async () => {
       const db = getFirestore();
-      const chaptersRef = collection(db, 'chapters');
+      const chaptersRef = collection(db, "chapters");
       try {
         const snapshot = await getDocs(chaptersRef);
-        const chapterNames = snapshot.docs.map(doc => doc.data().name);
+        const chapterNames = snapshot.docs.map((doc) => doc.data().name);
         setChapters(chapterNames);
       } catch (error) {
         console.error("Error fetching chapters: ", error);
       }
-    }
+    };
     fetchChapters();
   }, []);
 
   const handleSignUp = () => {
     // lastName is necessary, phone Number is not necessary
-    createUser(email, accountType, firstName, chapterName, lastName).catch((error) => {
-    window.alert("An account has already been created with that email!");
-    err = true;
-  }).then(() => {
-    if(!err){
-      navigate('/');
-      window.alert("An account has successfully been created! You may now sign in after resetting your password");
-      
-    }
-    err = false;
-
-  }
-      
-)};
+    createUser(email, accountType, firstName, chapterName, lastName)
+      .catch((error) => {
+        window.alert("An account has already been created with that email!");
+        err = true;
+      })
+      .then(() => {
+        if (!err) {
+          navigate("/");
+          window.alert(
+            "An account has successfully been created! You may now sign in after resetting your password"
+          );
+        }
+        err = false;
+      });
+  };
 
   const handleChangeType = (userType) => {
     setUserChapter(!userChapter);
     setAccountType(userType);
-
-  }
+  };
   return (
     <div id={styles["background"]}>
       <p id={styles["orgname"]}>Philippine Nurses Association of America</p>
@@ -70,28 +66,51 @@ const SignUp = () => {
         <h2>Sign Up</h2>
         <div className={styles.form}>
           <div className={styles.nameFields}>
-            <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First Name" />
-            <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last Name" />
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="First Name"
+            />
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Last Name"
+            />
           </div>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email Address" />
-          
-          <select value={accountType} onChange={(e) => handleChangeType(e.target.value)} placeholder="Account Type" >
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email Address"
+          />
+
+          <select
+            value={accountType}
+            onChange={(e) => handleChangeType(e.target.value)}
+            placeholder="Account Type"
+          >
             <option value="user">Chapter</option>
             <option value="admin">National</option>
           </select>
 
           {userChapter && <h5>Select your chapter:</h5>}
-          {userChapter && <select value={chapterName} onChange={(e) => setChapterName(e.target.value)} >
-          {chapters.map((chapter, index) => (
-                
-                <option key={index} value={chapter}>{chapter}</option>
+          {userChapter && (
+            <select
+              value={chapterName}
+              onChange={(e) => setChapterName(e.target.value)}
+            >
+              {chapters.map((chapter, index) => (
+                <option key={index} value={chapter}>
+                  {chapter}
+                </option>
               ))}
-           
-          </select>}
-          
+            </select>
+          )}
+
           <button onClick={handleSignUp}>Create Account</button>
         </div>
-       
       </div>
       <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]} />
     </div>

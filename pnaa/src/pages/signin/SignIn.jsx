@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebase";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
-import styles from "./SignIn.module.css"
+import { Link, useNavigate } from "react-router-dom";
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
+import { authenticateUser } from "../../backend/AuthFunctions";
+import styles from "./SignIn.module.css";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -15,72 +13,74 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSignIn = async () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        const userType = await getUserType(user.uid); // Fetch user type
-        setError("");
-        // console.log("Sign in successful:", user, "User Type:", userType);
-        navigate(
-          userType === "admin" ? "/national-dashboard" : "/chapter-dashboard"
-        );
-      })
-      .catch((error) => {
-        setError("Failed to sign in. Please check your credentials.");
-        console.error("Error signing in:", error);
-      });
-  };
-
-  const getUserType = async (uid) => {
-    const db = getFirestore();
-    const userRef = doc(db, "users", uid);
-    const userSnap = await getDoc(userRef);
-    if (userSnap.exists()) {
-      return userSnap.data().userType; // returns 'admin', 'user', etc.
+    if (email && password) {
+      authenticateUser(email, password)
+        .then(() => {
+          navigate("../chapter-dashboard");
+        })
+        .catch((error) => {
+          const code = error.code;
+          if (code === "auth/too-many-requests") {
+            setError(
+              "*Access to this account has been temporarily disabled due to many failed login attempts. You can reset your password or try again later."
+            );
+          } else {
+            setError("*Incorrect email address or password");
+          }
+        });
     } else {
-      console.error("Error with getting user type");
+      setError("*Incorrect email address or password");
     }
   };
 
   return (
-    <div id={styles["background"]}>
-      <p id={styles["orgname"]}>Philippine Nurses Association of America</p>
-      <p id={styles["mantra"]}>
+    <div>
+      <p className={styles.orgName}>Philippine Nurses Association of America</p>
+      <p className={styles.mantra}>
         <span style={{ color: "#0533F3" }}>Shine</span>
         <span style={{ color: "#AB2218" }}> PNAA </span>
         <span style={{ color: "#F4D44C" }}>Shine</span>
       </p>
-      <div id={styles["container"]}>
-        <h2 id="login">Login</h2>
+      <div className={styles.container}>
+        <h2 className={styles.login}>Login</h2>
         <div className={styles.form}>
           <input
             type="email"
+            className={styles.input}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Member ID / Email Address"
+            placeholder="Enter Email Address"
           />
+          <p className={styles.forgot}>
+            <Link to="/forgotpassword">Forgot Password?</Link>
+          </p>
           <input
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
+            placeholder="Enter Password"
+            className={styles.input}
           />
-          <label>
+
+          <label className={styles.showPass}>
             <input
               type="checkbox"
               checked={showPassword}
               onChange={() => setShowPassword(!showPassword)}
+              style={{ marginRight: "5px" }}
             />
             Show Password
           </label>
-          <button onClick={handleSignIn}>Login</button>
-          {error && <p id={styles["error"]} style={{ color: "red" }}>{error}</p>}
+          <div className={styles.centerButton}>
+            <button onClick={handleSignIn} className={styles.loginButton}>
+              Login
+            </button>
+          </div>
+
+          {error && <p className={styles.errorMessage}>{error}</p>}
         </div>
-        <p className={styles.backToLogin}>
-          Dont Remember Your Password? <Link to="/forgotpassword">Forgot Password</Link>
-        </p>
       </div>
-      <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]} />
+      <img src={PNAA_Logo} alt="PNAA Logo" className={styles.logo} />
     </div>
   );
 };

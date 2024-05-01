@@ -1,0 +1,47 @@
+.navTabs {
+  background-color: #fff;
+  margin: 30px auto 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.tabItem {
+  display: inline-block;
+}
+
+.tabLink,
+.activeTabLink {
+  padding: 15px 40px;
+  text-decoration: none;
+  font-size: 16px; /* Text size */
+  font-family: "Source-Serif 4", serif;
+  background-color: #ffffff;
+  color: #4f4f4f; /* Dark gray text color */
+  border: 1px solid black; /* Slight border for definition */
+  border-right: 1px solid gray;
+  border-left: none;
+  transition: background-color 0.2s; /* Smooth transition for hover effect */
+}
+
+.activeTabLink {
+  background-color: #e0e0e0; /* Slightly darker background for the active tab */
+  color: #000000; /* Black text color */
+}
+
+.tabLink:hover {
+  background-color: #d0d0d0; /* Slightly darker background on hover */
+}
+
+.firstTabLink {
+  border-left: 1px solid black;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom: 1px solid black;
+}
+
+.lastTabLink {
+  border-right: 1px solid black;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom: 1px solid black;
+}

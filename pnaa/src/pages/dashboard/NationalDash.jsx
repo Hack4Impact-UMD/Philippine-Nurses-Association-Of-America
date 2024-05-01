@@ -44,13 +44,6 @@ const Home = () => {
           </li>
           <li className={styles.tabItem}>
             <NavLink
-              to="about"
-              className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
-              About
-            </NavLink>
-          </li>
-          <li className={styles.tabItem}>
-            <NavLink
               to="chapter-details-nat"
               className={({ isActive }) => isActive ? styles.activeTabLink : styles.tabLink}>
               Chapter Details

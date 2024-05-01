@@ -5,7 +5,6 @@ import SignIn from "./pages/signin/SignIn";
 import ForgotPassword from "./pages/forgotpassword/ForgotPassword";
 import NationalDash from "./pages/dashboard/NationalDash";
 import ChapterDash from "./pages/dashboard/ChapterDash";
-import About from "./pages/about/About";
 import MemberDetail from "./pages/member/MemberDetails";
 import Events from "./pages/events/Events";
 import Fundraising from "./pages/fundraising/Fundraising";
@@ -25,9 +24,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
-  
         <Route path="/national-dashboard/*" element={<NationalDash />} >
-            <Route path="about" element={<About />} />
           <Route path="member-detail" element={<MemberDetail />} />
           <Route path="events" element={<Events />} />
           <Route path="event-details" element={<EventDetail />} />
@@ -42,7 +39,6 @@ function App() {
 
 
         <Route path="/chapter-dashboard/*" element={<ChapterDash />}>
-          <Route path="about" element={<About />} />
           <Route path="member-detail" element={<MemberDetail />} />
           <Route path="events" element={<Events />} />
           <Route path="event-details" element={<EventDetail />} />

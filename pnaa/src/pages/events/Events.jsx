@@ -282,7 +282,7 @@ const Events = () => {
     {
       field: "total_volunteer_hours",
       headerName: "TOTAL HOURS",
-      width: 200,
+      width: 500,
       cellClassName: "cell",
     },
   ];
@@ -419,6 +419,7 @@ const Events = () => {
             columnHeaderHeight={100}
             sx={{
               border: 10,
+              height: 800,
               borderColor: "rgba(189,189,189,0.75)",
               borderRadius: 4,
               "& .MuiDataGrid-row:nth-child(even)": {

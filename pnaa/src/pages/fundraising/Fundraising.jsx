@@ -322,7 +322,7 @@ const Fundraising = () => {
     { 
       field: 'Chapter Name', 
       headerName: 'Chapter Name', 
-      width: 250, 
+      width: 500, 
       renderCell: (params) => ( 
         <div
         style={{ cursor: 'pointer' }}
@@ -422,6 +422,7 @@ const Fundraising = () => {
             sx={{
               border: 13,
               borderColor: '#d9d9d9',
+              height: 800,
               borderRadius: 2,
               '& .MuiDataGrid-row:nth-child(even)': {
                 backgroundColor: '#E0E0E0'

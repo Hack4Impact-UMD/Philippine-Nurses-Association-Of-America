@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import styles from "./EventDetails.module.css";
 import { useUser } from "../../config/UserContext";
-import { doc, getDoc, updateDoc, setDoc, collection } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, collection, getFirestore, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase.ts";
 import EventDialogBox from "./EventDialogBox";
 
@@ -31,6 +31,7 @@ const EventDetails = () => {
   // Pass in event data from previous state
   const location = useLocation();
   const { event } = location.state;
+  const [chapters, setChapters] = useState([]);
 
   // Collect screen width for responsive design
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -98,7 +99,7 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchEventData = async () => {
       if (event && event.id) {
-        const eventRef = doc(db, "events", event.id);
+        const eventRef = doc(db, "events", event.id.toString());
         const eventSnap = await getDoc(eventRef);
         if (eventSnap.exists()) {
           setEditedEvent(eventSnap.data());
@@ -116,6 +117,21 @@ const EventDetails = () => {
 
     fetchEventData();
   }, [event, currentUser.chapterData.name]);
+
+  useEffect(() => {
+    const fetchChapters = async () => {
+      const db = getFirestore();
+      const chaptersRef = collection(db, 'chapters');
+      try {
+        const snapshot = await getDocs(chaptersRef);
+        const chapterNames = snapshot.docs.map(doc => doc.data().name);
+        setChapters(chapterNames);
+      } catch (error) {
+        console.error("Error fetching chapters: ", error);
+      }
+    };
+    fetchChapters();
+  }, []);
 
   /*****************************************************************************
    * Action Buttons (Back, Edit/Save, Archive/Unarchive)
@@ -189,7 +205,7 @@ const EventDetails = () => {
     } else {
       // Update existing event
       try {
-        const eventRef = doc(db, "events", event.id); // Use event.id instead of editedEvent.id
+        const eventRef = doc(db, "events", event.id.toString()); // Use event.id instead of editedEvent.id
         await updateDoc(eventRef, editedEvent);
         setIsEditMode(false);
       } catch (error) {
@@ -425,7 +441,7 @@ const EventDetails = () => {
               const value = editedEvent[fieldName] || "";
               const { type, validate } = fieldTypes[fieldName] || {};
               const readOnly =
-                (fieldName === "chapter" || fieldName === "full_time_#") &&
+                (fieldName === "chapter" || fieldName === "full_time_#" || fieldName === "region") &&
                 event;
               return (
                 <tr key={fieldName}>
@@ -516,6 +532,23 @@ const EventDetails = () => {
                         {statusOptions.map((option) => (
                           <option key={option} value={option}>
                             {option}
+                          </option>
+                        ))}
+                      </select>
+                    ) : isEditMode && fieldName === "chapter" ? (
+                      <select
+                        value={value}
+                        onChange={(e) => {
+                          setEditedEvent({
+                            ...editedEvent,
+                            [fieldName]: e.target.value,
+                          });
+                        }}
+                        className={styles["edit-input"]}
+                      >
+                        {chapters.map((chapter) => (
+                          <option key={chapter} value={chapter}>
+                            {chapter}
                           </option>
                         ))}
                       </select>

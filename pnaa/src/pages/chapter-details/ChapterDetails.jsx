@@ -1,56 +1,17 @@
 
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from 'react-router-dom';
-import { useUser } from "../../config/UserContext";
-import { getFirestore, collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { db } from "../../config/firebase.ts";
-import { Link, useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import { DataGrid } from '@mui/x-data-grid';
-import { Select, MenuItem, Button } from '@mui/material';
 import styles from "./ChapterDetails.module.css";
-import { Email } from "@mui/icons-material";
 
 
 const ChapterDetails = () => {
-  const { currentUser, loading: userLoading } = useUser();
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedRows, setSelectedRows] = useState([]);
   const location = useLocation();
   const { chapter } = location.state;
+  const [members, setMembers] = useState(chapter.members);
   const navigate = useNavigate();
-
-    //Fetches all member data within chapter
-    useEffect(() => {
-      const fetchMembers = async () => {
-        const db = getFirestore();
-        const membersRef = collection(
-          db,
-          "chapters",
-          chapter.id,
-          "members"
-        );
-
-        try {
-          const snapshot = await getDocs(membersRef);
-          const membersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          console.log(membersList);
-          setMembers(membersList);
-        } catch (error) {
-          console.error("Error fetching members:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchMembers();
-      
-    }, [currentUser]);
   
-    if (userLoading || loading) {
-      return <div>Loading...</div>;
-    }
   
     //Generic component definition to create the icons for the "status" column
     const Status = ({ text, width, height }) => {
@@ -116,9 +77,6 @@ const ChapterDetails = () => {
       },
     ];
   
-    const handleSelectionChange = (newSelection) => {
-      setSelectedRows(newSelection);
-    };
   
     const navigateToMemberDetails = (member) => {
       navigate(`/chapter-dashboard/member-detail/`, { state: { member } });
@@ -163,7 +121,7 @@ const ChapterDetails = () => {
               columns={columns}
               pageSize={5}
               rowsPerPageOptions={[5, 10, 20]}
-              onRowSelectionModelChange={handleSelectionChange}
+              getRowId={(row) => row.memberId}
               columnHeaderHeight={100}
               sx={{
                 border: 10,

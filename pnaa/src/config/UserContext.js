@@ -8,7 +8,7 @@ const UserContext = createContext();
 export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState({ uid: null, chapterData: null, chapterId: null });
+  const [currentUser, setCurrentUser] = useState({ uid: null, chapterData: null, chapterId: null, userType: null });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export const UserProvider = ({ children }) => {
         fetchUserData(user.uid);
       } else {
         // User is signed out.
-        setCurrentUser({ uid: null, chapterData: null, chapterId: null });
+        setCurrentUser({ uid: null, chapterData: null, chapterId: null, userType: null});
         setLoading(false);
       }
     });
@@ -34,6 +34,7 @@ export const UserProvider = ({ children }) => {
           const userData = userSnap.data();
           let chapterData = null;
           let chapterId = userData.chapterId || null;
+          let userType = userData.userType;
 
           if (chapterId) {
             const chapterRef = doc(db, "chapters", chapterId);
@@ -41,7 +42,7 @@ export const UserProvider = ({ children }) => {
             chapterData = chapterSnap.exists() ? chapterSnap.data() : null;
           }
 
-          setCurrentUser({ uid, chapterData, chapterId });
+          setCurrentUser({ uid, chapterData, chapterId, userType });
         } else {
           console.error("No user data found in Firestore for uid:", uid);
         }

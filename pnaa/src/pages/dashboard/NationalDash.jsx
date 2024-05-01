@@ -25,8 +25,12 @@ const Home = () => {
       <div className={styles.header}>
         <h1>Welcome To National Dashboard</h1>
        
+       <div>
+
+      
         <button onClick={signOut} className={styles.signOutButton}>Sign Out</button>
         <button onClick={signin} className={styles.makeAccountButton}>Make an account for another user</button>
+        </div>
       </div>
       
       <div className={styles.navTabs}>

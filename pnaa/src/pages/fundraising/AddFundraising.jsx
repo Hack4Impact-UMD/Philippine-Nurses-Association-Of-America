@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./AddFundraising.module.css";
 
-import { collection, doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  setDoc,
+} from "firebase/firestore";
 
 // import MemberDialogBox from "./MemberDialogBox";
 import { db } from "../../config/firebase.ts";
@@ -15,20 +21,24 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
+import { useAuth } from "../../auth/AuthProvider";
 
 const AddFundraising = () => {
   // Collect screen width for responsive design
+  const auth = useAuth();
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
 
   // Dialog box state
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState("");
+  const [chapters, setChapters] = useState([]);
   const [editedFund, setEditedFund] = useState({
     Name: "",
     Date: "",
     Note: "",
     Amount: 0,
+    ChapterName: "",
   });
   // Menu anchor for mobile view
   const [anchorEl, setAnchorEl] = useState(null);
@@ -41,6 +51,21 @@ const AddFundraising = () => {
   const mediumScreenWidth = 1000;
   const halfScreenWidth = 800;
   const mobileScreenWidth = 660;
+
+  useEffect(() => {
+    const fetchChapters = async () => {
+      const db = getFirestore();
+      const chaptersRef = collection(db, "chapters");
+      try {
+        const snapshot = await getDocs(chaptersRef);
+        const chapterNames = snapshot.docs.map((doc) => doc.data().name);
+        setChapters(chapterNames);
+      } catch (error) {
+        console.error("Error fetching chapters: ", error);
+      }
+    };
+    fetchChapters();
+  }, []);
 
   // Update screen width on resize
   useEffect(() => {
@@ -59,16 +84,27 @@ const AddFundraising = () => {
         "Are you sure you want to add this new fundraising event?"
       ) == true
     ) {
-      try {
-        const fundraiserCol = collection(db, "fundraisers");
-        const newFundRef = doc(fundraiserCol);
-        await setDoc(newFundRef, {
-          ...editedFund,
-          ChapterName: "National",
-        });
-        navigate(-1);
-      } catch (error) {
-        console.error("Error creating fundraiser: ", error);
+      if (auth.token?.claims?.role.toLowerCase() !== "admin") {
+        try {
+          const fundraiserCol = collection(db, "fundraisers");
+          const newFundRef = doc(fundraiserCol);
+          await setDoc(newFundRef, {
+            ...editedFund,
+            ChapterName: "National",
+          });
+          navigate(-1);
+        } catch (error) {
+          console.error("Error creating fundraiser: ", error);
+        }
+      } else {
+        try {
+          const fundraiserCol = collection(db, "fundraisers");
+          const newFundRef = doc(fundraiserCol);
+          await setDoc(newFundRef, editedFund);
+          navigate(-1);
+        } catch (error) {
+          console.error("Error creating fundraiser: ", error);
+        }
       }
     }
   };
@@ -128,8 +164,6 @@ const AddFundraising = () => {
         "Back to Main Fundraising",
         handleBackClick
       )}
-      {createMaterialButton("#00008B", "Add Fundraiser", handleAddClick)}
-      {createMaterialButton("#91201A", "Archive", handleRenewClick)}
     </div>
   );
 
@@ -161,9 +195,7 @@ const AddFundraising = () => {
     <div className={styles["fundraiser-detail-container"]}>
       <div className={styles["fundraiser-detail-content"]}>
         <div className={styles["fundraiser-header-container"]}>
-          <p className={styles["fundraiser-header"]}>
-            Enter the fields to add a new fundraising event
-          </p>
+          <p className={styles["fundraiser-header"]}>Add fundraising event</p>
           {screenWidth < mobileScreenWidth ? (
             <>
               <IconButton
@@ -192,7 +224,7 @@ const AddFundraising = () => {
                 </td>
                 <td>
                   <input
-                    type="text"
+                    type="date"
                     value={editedFund.Date}
                     onChange={(e) =>
                       setEditedFund({
@@ -266,6 +298,30 @@ const AddFundraising = () => {
                   />
                 </td>
               </tr>
+              {auth.token?.claims?.role.toLowerCase() === "admin" && (
+                <tr>
+                  <td>
+                    <p className={styles["fundraiser-label"]}>Chapter</p>
+                  </td>
+                  <td>
+                    <select
+                      value={editedFund.ChapterName}
+                      onChange={(e) =>
+                        setEditedFund({
+                          ...editedFund,
+                          ChapterName: e.target.value,
+                        })
+                      }
+                    >
+                      {chapters.map((chapter, index) => (
+                        <option key={index} value={chapter}>
+                          {chapter}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+              )}
             </table>
           </div>
         </div>

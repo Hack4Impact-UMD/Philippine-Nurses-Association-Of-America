@@ -28,6 +28,7 @@ const EventDetails = () => {
   // Pass in event data from previous state
   const location = useLocation();
   const { event } = location.state;
+  const [chapters, setChapters] = useState([]);
 
   // Collect screen width for responsive design
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -95,7 +96,7 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchEventData = async () => {
       if (event && event.id) {
-        const eventRef = doc(db, "events", event.id);
+        const eventRef = doc(db, "events", event.id.toString());
         const eventSnap = await getDoc(eventRef);
         if (eventSnap.exists()) {
           setEditedEvent(eventSnap.data());
@@ -186,7 +187,7 @@ const EventDetails = () => {
     } else {
       // Update existing event
       try {
-        const eventRef = doc(db, "events", event.id); // Use event.id instead of editedEvent.id
+        const eventRef = doc(db, "events", event.id.toString()); // Use event.id instead of editedEvent.id
         await updateDoc(eventRef, editedEvent);
         setIsEditMode(false);
       } catch (error) {
@@ -422,7 +423,9 @@ const EventDetails = () => {
               const value = editedEvent[fieldName] || "";
               const { type, validate } = fieldTypes[fieldName] || {};
               const readOnly =
-                (fieldName === "chapter" || fieldName === "full_time_#") &&
+                (fieldName === "chapter" ||
+                  fieldName === "full_time_#" ||
+                  fieldName === "region") &&
                 event;
               return (
                 <tr key={fieldName}>
@@ -465,6 +468,39 @@ const EventDetails = () => {
                           className={styles["edit-input"]}
                         />
                       </>
+                    ) : isEditMode && fieldName === "date" ? (
+                      <>
+                        <input
+                          type="date"
+                          value={value.split(" - ")[0]}
+                          onChange={(e) => {
+                            const [_, endTime] = value.split(" - ");
+                            const newValue = `${e.target.value} - ${
+                              endTime || ""
+                            }`;
+                            setEditedEvent({
+                              ...editedEvent,
+                              [fieldName]: newValue,
+                            });
+                          }}
+                          className={styles["edit-input"]}
+                        />
+                        <span> - </span>
+                        <input
+                          type="date"
+                          value={value.split(" - ")[1]}
+                          onChange={(e) => {
+                            const [startTime] = value.split(" - ");
+                            const newValue = `${startTime} - ${e.target.value}`;
+                            setEditedEvent({
+                              ...editedEvent,
+                              [fieldName]: newValue,
+                            });
+                            setIsEventTimeChanged(true);
+                          }}
+                          className={styles["edit-input"]}
+                        />
+                      </>
                     ) : isEditMode && fieldName === "status" ? (
                       <select
                         value={value}
@@ -480,6 +516,23 @@ const EventDetails = () => {
                         {statusOptions.map((option) => (
                           <option key={option} value={option}>
                             {option}
+                          </option>
+                        ))}
+                      </select>
+                    ) : isEditMode && fieldName === "chapter" ? (
+                      <select
+                        value={value}
+                        onChange={(e) => {
+                          setEditedEvent({
+                            ...editedEvent,
+                            [fieldName]: e.target.value,
+                          });
+                        }}
+                        className={styles["edit-input"]}
+                      >
+                        {chapters.map((chapter) => (
+                          <option key={chapter} value={chapter}>
+                            {chapter}
                           </option>
                         ))}
                       </select>

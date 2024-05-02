@@ -16,14 +16,26 @@ import styles from "./Events.module.css";
 const Events = () => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
-
   const [originalEvents, setOriginalEvents] = useState([]);
   const [originalRegions, setOriginalRegions] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [selectedChapter, setSelectedChapter] = useState(""); // State to hold the selected chapter
+  const [selectedChapter, setSelectedChapter] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
-  const [chapters, setChapters] = useState([]); // State to hold the list of chapters
+  const [chapters, setChapters] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const navigate = useNavigate();
+
+  // Existing code for fetching events and chapters
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    const filteredEvents = originalEvents.filter(
+      (event) =>
+        event.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        event.location.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setEvents(filteredEvents);
+  };
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -159,10 +171,11 @@ const Events = () => {
       "time",
       "location",
       "status",
-      "attendee#",
-      "contact hrs",
-      "volunteer#",
+      "attendee_#",
+      "contact_hrs",
+      "volunteer_#",
       "participants_served",
+      "total_volunteer_hours",
       "region",
       "about",
       "other_details",
@@ -173,14 +186,14 @@ const Events = () => {
       data: selectedEvents,
     });
 
-    if (csvData) {
+    if (selectedEvents.length > 0) {
       const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
 
       // Create a link and trigger the download
       const link = document.createElement("a");
       const url = URL.createObjectURL(blob);
       link.setAttribute("href", url);
-      link.setAttribute("download", "events.csv");
+      link.setAttribute("download", "chapter_events.csv");
       document.body.appendChild(link); // Required for FF
       link.click();
       document.body.removeChild(link);
@@ -290,7 +303,7 @@ const Events = () => {
     {
       field: "total_volunteer_hours",
       headerName: "TOTAL HOURS",
-      width: 200,
+      width: 500,
       cellClassName: "cell",
     },
   ];
@@ -360,9 +373,14 @@ const Events = () => {
   return (
     <div>
       <div>
-        <div className={styles["events-header"]}>
-          <h1>Events</h1>
-        </div>
+        <h1>Events</h1>
+        <input
+          type="text"
+          placeholder="Search by event name or location"
+          value={searchTerm}
+          onChange={handleSearch}
+          style={{ width: "250px" }}
+        />
         <NavigationBar />
         <div
           style={{ display: "flex", alignItems: "center", marginTop: "20px" }}
@@ -434,6 +452,7 @@ const Events = () => {
             columnHeaderHeight={100}
             sx={{
               border: 10,
+              height: 800,
               borderColor: "rgba(189,189,189,0.75)",
               borderRadius: 4,
               "& .MuiDataGrid-row:nth-child(even)": {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import styles from "./FundraisingDetails.module.css";
+import { useUser} from '../../config/UserContext';
 
 import {
     getFirestore,
@@ -8,6 +9,7 @@ import {
     updateDoc,
     setDoc,
     collection,
+    getDocs
   } from "firebase/firestore";
 
 // import MemberDialogBox from "./MemberDialogBox";
@@ -27,9 +29,12 @@ const FundraisingDetail = () => {
   // Pass in member data from previous state
   const location = useLocation();
   const { fundraiser } = location.state;
+  const { currentUser, loading: userLoading } = useUser();
+  const [chapters, setChapters] = useState([]);
+  
   var date = new Date(fundraiser.Date);
   console.log(date);
-
+  
   // Collect screen width for responsive design
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
@@ -44,6 +49,7 @@ const FundraisingDetail = () => {
       Date: "",
       Note: "",
       Amount: 1,
+      ChapterName: "",
     }
   );
   // Menu anchor for mobile view
@@ -102,10 +108,20 @@ const FundraisingDetail = () => {
     }
   };
 
-  const handleSuspendClick = () => {
-    setDialogAction("suspend");
-    setDialogOpen(true);
-  };
+  useEffect(() => {
+    const fetchChapters = async () => {
+      const db = getFirestore();
+      const chaptersRef = collection(db, 'chapters');
+      try {
+        const snapshot = await getDocs(chaptersRef);
+        const chapterNames = snapshot.docs.map(doc => doc.data().name);
+        setChapters(chapterNames);
+      } catch (error) {
+        console.error("Error fetching chapters: ", error);
+      }
+    }
+    fetchChapters();
+  }, []);
 
   const handleRenewClick = () => {
     setDialogAction("renew");
@@ -164,11 +180,10 @@ const FundraisingDetail = () => {
         handleEditClick,
        
       )}
-      {createMaterialButton(
-        "#91201A",
-        "Archive",
-        handleRenewClick,
-      )}
+    
+
+
+     
     </div>
   );
 
@@ -237,7 +252,7 @@ const FundraisingDetail = () => {
                 </td>
                 <td>
                 {editMode?  (<input
-                        type="text"
+                        type="date"
                         value={editedFund.Date}
                         onChange={(e) =>
                           setEditedFund({
@@ -304,6 +319,29 @@ const FundraisingDetail = () => {
                         className={styles["edit-input"]} // Add CSS for this
                       />):(<p className={styles["fundraiser-data"]}>
                     {editedFund.Note}
+                  </p>)}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p className={styles["fundraiser-label"]}>
+                    Chapter Name
+                  </p>
+                </td>
+                <td>
+                {(editMode && currentUser.userType === 'admin')? 
+                (
+                  <select value={editedFund.ChapterName} onChange={(e) =>  setEditedFund({
+                            ...editedFund,
+                            ChapterName: e.target.value,
+                          })} >
+                {chapters.map((chapter, index) => (
+                
+                <option key={index} value={chapter}>{chapter}</option>
+              ))}
+           
+                 </select>):(<p className={styles["fundraiser-data"]}>
+                    {editedFund.ChapterName}
                   </p>)}
                 </td>
               </tr>

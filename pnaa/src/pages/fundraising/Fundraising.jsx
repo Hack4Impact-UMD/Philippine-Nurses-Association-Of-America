@@ -2,19 +2,61 @@ import ArchiveIcon from "@mui/icons-material/Archive";
 import InfoIcon from "@mui/icons-material/Info";
 import ModeIcon from "@mui/icons-material/Mode";
 import { DataGrid } from "@mui/x-data-grid";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  getFirestore,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavigationBar from "../../components/NavigationBar/NavigationBar";
+import NavigationBar from "../../components/NavigationBar/NavigationBar.jsx";
+import { db } from "../../config/firebase.ts";
 import styles from "./fundraising.module.css";
 
 const Fundraising = () => {
   const [donations, setDonations] = useState([]);
+
   const [origDonations, setOrigDonations] = useState([]);
+  const [displayDonations, setDisplayDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalDonations, setTotalDonations] = useState(0);
   const [selectedChapter, setSelectedChapter] = useState("");
   const [chapters, setChapters] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [del, setDel] = useState(false);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (value === "" && !selectedChapter) {
+      setDonations(origDonations);
+      calculateTotal(origDonations);
+    } else if (value === "") {
+      let filteredDonations = origDonations.filter(
+        (donation) => donation.ChapterName === selectedChapter
+      );
+      setDonations(filteredDonations);
+      calculateTotal(filteredDonations);
+    } else {
+      const filteredDonations = origDonations.filter((donation) =>
+        donation.Name.toLowerCase().includes(value.toLowerCase())
+      );
+
+      if (selectedChapter) {
+        const finalFiltered = filteredDonations.filter(
+          (donation) => donation.ChapterName === selectedChapter
+        );
+
+        setDonations(finalFiltered);
+        calculateTotal(finalFiltered);
+      } else {
+        setDonations(filteredDonations);
+        calculateTotal(filteredDonations);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchDonations = async () => {
@@ -28,8 +70,8 @@ const Fundraising = () => {
           ...doc.data(),
         }));
         console.log(donationsList);
-        console.log("Lol");
         setDonations(donationsList);
+
         setOrigDonations(donationsList);
         let i = 0;
         let total = 0;
@@ -47,8 +89,7 @@ const Fundraising = () => {
     };
 
     fetchDonations();
-  }, []);
-
+  }, [del]);
   const calculateTotal = (donations) => {
     let i = 0;
     let total = 0;
@@ -80,12 +121,44 @@ const Fundraising = () => {
     console.log("ok");
   };
 
+  const handleDeleteFundraising = async () => {
+    if (selectedRows.length === 0) {
+      alert("No fundraiser selected. Please select fundraisers to delete.");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete the selected fundraiser events?"
+    );
+
+    if (confirmDelete) {
+      const fundraisersRef = collection(db, "fundraisers");
+      try {
+        for (const fundraiserId of selectedRows) {
+          const fundraiserRef = doc(fundraisersRef, fundraiserId);
+          await deleteDoc(fundraiserRef);
+        }
+
+        setSelectedRows([]);
+
+        alert("Selected fundraisers deleted successfully!");
+        setDel(!del);
+      } catch (error) {
+        console.error("Error deleting fundraisers: ", error);
+        alert(
+          "An error occurred while deleting fundraisers. Please try again."
+        );
+      }
+    }
+  };
+
   const [selectedRows, setSelectedRows] = useState([]);
   const navigate = useNavigate();
 
   if (loading) {
     return <div>Loading...</div>;
   }
+  console.log("after fetch");
 
   //Generic component definition to create the icons for the "status" column
   const Status = ({
@@ -164,7 +237,9 @@ const Fundraising = () => {
       />
     </div>
   );
-
+  const navigateToFundraiserDetails = (fundraiser) => {
+    navigate(`fundraising-detail`, { state: { fundraiser } });
+  };
   const EditMember = (
     <div style={{ marginRight: "10px" }}>
       <DonationButton
@@ -180,6 +255,15 @@ const Fundraising = () => {
         width="156px"
         height="32px"
       />
+    </div>
+  );
+
+  const DeleteFundraising = (
+    <div style={{ marginRight: "10px" }}>
+      <button class={styles.button} onClick={handleDeleteFundraising}>
+        {" "}
+        Delete{" "}
+      </button>
     </div>
   );
 
@@ -200,7 +284,6 @@ const Fundraising = () => {
       />
     </div>
   );
-
   const columns = [
     {
       field: "name",
@@ -286,6 +369,12 @@ const Fundraising = () => {
       field: "Chapter Name",
       headerName: "Chapter Name",
       width: 250,
+      renderCell: (params) => <div></div>,
+    },
+    {
+      field: "Chapter Name",
+      headerName: "Chapter Name",
+      width: 500,
       renderCell: (params) => (
         <div
           style={{ cursor: "pointer" }}
@@ -300,87 +389,105 @@ const Fundraising = () => {
   const handleSelectionChange = (newSelection) => {
     setSelectedRows(newSelection);
   };
+  console.log("after col");
 
   const handleFilterByChapter = (selectedChapter) => {
     setSelectedChapter(selectedChapter);
     // if there is no filter applied
 
     if (!selectedChapter) {
-      setDonations(origDonations);
-      calculateTotal(origDonations);
-    } else {
-      let filteredDonations = origDonations.filter(
-        (donation) => donation.ChapterName === selectedChapter
-      );
-
-      setDonations(filteredDonations);
-      calculateTotal(filteredDonations);
+      if (!selectedChapter && searchTerm === "") {
+        setDonations(origDonations);
+        calculateTotal(origDonations);
+      } else if (!selectedChapter) {
+        const filteredDonations = origDonations.filter((donation) =>
+          donation.Name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setDonations(filteredDonations);
+        calculateTotal(filteredDonations);
+      } else {
+        let filteredDonations = origDonations.filter(
+          (donation) => donation.ChapterName === selectedChapter
+        );
+        const finalDonations = filteredDonations.filter((donation) =>
+          donation.Name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setDonations(finalDonations);
+        calculateTotal(finalDonations);
+      }
     }
-  };
-
-  const navigateToFundraiserDetails = (fundraiser) => {
-    navigate(`fundraising-detail`, { state: { fundraiser } });
   };
 
   return (
     <div>
       <div style={{ height: "80%", width: "100%", margin: "0 auto" }}>
-        <h1> Total Amount: ${totalDonations} </h1>
-        <NavigationBar />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "40px",
-            marginBottom: "10px",
-            marginRight: "50px",
-          }}
-        >
-          {selectedRows.length === 0 && AddDonation}
-          {selectedRows.length !== 0 && DetailsMember}
-          {selectedRows.length !== 0 && EditMember}
-          {selectedRows.length !== 0 && ArchiveMember}
-        </div>
-        <label id={styles.filterlabel} htmlFor="chapterSelect">
-          Filter by Chapter Name:
-        </label>
-        <select
-          id={styles.chapterSelect}
-          value={selectedChapter}
-          onChange={(e) => handleFilterByChapter(e.target.value)}
-        >
-          <option value="">All Chapters</option>
-          {chapters.map((chapter, index) => (
-            <option key={index} value={chapter}>
-              {chapter}
-            </option>
-          ))}
-        </select>
-        <div style={{ margin: "0 50px" }}>
-          <DataGrid
-            header={"Total Amount: $1000"}
-            rows={donations}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5, 10, 20]}
-            checkboxSelection
-            onRowSelectionModelChange={handleSelectionChange}
-            columnHeaderHeight={100}
-            sx={{
-              border: 13,
-              borderColor: "#d9d9d9",
-              borderRadius: 2,
-              "& .MuiDataGrid-row:nth-child(even)": {
-                backgroundColor: "#E0E0E0",
-              },
-              "& .MuiDataGrid-columnHeader": {
-                backgroundColor: "#BDBDBD",
-              },
-              "& .MuiDataGrid-row:nth-child(odd)": {
-                backgroundColor: "#FFFFFF",
-              },
-            }}
+        <div style={{ height: "80%", width: "100%", margin: "0 auto" }}>
+          <NavigationBar />
+          <h1> Total Amount: ${totalDonations} </h1>
+          <label>Search by fundraising event name: </label>
+          <input
+            type="text"
+            id={styles.searchBar}
+            placeholder="Search by donation name"
+            value={searchTerm}
+            onChange={handleSearch}
           />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "20px",
+              marginBottom: "10px",
+              marginRight: "50px",
+            }}
+          >
+            {selectedRows.length === 0 && AddDonation}
+            {selectedRows.length !== 0 && DeleteFundraising}
+          </div>
+          <div class={styles.finders}>
+            <label id={styles.filterlabel} htmlFor="chapterSelect">
+              Filter by Chapter Name:
+            </label>
+            <select
+              id={styles.chapterSelect}
+              value={selectedChapter}
+              onChange={(e) => handleFilterByChapter(e.target.value)}
+            >
+              <option value="">All Chapters</option>
+              {chapters.map((chapter, index) => (
+                <option key={index} value={chapter}>
+                  {chapter}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div style={{ margin: "0 50px" }}>
+            <DataGrid
+              header={"Total Amount: $1000"}
+              rows={donations}
+              columns={columns}
+              pageSize={5}
+              rowsPerPageOptions={[5, 10, 20]}
+              checkboxSelection
+              onRowSelectionModelChange={handleSelectionChange}
+              columnHeaderHeight={100}
+              sx={{
+                border: 13,
+                borderColor: "#d9d9d9",
+                height: 800,
+                borderRadius: 2,
+                "& .MuiDataGrid-row:nth-child(even)": {
+                  backgroundColor: "#E0E0E0",
+                },
+                "& .MuiDataGrid-columnHeader": {
+                  backgroundColor: "#BDBDBD",
+                },
+                "& .MuiDataGrid-row:nth-child(odd)": {
+                  backgroundColor: "#FFFFFF",
+                },
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>

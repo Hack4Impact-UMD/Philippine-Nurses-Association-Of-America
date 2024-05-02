@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import NavigationBar from "../../components/NavigationBar/NavigationBar.jsx";
 import { db } from "../../config/firebase.ts";
 import styles from "./Events.module.css";
+import SignOutButton from "../../components/SignOutButton/SignOutButton";
 
 const Events = () => {
   const [loading, setLoading] = useState(true);
@@ -372,22 +373,26 @@ const Events = () => {
 
   return (
     <div>
-      <div>
+      <div className={styles.header}>
         <h1>Events</h1>
-        <input
-          type="text"
-          placeholder="Search by event name or location"
-          value={searchTerm}
-          onChange={handleSearch}
-          style={{ width: "250px" }}
-        />
-        <NavigationBar />
+        <SignOutButton />
+      </div>
+      <NavigationBar />
+
+      <div style={{ padding: '40px' }}>
         <div
           style={{ display: "flex", alignItems: "center", marginTop: "20px" }}
         >
+          <input
+            type="text"
+            placeholder="Search by event name or location"
+            value={searchTerm}
+            onChange={handleSearch}
+            style={{ width: "270px" }}
+          />
           <div style={{ marginRight: "auto", padding: "10px" }}>
             <label id="filterlabel" htmlFor="chapterSelect">
-              Filter By Chapter or Archived:{" "}
+              Filter:{" "}
             </label>
             <select
               id="chapterSelect"
@@ -424,11 +429,10 @@ const Events = () => {
             {exportRegistration}
             <button
               onClick={handleDeleteEvent}
-              className={`${styles["events-delete-btn"]} ${
-                selectedRows.length === 0
-                  ? styles["events-delete-btn-disabled"]
-                  : ""
-              }`}
+              className={`${styles["events-delete-btn"]} ${selectedRows.length === 0
+                ? styles["events-delete-btn-disabled"]
+                : ""
+                }`}
               disabled={selectedRows.length === 0}
             >
               Delete Events

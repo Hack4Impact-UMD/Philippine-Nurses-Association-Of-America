@@ -1,3 +1,10 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px; /* Add padding around the header */
+  }
+
 #searchBar{
     width: 300px;
 }
@@ -5,8 +12,6 @@
 #filterlabel {
 position: relative;
 bottom: 60px;
-
-
 }
 
 #chapterSelect {
@@ -15,11 +20,6 @@ bottom: 60px;
 
 }
 
-.finders {
-
-
-
-}
 
 
 .button {

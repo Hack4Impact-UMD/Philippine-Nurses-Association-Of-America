@@ -16,7 +16,7 @@ const SignIn = () => {
     if (email && password) {
       authenticateUser(email, password)
         .then(() => {
-          navigate("../chapter-dashboard");
+          navigate("../dashboard");
         })
         .catch((error) => {
           const code = error.code;

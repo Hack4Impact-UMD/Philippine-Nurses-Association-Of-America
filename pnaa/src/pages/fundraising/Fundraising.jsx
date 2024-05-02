@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import NavigationBar from "../../components/NavigationBar/NavigationBar.jsx";
 import { db } from "../../config/firebase.ts";
 import styles from "./fundraising.module.css";
+import SignOutButton from "../../components/SignOutButton/SignOutButton";
 
 const Fundraising = () => {
   const [donations, setDonations] = useState([]);
@@ -238,7 +239,7 @@ const Fundraising = () => {
     </div>
   );
   const navigateToFundraiserDetails = (fundraiser) => {
-    navigate(`fundraising-detail`, { state: { fundraiser } });
+    navigate(`/fundraising-detail`, { state: { fundraiser } });
   };
   const EditMember = (
     <div style={{ marginRight: "10px" }}>
@@ -420,75 +421,75 @@ const Fundraising = () => {
 
   return (
     <div>
-      <div style={{ height: "80%", width: "100%", margin: "0 auto" }}>
-        <div style={{ height: "80%", width: "100%", margin: "0 auto" }}>
-          <NavigationBar />
-          <h1> Total Amount: ${totalDonations} </h1>
-          <label>Search by fundraising event name: </label>
-          <input
-            type="text"
-            id={styles.searchBar}
-            placeholder="Search by donation name"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "20px",
-              marginBottom: "10px",
-              marginRight: "50px",
-            }}
-          >
-            {selectedRows.length === 0 && AddDonation}
-            {selectedRows.length !== 0 && DeleteFundraising}
-          </div>
-          <div class={styles.finders}>
-            <label id={styles.filterlabel} htmlFor="chapterSelect">
-              Filter by Chapter Name:
-            </label>
-            <select
-              id={styles.chapterSelect}
-              value={selectedChapter}
-              onChange={(e) => handleFilterByChapter(e.target.value)}
-            >
-              <option value="">All Chapters</option>
-              {chapters.map((chapter, index) => (
-                <option key={index} value={chapter}>
-                  {chapter}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div style={{ margin: "0 50px" }}>
-            <DataGrid
-              header={"Total Amount: $1000"}
-              rows={donations}
-              columns={columns}
-              pageSize={5}
-              rowsPerPageOptions={[5, 10, 20]}
-              checkboxSelection
-              onRowSelectionModelChange={handleSelectionChange}
-              columnHeaderHeight={100}
-              sx={{
-                border: 13,
-                borderColor: "#d9d9d9",
-                height: 800,
-                borderRadius: 2,
-                "& .MuiDataGrid-row:nth-child(even)": {
-                  backgroundColor: "#E0E0E0",
-                },
-                "& .MuiDataGrid-columnHeader": {
-                  backgroundColor: "#BDBDBD",
-                },
-                "& .MuiDataGrid-row:nth-child(odd)": {
-                  backgroundColor: "#FFFFFF",
-                },
-              }}
-            />
-          </div>
+      <div className={styles.header}>
+        <h1>Fundraising</h1>
+        <SignOutButton />
+      </div>
+      <NavigationBar />
+      <div style={{ padding: '40px' }}>
+        <h1> Total Amount: ${totalDonations} </h1>
+        <label>Search by fundraising event name: </label>
+        <input
+          type="text"
+          id={styles.searchBar}
+          placeholder="Search by donation name"
+          value={searchTerm}
+          onChange={handleSearch}
+          style={{ width: "210px" }}
+        />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "20px",
+            marginBottom: "10px",
+          }}
+        >
+          {selectedRows.length === 0 && AddDonation}
+          {selectedRows.length !== 0 && DeleteFundraising}
         </div>
+        <div class={styles.finders}>
+          <label id={styles.filterlabel} htmlFor="chapterSelect">
+            Filter by Chapter Name:
+          </label>
+          <select
+            id={styles.chapterSelect}
+            value={selectedChapter}
+            onChange={(e) => handleFilterByChapter(e.target.value)}
+          >
+            <option value="">All Chapters</option>
+            {chapters.map((chapter, index) => (
+              <option key={index} value={chapter}>
+                {chapter}
+              </option>
+            ))}
+          </select>
+        </div>
+        <DataGrid
+          header={"Total Amount: $1000"}
+          rows={donations}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5, 10, 20]}
+          checkboxSelection
+          onRowSelectionModelChange={handleSelectionChange}
+          columnHeaderHeight={100}
+          sx={{
+            border: 13,
+            borderColor: "#d9d9d9",
+            height: 600,
+            borderRadius: 2,
+            "& .MuiDataGrid-row:nth-child(even)": {
+              backgroundColor: "#E0E0E0",
+            },
+            "& .MuiDataGrid-columnHeader": {
+              backgroundColor: "#BDBDBD",
+            },
+            "& .MuiDataGrid-row:nth-child(odd)": {
+              backgroundColor: "#FFFFFF",
+            },
+          }}
+        />
       </div>
     </div>
   );

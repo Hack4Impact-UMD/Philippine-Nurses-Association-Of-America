@@ -24,7 +24,7 @@ function App() {
             path="/"
             element={
               <RequireAuth>
-                <Dashboard />
+                <SignIn />
               </RequireAuth>
             }
           />

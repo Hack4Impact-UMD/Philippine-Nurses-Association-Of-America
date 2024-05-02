@@ -15,11 +15,8 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
-import { useUser } from "../../auth/UserContext";
 
 const AddFundraising = () => {
-  const { currentUser, loading: userLoading } = useUser();
-
   // Collect screen width for responsive design
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
@@ -67,7 +64,7 @@ const AddFundraising = () => {
         const newFundRef = doc(fundraiserCol);
         await setDoc(newFundRef, {
           ...editedFund,
-          ChapterName: currentUser.chapterId,
+          ChapterName: "National",
         });
         navigate(-1);
       } catch (error) {

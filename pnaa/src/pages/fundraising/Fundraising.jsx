@@ -5,7 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../../auth/UserContext";
+import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import styles from "./fundraising.module.css";
 
 const Fundraising = () => {
@@ -13,7 +13,6 @@ const Fundraising = () => {
   const [origDonations, setOrigDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalDonations, setTotalDonations] = useState(0);
-  const { currentUser, loading: userLoading } = useUser();
   const [selectedChapter, setSelectedChapter] = useState("");
   const [chapters, setChapters] = useState([]);
 
@@ -48,7 +47,7 @@ const Fundraising = () => {
     };
 
     fetchDonations();
-  }, [currentUser]);
+  }, []);
 
   const calculateTotal = (donations) => {
     let i = 0;
@@ -77,14 +76,14 @@ const Fundraising = () => {
   }, []);
 
   const handleAddFundraising = () => {
-    navigate("add-fundraising");
+    navigate("../add-fundraising");
     console.log("ok");
   };
 
   const [selectedRows, setSelectedRows] = useState([]);
   const navigate = useNavigate();
 
-  if (userLoading || loading) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -327,11 +326,12 @@ const Fundraising = () => {
     <div>
       <div style={{ height: "80%", width: "100%", margin: "0 auto" }}>
         <h1> Total Amount: ${totalDonations} </h1>
+        <NavigationBar />
         <div
           style={{
             display: "flex",
             justifyContent: "flex-end",
-            marginTop: "20px",
+            marginTop: "40px",
             marginBottom: "10px",
             marginRight: "50px",
           }}

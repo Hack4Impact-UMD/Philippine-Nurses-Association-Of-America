@@ -9,13 +9,11 @@ import {
 import Papa from "papaparse";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../../auth/UserContext";
+import NavigationBar from "../../components/NavigationBar/NavigationBar.jsx";
 import { db } from "../../config/firebase.ts";
 import styles from "./Events.module.css";
 
 const Events = () => {
-  const { currentUser, loading: userLoading } = useUser();
-
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
 
@@ -54,7 +52,7 @@ const Events = () => {
       }
     };
     fetchEvents();
-  }, [currentUser]);
+  }, []);
 
   useEffect(() => {
     const fetchChapters = async () => {
@@ -71,7 +69,7 @@ const Events = () => {
     fetchChapters();
   }, []);
 
-  if (loading || userLoading) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -204,7 +202,7 @@ const Events = () => {
   );
 
   const handleAddEvent = () => {
-    navigate("event-details", { state: { event: null } });
+    navigate("../event-details", { state: { event: null } });
   };
 
   const handleDeleteEvent = async () => {
@@ -365,7 +363,10 @@ const Events = () => {
         <div className={styles["events-header"]}>
           <h1>Events</h1>
         </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <NavigationBar />
+        <div
+          style={{ display: "flex", alignItems: "center", marginTop: "20px" }}
+        >
           <div style={{ marginRight: "auto", padding: "10px" }}>
             <label id="filterlabel" htmlFor="chapterSelect">
               Filter By Chapter or Archived:{" "}

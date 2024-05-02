@@ -4,7 +4,6 @@ import { useState } from "react";
 import styles from "./EventDialogBox.module.css";
 
 import { doc, updateDoc } from "firebase/firestore";
-import { useUser } from "../../auth/UserContext";
 import { db } from "../../config/firebase.ts";
 
 const EventDialogBox = ({
@@ -18,12 +17,11 @@ const EventDialogBox = ({
   const buttonText = dialogAction === "archive" ? "Archive" : "Unarchive";
   const buttonColor = dialogAction === "archive" ? "#91201A" : "#14804A";
 
-  const { currentUser, loading: userLoading } = useUser();
   const [loading, setLoading] = useState(false);
 
   // Function to handle dialog box actions by toggling active field in Firestore and updating parent
   const handleDialogAction = async () => {
-    const chapterId = currentUser?.chapterId;
+    const chapterId = "National";
     if (!chapterId) {
       console.error("Chapter ID not found");
       return;

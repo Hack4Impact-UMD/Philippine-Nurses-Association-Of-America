@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { useUser } from "../../auth/UserContext";
 import { db } from "../../config/firebase.ts";
 import styles from "./EventDetails.module.css";
 import EventDialogBox from "./EventDialogBox";
@@ -24,9 +23,7 @@ const EventDetails = () => {
   /*****************************************************************************
    * Variables and States
    *****************************************************************************/
-  const { currentUser } = useUser();
   const navigate = useNavigate();
-  // console.log("currentUser", currentUser);
 
   // Pass in event data from previous state
   const location = useLocation();
@@ -51,8 +48,8 @@ const EventDetails = () => {
       time: "",
       location: "",
       status: "Chapter", //Default status
-      chapter: currentUser.chapterData.name || "National", //Automatically fills in chapter of the user
-      region: currentUser.chapterData.region || "Not Specified",
+      chapter: "National", //Automatically fills in chapter of the user
+      region: "Not Specified",
       attendee: "",
       about: "",
       event_poster: "",
@@ -108,14 +105,14 @@ const EventDetails = () => {
         setIsEditMode(true);
         setEditedEvent((prev) => ({
           ...prev,
-          chapter: currentUser.chapterData.name,
+          chapter: "National",
         }));
         setEventArchived(false);
       }
     };
 
     fetchEventData();
-  }, [event, currentUser.chapterData.name]);
+  }, [event]);
 
   /*****************************************************************************
    * Action Buttons (Back, Edit/Save, Archive/Unarchive)

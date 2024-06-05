@@ -7,9 +7,7 @@ const RequireAuth = ({ children }) => {
   if (authContext.loading) {
     return (
       /*  Placeholder for some loading component */
-      <div className={styles.loadingContainer}>
-        <h1>Hello world!</h1>
-      </div>
+      <div className={styles.loadingContainer}>Loading. . .</div>
     );
   } else if (!authContext.user) {
     return (

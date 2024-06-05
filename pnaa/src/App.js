@@ -2,6 +2,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthProvider";
 import RequireAuth from "./auth/RequireAuth/RequireAuth";
 import ChapterDetails from "./pages/chapter-details/AllChapterDetails/ChapterDetails";
+import SingleChapterDetails from "./pages/chapter-details/SingleChapterDetails/SingleChapterDetails";
 import Dashboard from "./pages/dashboard/Dashboard";
 import EventDetails from "./pages/events/EventDetails";
 import Events from "./pages/events/Events";
@@ -41,6 +42,14 @@ function App() {
             element={
               <RequireAuth>
                 <ChapterDetails />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/details/chapter"
+            element={
+              <RequireAuth>
+                <SingleChapterDetails />
               </RequireAuth>
             }
           />

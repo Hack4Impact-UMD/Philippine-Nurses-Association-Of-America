@@ -28,16 +28,6 @@ const Events = () => {
 
   // Existing code for fetching events and chapters
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    const filteredEvents = originalEvents.filter(
-      (event) =>
-        event.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        event.location.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setEvents(filteredEvents);
-  };
-
   useEffect(() => {
     const fetchEvents = async () => {
       const db = getFirestore();
@@ -383,13 +373,6 @@ const Events = () => {
         <div
           style={{ display: "flex", alignItems: "center", marginTop: "20px" }}
         >
-          <input
-            type="text"
-            placeholder="Search by event name or location"
-            value={searchTerm}
-            onChange={handleSearch}
-            style={{ width: "270px" }}
-          />
           <div style={{ marginRight: "auto", padding: "10px" }}>
             <label id="filterlabel" htmlFor="chapterSelect">
               Filter:{" "}

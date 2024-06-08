@@ -23,6 +23,7 @@ const EventDetails = () => {
   /*****************************************************************************
    * Variables and States
    *****************************************************************************/
+ 
   const navigate = useNavigate();
 
   // Pass in event data from previous state

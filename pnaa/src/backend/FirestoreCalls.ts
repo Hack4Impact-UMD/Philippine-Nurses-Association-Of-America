@@ -31,6 +31,27 @@ export function getChapterData(): Promise<any[]> {
   });
 }
 
+export function getEventsData(): Promise<any[]> {
+  // Add collectionName here
+  const collectionName = "events";
+  const collectionRef = collection(db, collectionName);
+  return new Promise((resolve, reject) => {
+    getDocs(collectionRef)
+      .then((snapshot: any) => {
+        const allDocuments: any = [];
+        const documents = snapshot.docs.map((doc: any) => {
+          const document = doc.data();
+          const newEvent = { ...document, id: doc.id };
+          allDocuments.push(newEvent);
+        });
+        resolve(allDocuments);
+      })
+      .catch((error: any) => {
+        reject(error);
+      });
+  });
+}
+
 export function filteredGetter(): Promise<any[]> {
   // Add collectionName here
   const collectionName = "";

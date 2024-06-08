@@ -4,7 +4,7 @@ import RequireAuth from "./auth/RequireAuth/RequireAuth";
 import ChapterDetails from "./pages/chapter-details/AllChapterDetails/ChapterDetails";
 import Dashboard from "./pages/dashboard/Dashboard";
 import EventDetails from "./pages/events/EventDetails";
-import Events from "./pages/events/Events";
+import Events1 from "./pages/events/Events1";
 import ForgotPassword from "./pages/forgotpassword/ForgotPassword";
 import AddFundraising from "./pages/fundraising/AddFundraising";
 import Fundraising from "./pages/fundraising/Fundraising";
@@ -72,7 +72,7 @@ function App() {
             path="/events"
             element={
               <RequireAuth>
-                <Events />
+                <Events1 />
               </RequireAuth>
             }
           />

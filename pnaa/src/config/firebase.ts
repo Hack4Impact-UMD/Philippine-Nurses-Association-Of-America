@@ -2,7 +2,11 @@
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import {
+  initializeFirestore,
+  memoryLocalCache,
+  memoryLruGarbageCollector,
+} from "firebase/firestore";
 import { getFunctions } from "firebase/functions";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -24,7 +28,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-export const db = getFirestore(app);
+// Initializes a cache. Cache is cleared when page is refreshed, but not when using the navbar
+export const db = initializeFirestore(app, {
+  localCache: memoryLocalCache({
+    garbageCollector: memoryLruGarbageCollector(),
+  }),
+});
 export const auth = getAuth(app);
 export const functions = getFunctions(app, "us-east4");
 export default app;

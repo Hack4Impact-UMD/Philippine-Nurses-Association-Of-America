@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  getDocsFromCache,
   query,
   updateDoc,
   where,
@@ -11,19 +12,70 @@ import {
 import { db } from "../config/firebase";
 
 export function getChapterData(): Promise<any[]> {
-  // Add collectionName here
-  const collectionName = "chapters";
-  const collectionRef = collection(db, collectionName);
+  const collectionRef = collection(db, "chapters");
   return new Promise((resolve, reject) => {
-    getDocs(collectionRef)
+    getDocsFromCache(collectionRef)
       .then((snapshot: any) => {
         const allDocuments: any = [];
-        const documents = snapshot.docs.map((doc: any) => {
+        snapshot.docs.map((doc: any) => {
           const document = doc.data();
           const newChapter = { ...document, id: doc.id };
           allDocuments.push(newChapter);
         });
-        resolve(allDocuments);
+        if (allDocuments.length == 0) {
+          getDocs(collectionRef)
+            .then((snapshot: any) => {
+              const otherDocuments: any = [];
+              snapshot.docs.map((doc: any) => {
+                const document = doc.data();
+                const newChapter = { ...document, id: doc.id };
+                otherDocuments.push(newChapter);
+              });
+
+              resolve(otherDocuments);
+            })
+            .catch((error: any) => {
+              reject(error);
+            });
+        } else {
+          resolve(allDocuments);
+        }
+      })
+      .catch((error: any) => {
+        reject(error);
+      });
+  });
+}
+
+export function getDashboardData(): Promise<any[]> {
+  const collectionRef = collection(db, "chapters");
+  return new Promise((resolve, reject) => {
+    getDocsFromCache(collectionRef)
+      .then((snapshot: any) => {
+        const allDocuments: any = [];
+        snapshot.docs.map((doc: any) => {
+          const document = doc.data();
+          const newChapter = { ...document, id: doc.id };
+          allDocuments.push(newChapter);
+        });
+        if (allDocuments.length == 0) {
+          getDocs(collectionRef)
+            .then((snapshot: any) => {
+              const otherDocuments: any = [];
+              snapshot.docs.map((doc: any) => {
+                const document = doc.data();
+                const newChapter = { ...document, id: doc.id };
+                otherDocuments.push(newChapter);
+              });
+
+              resolve(otherDocuments);
+            })
+            .catch((error: any) => {
+              reject(error);
+            });
+        } else {
+          resolve(allDocuments);
+        }
       })
       .catch((error: any) => {
         reject(error);

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { getChapterData } from "../../../backend/FirestoreCalls";
 import NavigationBar from "../../../components/NavigationBar/NavigationBar";
 import SignOutButton from "../../../components/SignOutButton/SignOutButton";
-import SingleChapterDetails from "../SingleChapterDetails/SingleChapterDetails";
 import styles from "./ChapterDetails.module.css";
 import {
   DataGridStyles,
@@ -46,7 +45,7 @@ const ChapterDetails = () => {
           "Loading Data"
         ) : error ? (
           "Error fetching data"
-        ) : national ? (
+        ) : (
           <div className={styles.innerGrid}>
             <DataGrid
               rows={chapterData}
@@ -58,14 +57,17 @@ const ChapterDetails = () => {
                 toolbar: QuickSearchToolbar,
               }}
               onRowClick={(row) => {
-                setSelectedRow(row.row);
-                setNational(false);
+                console.log(row.row);
+                navigate("/details/chapter", {
+                  state: {
+                    fromApp: true,
+                    chapterDetails: row.row,
+                  },
+                });
               }}
               sx={DataGridStyles}
             />
           </div>
-        ) : (
-          <SingleChapterDetails row={selectedRow} />
         )}
       </div>
     </div>

@@ -10,6 +10,8 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
+import { Event } from "../types/EventType";
+import { User } from "../types/UserType";
 
 export function getChapterData(): Promise<any[]> {
   const collectionRef = collection(db, "chapters");
@@ -83,18 +85,35 @@ export function getDashboardData(): Promise<any[]> {
   });
 }
 
-export function getEventsData(): Promise<any[]> {
-  // Add collectionName here
-  const collectionName = "events";
-  const collectionRef = collection(db, collectionName);
+export function getEventsData(): Promise<{ event: Event; id: string }[]> {
+  const collectionRef = collection(db, "events");
   return new Promise((resolve, reject) => {
     getDocs(collectionRef)
       .then((snapshot: any) => {
-        const allDocuments: any = [];
+        const allDocuments: { event: Event; id: string }[] = [];
         const documents = snapshot.docs.map((doc: any) => {
           const document = doc.data();
-          const newEvent = { ...document, id: doc.id };
+          const newEvent = { event: document, id: doc.id };
           allDocuments.push(newEvent);
+        });
+        resolve(allDocuments);
+      })
+      .catch((error: any) => {
+        reject(error);
+      });
+  });
+}
+
+export function getUsersData(): Promise<{ user: User; id: string }[]> {
+  const collectionRef = collection(db, "users");
+  return new Promise((resolve, reject) => {
+    getDocs(collectionRef)
+      .then((snapshot: any) => {
+        const allDocuments: { user: User; id: string }[] = [];
+        const documents = snapshot.docs.map((doc: any) => {
+          const document = doc.data();
+          const newUser = { user: document, id: doc.id };
+          allDocuments.push(newUser);
         });
         resolve(allDocuments);
       })

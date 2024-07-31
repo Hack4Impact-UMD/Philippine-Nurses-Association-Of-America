@@ -5,20 +5,32 @@
   padding: 10px 20px; /* Add padding around the header */
 }
 
-div {
-  font-family: "Source Serif 4", serif;
-}
-
-.events-header {
+.gridContainer {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   flex-direction: row;
-  padding: 0px 10px 0px 10px;
+  justify-content: center;
+  width: 100%;
+  height: 500px;
+  margin-top: 30px;
 }
 
-.events-header h1 {
-  margin-right: auto;
+.innerGrid {
+  width: 80%;
+}
+
+.content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.events-btns{
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-top: 30px;
+  width: 80%;
 }
 
 .events-delete-btn {
@@ -26,13 +38,13 @@ div {
   color: white;
   border: none;
   padding: 8px 16px;
-  margin-right: 5px;
 }
 
 .events-delete-btn-disabled {
   background-color: #ccc;
   color: #666;
   cursor: default;
+  padding: 8px 16px;
 }
 
 .events-add-btn {
@@ -42,25 +54,9 @@ div {
   padding: 8px 16px;
 }
 
-.event-cell {
-  font-weight: 500;
-  color: black;
-}
-
-.cell {
-  color: #464f60;
-}
-
-.MuiDataGrid-checkbox {
-  border-radius: 4px;
-}
-
-#filterlabel {
-  padding: 5px;
-  font-weight: bold;
-}
-
-#filterRegion {
-  padding: 5px;
-  font-weight: bold;
+.events-export-btn {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 8px 16px;
 }

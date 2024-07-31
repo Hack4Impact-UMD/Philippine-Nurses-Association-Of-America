@@ -13,9 +13,6 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
 
   const handleResetPassword = async () => {
-    // Implement logic to send reset password link
-    // You can use Firebase's password reset functionality here
-    // Example: auth.sendPasswordResetEmail(email);
     sendResetEmail(email)
       .then(() => {
         setSubmitted(true);
@@ -74,7 +71,10 @@ const ForgotPassword = () => {
           </>
         )}
         <div>
-          <button onClick={navigate("/signin")} className={styles.backLogin}>
+          <button
+            onClick={() => navigate("/signin")}
+            className={styles.backLogin}
+          >
             <Link>&#x3c; Back to Login</Link>
           </button>
         </div>

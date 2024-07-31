@@ -58,30 +58,23 @@ export async function updateUserPassword(newPassword, oldPassword) {
 /*
  * Creates a user and sends a password reset email to that user.
  */
-export function createUser(
-  newEmail,
-  newRole,
-  firstName,
-  chapterName,
-  lastName
-) {
+export function createUser(name, chapterName, email, role) {
   return new Promise((resolve, reject) => {
     /* If role isn't one of the expected ones, reject it.*/
-    if (newRole != "admin" && newRole != "user") {
+    if (role.toLowerCase() != "admin" && role.toLowerCase() != "user") {
       reject();
     }
     const createUserCloudFunction = httpsCallable(functions, "createUser");
     const auth = getAuth(app);
 
     createUserCloudFunction({
-      email: newEmail,
-      role: newRole,
-      firstName: firstName,
+      email: email,
+      role: role,
+      name: name,
       chapterName: chapterName,
-      lastName: lastName,
     })
       .then(async () => {
-        await sendPasswordResetEmail(auth, newEmail)
+        await sendPasswordResetEmail(auth, email)
           .then(() => {
             resolve();
           })

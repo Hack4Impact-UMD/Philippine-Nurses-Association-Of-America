@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../config/firebase.ts";
+import { db } from "../../../config/firebase.ts";
+import EventDialogBox from "../EventDialogBox.jsx";
 import styles from "./EventDetails.module.css";
-import EventDialogBox from "./EventDialogBox";
 
 // Material UI Components
 import {
@@ -23,7 +23,7 @@ const EventDetails = () => {
   /*****************************************************************************
    * Variables and States
    *****************************************************************************/
- 
+
   const navigate = useNavigate();
 
   // Pass in event data from previous state

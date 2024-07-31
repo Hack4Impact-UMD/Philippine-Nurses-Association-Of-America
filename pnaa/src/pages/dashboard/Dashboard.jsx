@@ -1,9 +1,8 @@
-import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getChapterData } from "../../../backend/FirestoreCalls";
-import NavigationBar from "../../../components/NavigationBar/NavigationBar";
-import SignOutButton from "../../../components/SignOutButton/SignOutButton";
+import { getChapterData } from "../../backend/FirestoreCalls";
+import NavigationBar from "../../components/NavigationBar/NavigationBar";
+import SignOutButton from "../../components/SignOutButton/SignOutButton";
 import styles from "./Dashboard.module.css";
 
 const Dashboard = () => {
@@ -42,7 +41,7 @@ const Dashboard = () => {
           "Error fetching data"
         ) : (
           <div className={styles.innerGrid}>
-            <DataGrid
+            {/* <DataGrid
               rows={chapterData}
               columns={columns}
               columnHeaderHeight={50}
@@ -61,7 +60,7 @@ const Dashboard = () => {
                 });
               }}
               sx={DataGridStyles}
-            />
+            /> */}
           </div>
         )}
       </div>

@@ -1,7 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../auth/AuthProvider";
 import styles from "./NavigationBar.module.css";
 
 const NavigationBar = () => {
+  const auth = useAuth();
   return (
     <div className={styles.navTabs}>
       <ul>
@@ -48,6 +50,18 @@ const NavigationBar = () => {
             Fundraising
           </NavLink>
         </li>
+        {auth.token?.claims?.role.toLowerCase() === "admin" && (
+          <li className={styles.tabItem}>
+            <NavLink
+              to="../users"
+              className={({ isActive }) =>
+                isActive ? styles.activeTabLink : styles.tabLink
+              }
+            >
+              Users
+            </NavLink>
+          </li>
+        )}
         <li className={styles.tabItem}>
           <NavLink
             to="../settings"

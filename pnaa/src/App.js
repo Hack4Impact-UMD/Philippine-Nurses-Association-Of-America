@@ -1,17 +1,19 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthProvider";
+import RequireAdminAuth from "./auth/RequireAdminAuth/RequireAdminAuth";
 import RequireAuth from "./auth/RequireAuth/RequireAuth";
 import ChapterDetails from "./pages/chapter-details/AllChapterDetails/ChapterDetails";
 import SingleChapterDetails from "./pages/chapter-details/SingleChapterDetails/SingleChapterDetails";
 import Dashboard from "./pages/dashboard/Dashboard";
-import EventDetails from "./pages/events/EventDetails";
-import Events1 from "./pages/events/Events1";
+import EventDetails from "./pages/events/EventDetails/EventDetails";
+import Events1 from "./pages/events/Events";
 import ForgotPassword from "./pages/forgotpassword/ForgotPassword";
 import AddFundraising from "./pages/fundraising/AddFundraising";
 import Fundraising from "./pages/fundraising/Fundraising";
 import FundraisingDetail from "./pages/fundraising/FundraisingDetails";
 import SignIn from "./pages/signin/SignIn";
 import SignUp from "./pages/signup/SignUp";
+import Users from "./pages/users/Users";
 
 function App() {
   return (
@@ -93,6 +95,14 @@ function App() {
               </RequireAuth>
             }
           />
+          <Route
+            path="/users"
+            element={
+              <RequireAdminAuth>
+                <Users />
+              </RequireAdminAuth>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>
@@ -100,21 +110,3 @@ function App() {
 }
 
 export default App;
-
-{
-  /* <Route path="/chapter-dashboard/*" element={<ChapterDash />}>
-            <Route path="members" element={<MemberManagement />} />
-            <Route path="member-detail" element={<MemberDetail />} />
-            <Route path="fundraising" element={<Fundraising />} />
-          </Route> */
-}
-{
-  /* 
-
-
-          <Route
-            path="/chapter-dashboard/events/event-details"
-            element={<EventDetail />}
-          />
-*/
-}

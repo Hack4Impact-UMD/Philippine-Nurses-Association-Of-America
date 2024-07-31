@@ -15,7 +15,8 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^1.7.2",
-    "dotenv": "^16.3.1",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^4.5.0",
     "googleapis": "^129.0.0",

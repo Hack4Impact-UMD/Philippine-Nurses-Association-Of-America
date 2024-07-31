@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
 import { authenticateUser } from "../../backend/AuthFunctions";
+import Loading from "../../components/LoadingScreen/Loading";
 import styles from "./SignIn.module.css";
 
 const SignIn = () => {
@@ -11,9 +12,11 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSignIn = async () => {
     if (email && password) {
+      setLoading(true);
       authenticateUser(email, password)
         .then(() => {
           navigate("../dashboard");
@@ -27,6 +30,9 @@ const SignIn = () => {
           } else {
             setError("*Incorrect email address or password");
           }
+        })
+        .finally(() => {
+          setLoading(false);
         });
     } else {
       setError("*Incorrect email address or password");
@@ -73,7 +79,7 @@ const SignIn = () => {
           </label>
           <div className={styles.centerButton}>
             <button onClick={handleSignIn} className={styles.loginButton}>
-              Login
+              {loading ? <Loading /> : "Login"}
             </button>
           </div>
 

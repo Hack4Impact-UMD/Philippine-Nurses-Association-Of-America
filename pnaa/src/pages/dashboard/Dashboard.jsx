@@ -6,6 +6,7 @@ import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import SignOutButton from "../../components/SignOutButton/SignOutButton";
 import styles from "./Dashboard.module.css";
 import DateSelection from "./DateSelection/DateSelection";
+import dayjs from "dayjs";
 
 const Dashboard = () => {
   const [chapterData, setChapterData] = useState([]);
@@ -14,6 +15,8 @@ const Dashboard = () => {
   const [national, setNational] = useState(true);
   const [selectedRow, setSelectedRow] = useState();
   const [openDateSelection, setOpenDateSelection] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const navigate = useNavigate();
 
   //Fetches all member data within chapter
@@ -46,7 +49,10 @@ const Dashboard = () => {
           <div className={styles.innerGrid}>
             <div className={styles.mainPanel}>
               <div className={styles.dateSelection}>
-                <div className={styles.dateRange}>start date - end date</div>
+                <div className={styles.dateRange}>
+                  {dayjs(startDate).format("MM/DD/YYYY")} -{" "}
+                  {dayjs(endDate).format("MM/DD/YYYY")}
+                </div>
                 <Button
                   variant="outlined"
                   className={styles.dateButton}
@@ -78,6 +84,10 @@ const Dashboard = () => {
         handleClose={() => {
           setOpenDateSelection(!openDateSelection);
         }}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
       />
     </div>
   );

@@ -5,13 +5,13 @@ import { deleteSelf } from "../../../backend/AuthFunctions";
 import Loading from "../../../components/LoadingScreen/Loading";
 import styles from "./DeleteUser.module.css";
 
-const DeleteUser = ({ open, handleClose }: any) => {
+const DeleteUser = ({ open, handleClose }) => {
   const auth = useAuth();
-  const [status, setStatus] = useState<{
-    loading: boolean;
-    error: boolean;
-    submitted: boolean;
-  }>({ loading: false, error: false, submitted: false });
+  const [status, setStatus] = useState({
+    loading: false,
+    error: false,
+    submitted: false,
+  });
   const handleSubmit = () => {
     setStatus({ ...status, loading: true });
     deleteSelf(auth?.user.uid)

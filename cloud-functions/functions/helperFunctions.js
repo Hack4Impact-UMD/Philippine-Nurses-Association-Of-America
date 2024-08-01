@@ -86,7 +86,12 @@ module.exports = {
     return validMembers;
   },
   processMembershipData: async function (db, data) {
-    const chaptersData = {};
+    const tempDataCollection = db.collection("chapters");
+    const snapshot = await tempDataCollection.get();
+    const chapterInfo = {};
+    snapshot.forEach((doc) => {
+      chapterInfo[doc.id] = doc.data();
+    });
 
     data.forEach((contact) => {
       const chapterField = contact.FieldValues.find(
@@ -137,42 +142,35 @@ module.exports = {
 
       if (chapterField && chapterField.Value && chapterField.Value.Label) {
         const chapter = chapterField.Value.Label;
-
-        // Initialize chapter object if not already present
-        if (!chaptersData[chapter]) {
-          chaptersData[chapter] = {
-            name: chapter, // Add the chapter name field
+        const safeKey = chapter.replace(/\//g, "_");
+        if (!chapterInfo[safeKey]) {
+          chapterInfo[safeKey] = {
+            name: chapter,
             totalActive: 0,
             totalLapsed: 0,
             region: regionValue,
             members: [],
           };
         }
+        const index = chapterInfo[safeKey].members.findIndex(
+          (member) => member.memberId === memberInfo.memberId
+        );
 
-        // Increment counts based on active status
-        if (isActive) {
-          chaptersData[chapter].totalActive++;
+        if (index == -1) {
+          chapterInfo[safeKey].members.push(memberInfo);
         } else {
-          chaptersData[chapter].totalLapsed++;
+          chapterInfo[safeKey].members[index] = memberInfo;
         }
-
-        // Add member info to the combined list
-        chaptersData[chapter].members.push(memberInfo);
       }
     });
-    // console.log(JSON.stringify(chaptersData, null, 2));
-    return chaptersData;
+    return chapterInfo;
   },
   storeProcessedData: async function (db, processedData) {
     const finishedProcess = await processedData;
-    console.log(finishedProcess);
     const tempDataCollection = db.collection("chapters");
     const batch = db.batch();
-    console.log("before loop");
     Object.entries(finishedProcess).forEach(([key, data], index) => {
-      console.log(data);
-      const safeKey = key.replace(/\//g, "_");
-      const docRef = tempDataCollection.doc(safeKey); // Use chapter name or a unique key as the document ID
+      const docRef = tempDataCollection.doc(key); // Use chapter name or a unique key as the document ID
       batch.set(docRef, data);
     });
 

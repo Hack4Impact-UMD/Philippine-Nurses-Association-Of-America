@@ -40,9 +40,14 @@ async function getAccessToken() {
 }
 
 async function fetchContactsData(accessToken) {
+  // Get the date from a week ago
+  const lastWeek = new Date(new Date().getTime() - 1000 * 3600 * 24 * 7)
+    .toISOString()
+    .split("T")[0]; // Get the current date in the format YYYY-MM-DD
+
   // Initial request to the contacts endpoint
   let response = await axios.get(
-    `https://api.wildapricot.com/v2.1/accounts/${accountId}/contacts`,
+    `https://api.wildapricot.com/v2.1/accounts/${accountId}/contacts?$filter=LastUpdated gt ${lastWeek}`,
     {
       headers: {
         "Accept": "application/json",
@@ -128,24 +133,50 @@ exports.fetchEventData = onSchedule(
   }
 );
 
-// exports.generalCloudFunction = onCall(
-//   { region: "us-east4", cors: true },
-//   async ({ auth, data }) => {
-//     return new Promise(async (resolve, reject) => {
-//       // Parameters found by doing data.parameterName
-//       // Auth of the user that called the function
-//       if (
-//         // Validate parameters here
-
-//         // Validate auth
-//         auth &&
-//         auth.token &&
-//         auth.token.role.toLowerCase() == "" // Desired Role
-//       ) {
-//       }
-//     });
-//   }
-// );
+exports.updateMembers = onSchedule(
+  {
+    schedule: "every day 01:00",
+    region: "us-east4",
+    timeoutSeconds: 1200, // Increase timeout to 9 minutes
+    memory: "2GiB", // Optionally increase the memory allocation if needed
+    timeZone: "America/New_York",
+  },
+  async (event) => {
+    try {
+      const tempDataCollection = db.collection("chapters");
+      const snapshot = await tempDataCollection.get();
+      const chapterInfo = {};
+      snapshot.forEach((doc) => {
+        chapterInfo[doc.id] = doc.data();
+      });
+      Object.keys(chapterInfo).forEach((key) => {
+        const chapter = chapterInfo[key];
+        const chapterMembers = chapter.members;
+        let totalActive = 0;
+        let totalLapsed = 0;
+        const today = new Date().toISOString().split("T")[0];
+        chapterMembers.forEach((member, index) => {
+          if (member.renewalDueDate == "N/A") {
+            totalLapsed += 1;
+            return;
+          }
+          const isActive = member.renewalDueDate >= today;
+          chapter.members[index].activeStatus = isActive ? "Active" : "Lapsed";
+          if (isActive) {
+            totalActive += 1;
+          } else {
+            totalLapsed += 1;
+          }
+        });
+        chapter.totalActive = totalActive;
+        chapter.totalLapsed = totalLapsed;
+        chapterInfo[key] = chapter;
+      });
+    } catch (error) {
+      functions.logger.log("Error while updating chapter data: ", error);
+    }
+  }
+);
 
 /*
  * Creates a new user.
@@ -322,250 +353,188 @@ exports.deleteUser = onCall(
   }
 );
 
-// /**
-//  * Deletes the user
-//  * Argument: firebase_id - the user's firebase_id
-//  */
+/**
+ * Updates a user's email
+ * Arguments: email - the user's current email
+ *            newEmail - the user's new email
+ * TODO: Update Error Codes
+ */
 
-// exports.deleteUser = onCall(
-//   { region: "us-east4", cors: true },
-//   async ({ auth, data }) => {
-//     return new Promise(async (resolve, reject) => {
-//       const authorization = admin.auth();
-//       if (
-//         data.firebase_id != null &&
-//         auth &&
-//         auth.token &&
-//         auth.token.role.toLowerCase() == "admin"
-//       ) {
-//         await authorization
-//           .deleteUser(data.firebase_id)
-//           .then(async () => {
-//             const promises = [];
-//             await db
-//               .collection("users")
-//               .where("auth_id", "==", data.firebase_id)
-//               .get()
-//               .then((querySnapshot) => {
-//                 if (querySnapshot.docs.length == 0) {
-//                   throw new functions.https.HttpsError(
-//                     "Unknown",
-//                     "Unable to find user with that firebase id in the database"
-//                   );
-//                 } else {
-//                   querySnapshot.forEach((documentSnapshot) => {
-//                     promises.push(documentSnapshot.ref.delete());
-//                   });
-//                 }
-//               })
-//               .catch((error) => {
-//                 reject({
-//                   reason: "Database Deletion Failed",
-//                   text: "Unable to find user in the database. Make sure they exist.",
-//                 });
-//                 throw new functions.https.HttpsError("unknown", `${error}`);
-//               });
-//             await Promise.all(promises)
-//               .then(() => {
-//                 resolve({ reason: "Success", text: "Success" });
-//               })
-//               .catch((error) => {
-//                 reject({
-//                   reason: "Database Deletion Failed",
-//                   text: "Unable to delete user from the database.",
-//                 });
-//                 throw new functions.https.HttpsError("unknown", `${error}`);
-//               });
-//           })
-//           .catch((error) => {
-//             reject({
-//               reason: "Auth Deletion Failed",
-//               text: "Unable to delete user from login system. Make sure they exist.",
-//             });
-//             throw new functions.https.HttpsError(
-//               "Unknown",
-//               "Unable to delete user."
-//             );
-//           });
-//       } else {
-//         reject({
-//           reason: "Permissions",
-//           text: "Only an admin user can delete users. If you are an admin, make sure the account exists.",
-//         });
-//         throw new functions.https.HttpsError(
-//           "permission-denied",
-//           "Only an admin user can delete users. If you are an admin, make sure the account exists."
-//         );
-//       }
-//     });
-//   }
-// );
-// /**
-//  * Updates a user's email
-//  * Arguments: email - the user's current email
-//  *            newEmail - the user's new email
-//  * TODO: Update Error Codes
-//  */
+exports.updateUserEmail = onCall(
+  { region: "us-east4", cors: true },
+  async ({ auth, data }) => {
+    return new Promise(async (resolve, reject) => {
+      const authorization = admin.auth();
+      if (
+        data.email != null &&
+        data.newEmail != null &&
+        auth &&
+        auth.token &&
+        auth.token.email.toLowerCase() == data.email.toLowerCase()
+      ) {
+        await authorization
+          .updateUser(auth.uid, {
+            email: data.newEmail,
+          })
+          .then(async () => {
+            await db
+              .collection("users")
+              .where("auth_id", "==", auth.uid)
+              .get()
+              .then(async (querySnapshot) => {
+                if (querySnapshot.docs.length == 0) {
+                  reject(
+                    new functions.https.HttpsError(
+                      "unknown",
+                      "Unable to find user with that email in the database"
+                    )
+                  );
+                  functions.logger.error(
+                    "Unknown",
+                    "Unable to find user with that email in the database"
+                  );
+                } else {
+                  const promises = [];
+                  querySnapshot.forEach((doc) => {
+                    promises.push(doc.ref.update({ email: data.newEmail }));
+                  });
+                  await Promise.all(promises)
+                    .then(() => {
+                      resolve({
+                        reason: "Success",
+                        text: "Successfully changed email.",
+                      });
+                    })
+                    .catch(() => {
+                      reject(
+                        new functions.https.HttpsError(
+                          "unknown",
+                          "Failed to change user's email within the database."
+                        )
+                      );
+                      functions.logger.error(
+                        "Unknown",
+                        "Failed to change user's email within the database."
+                      );
+                    });
+                }
+              })
+              .catch((error) => {
+                reject(
+                  new functions.https.HttpsError(
+                    "unknown",
+                    "Unable to find user with that email in the database"
+                  )
+                );
+                functions.logger.error(
+                  "Unknown",
+                  "Unable to find user with that email in the database"
+                );
+              });
+          })
+          .catch((error) => {
+            reject(
+              new functions.https.HttpsError(
+                "unknown",
+                "Failed to change user's email."
+              )
+            );
+            functions.logger.error("Unknown", "Failed to change user's email.");
+          });
+      } else {
+        reject(
+          new functions.https.HttpsError(
+            "unknown",
+            "You do not have the correct permissions to update email. If you think you do, please make sure the new email is not already in use."
+          )
+        );
+        functions.logger.error(
+          "unknown",
+          "You do not have the correct permissions to update email. If you think you do, please make sure the new email is not already in use."
+        );
+      }
+    });
+  }
+);
 
-// exports.updateUserEmail = onCall(
-//   { region: "us-east4", cors: true },
-//   async ({ auth, data }) => {
-//     return new Promise(async (resolve, reject) => {
-//       const authorization = admin.auth();
-//       if (
-//         data.email != null &&
-//         data.newEmail != null &&
-//         auth &&
-//         auth.token &&
-//         auth.token.email.toLowerCase() == data.email.toLowerCase()
-//       ) {
-//         await authorization
-//           .updateUser(auth.uid, {
-//             email: data.newEmail,
-//           })
-//           .then(async () => {
-//             await db
-//               .collection("users")
-//               .where("auth_id", "==", auth.uid)
-//               .get()
-//               .then(async (querySnapshot) => {
-//                 if (querySnapshot.docs.length == 0) {
-//                   reject({
-//                     reason: "Database Change Failed",
-//                     text: "User's email has been changed for login, but failed to find user's email within the database.",
-//                   });
-//                   throw new functions.https.HttpsError(
-//                     "Unknown",
-//                     "Unable to find user with that email in the database"
-//                   );
-//                 } else {
-//                   const promises = [];
-//                   querySnapshot.forEach((doc) => {
-//                     promises.push(doc.ref.update({ email: data.newEmail }));
-//                   });
-//                   await Promise.all(promises)
-//                     .then(() => {
-//                       resolve({
-//                         reason: "Success",
-//                         text: "Successfully changed email.",
-//                       });
-//                     })
-//                     .catch(() => {
-//                       reject({
-//                         reason: "Database Change Failed",
-//                         text: "User's email has been changed for login, but failed to find user's email within the database.",
-//                       });
-//                       throw new functions.https.HttpsError(
-//                         "Unknown",
-//                         "Failed to change user's email within the database."
-//                       );
-//                     });
-//                 }
-//               })
-//               .catch((error) => {
-//                 reject({
-//                   reason: "Database Change Failed",
-//                   text: "User's email has been changed for login, but failed to find user's email within the database.",
-//                 });
-//                 throw new functions.https.HttpsError(
-//                   "Unknown",
-//                   "Unable to find user with that email in the database"
-//                 );
-//               });
-//           })
-//           .catch((error) => {
-//             reject({
-//               reason: "Auth Change Failed",
-//               text: "Failed to change user's email within the login system.",
-//             });
-//             throw new functions.https.HttpsError(
-//               "Unknown",
-//               "Failed to change user's email."
-//             );
-//           });
-//       } else {
-//         reject({
-//           reason: "Permissions",
-//           text: "You do not have the correct permissions to update email. If you think you do, please make sure the new email is not already in use.",
-//         });
-//         throw new functions.https.HttpsError(
-//           "permission-denied",
-//           "You do not have the correct permissions to update email."
-//         );
-//       }
-//     });
-//   }
-// );
+/**
+ * Let's a user delete themselves
+ * Argument: firebase_id - the user's firebase_id
+ */
 
-// /**
-//  * Changes a user's role in both authorization and the database.
-//  * Takes an object as a parameter that should contain a firebase_id field and a role field.
-//  * This function can only be called by a user with admin status
-//  * Arguments: firebase_id - the id of the user
-//  *            role: the user's new role; string, (Options: "ADMIN", "TEACHER")
-//  */
-
-// exports.setUserRole = onCall(
-//   { region: "us-east4", cors: true },
-//   async ({ auth, data }) => {
-//     return new Promise(async (resolve, reject) => {
-//       const authorization = admin.auth();
-//       if (
-//         data.firebase_id != null &&
-//         data.role != null &&
-//         auth &&
-//         auth.token &&
-//         auth.token.role.toLowerCase() == "admin"
-//       ) {
-//         authorization
-//           .setCustomUserClaims(data.firebase_id, { role: data.role })
-//           .then(async () => {
-//             await db
-//               .collection("users")
-//               .where("auth_id", "==", data.firebase_id)
-//               .get()
-//               .then(async (querySnapshot) => {
-//                 if (querySnapshot.docs.length == 0) {
-//                   throw new functions.https.HttpsError(
-//                     "Unknown",
-//                     "Unable to find user with that firebase id in the database"
-//                   );
-//                 } else {
-//                   const promises = [];
-//                   querySnapshot.forEach((doc) => {
-//                     promises.push(doc.ref.update({ type: data.role }));
-//                   });
-//                   await Promise.all(promises)
-//                     .then(() => {
-//                       return { result: "OK" };
-//                     })
-//                     .catch(() => {
-//                       throw new functions.https.HttpsError(
-//                         "Unknown",
-//                         "Unable to update user role in database"
-//                       );
-//                     });
-//                 }
-//               })
-//               .catch((error) => {
-//                 throw new functions.https.HttpsError(
-//                   "Unknown",
-//                   "Unable to find user with that firebase id in the database"
-//                 );
-//               });
-//           })
-//           .catch((error) => {
-//             throw new functions.https.HttpsError(
-//               "Unknown",
-//               "Failed to change user role."
-//             );
-//           });
-//       } else {
-//         throw new functions.https.HttpsError(
-//           "permission-denied",
-//           "Only an admin user can change roles. If you are an admin, make sure the arguments passed into the function are correct."
-//         );
-//       }
-//     });
-//   }
-// );
+exports.deleteSelf = onCall(
+  { region: "us-east4", cors: true },
+  async ({ auth, data }) => {
+    return new Promise(async (resolve, reject) => {
+      const authorization = admin.auth();
+      if (
+        data.firebase_id != null &&
+        auth &&
+        auth.uid &&
+        auth.uid == data.firebase_id &&
+        (auth.token.role.toLowerCase() == "admin" ||
+          auth.token.role.toLowerCase() == "user")
+      ) {
+        const promises = [];
+        await db
+          .collection("users")
+          .where("auth_id", "==", data.firebase_id)
+          .get()
+          .then((querySnapshot) => {
+            if (querySnapshot.docs.length == 0) {
+              reject(
+                new functions.https.HttpsError(
+                  "unknown",
+                  "Unable to find you in the database"
+                )
+              );
+              new functions.logger.error(
+                "unknown",
+                "Unable to find you in the database"
+              );
+            } else {
+              querySnapshot.forEach((documentSnapshot) => {
+                promises.push(documentSnapshot.ref.delete());
+              });
+            }
+          })
+          .catch((error) => {
+            reject(new functions.https.HttpsError("unknown", `${error}`));
+            functions.logger.error("unknown", `${error}`);
+          });
+        await Promise.all(promises)
+          .then(async () => {
+            await authorization
+              .deleteUser(data.firebase_id)
+              .then(async () => {
+                resolve();
+              })
+              .catch((error) => {
+                reject(
+                  new functions.https.HttpsError(
+                    "unknown",
+                    "Unable to delete user."
+                  )
+                );
+                functions.logger.error("Unknown", "Unable to delete user.");
+              });
+          })
+          .catch((error) => {
+            reject(new functions.https.HttpsError("unknown", `${error}`));
+            functions.logger.error("unknown", `${error}`);
+          });
+      } else {
+        reject(
+          new functions.https.HttpsError(
+            "unknown",
+            "Make sure you have the correct permissions to delete this account."
+          )
+        );
+        functions.logger.error(
+          "unknown",
+          "Make sure you have the correct permissions to delete this account."
+        );
+      }
+    });
+  }
+);

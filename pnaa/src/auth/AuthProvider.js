@@ -15,16 +15,17 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const auth = getAuth(app);
-    onIdTokenChanged(auth, (newUser) => {
+    onIdTokenChanged(auth, async (newUser) => {
       setUser(newUser);
       if (newUser != null) {
-        newUser
+        await newUser
           .getIdTokenResult()
           .then((newToken) => {
             setToken(newToken);
           })
           .catch(() => {});
       }
+
       setLoading(false);
     });
   }, []);

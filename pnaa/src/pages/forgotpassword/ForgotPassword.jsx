@@ -1,5 +1,6 @@
 // ForgotPassword.js
 
+import { Button } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
@@ -59,12 +60,12 @@ const ForgotPassword = () => {
                 className={styles.input}
               />
               <div className={styles.centerButton}>
-                <button
+                <Button
                   onClick={handleResetPassword}
                   className={styles.submitButton}
                 >
                   Submit
-                </button>
+                </Button>
               </div>
             </div>
             <p className={styles.errorMessage}>{error}</p>

@@ -1,14 +1,12 @@
 import { Navigate } from "react-router-dom";
+import Loading from "../../components/LoadingScreen/Loading";
 import { AuthProvider, useAuth } from "../AuthProvider";
 import styles from "./RequireAuth.module.css";
 
 const RequireAuth = ({ children }) => {
   const authContext = useAuth();
   if (authContext.loading) {
-    return (
-      /*  Placeholder for some loading component */
-      <div className={styles.loadingContainer}>Loading. . .</div>
-    );
+    return <Loading />;
   } else if (!authContext.user) {
     return (
       <Navigate to="/signin" state={{ redir: window.location.pathname }} />

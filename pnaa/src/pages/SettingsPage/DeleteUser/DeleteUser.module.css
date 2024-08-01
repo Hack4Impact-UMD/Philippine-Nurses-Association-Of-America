@@ -22,11 +22,7 @@
 }
 .submitButton {
   width: 200px;
-  background-color: #013b46 !important;
-  color: white !important;
-}
-.submitButton:mui-focused {
-  background-color: #013b46 !important;
+  background-color: #05208b !important;
   color: white !important;
 }
 

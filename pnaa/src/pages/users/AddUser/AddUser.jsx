@@ -177,17 +177,14 @@ const AddUser = ({ open, handleClose, user }) => {
                     </Select>
                   </>
                 )}
-                {status.loading ? (
-                  <Loading />
-                ) : (
-                  <Button
-                    type="submit"
-                    variant="outlined"
-                    className={styles.submitButton}
-                  >
-                    Submit
-                  </Button>
-                )}
+
+                <Button
+                  type="submit"
+                  variant="outlined"
+                  className={styles.submitButton}
+                >
+                  {status.loading ? <Loading /> : "Submit"}
+                </Button>
               </form>
             </>
           )}

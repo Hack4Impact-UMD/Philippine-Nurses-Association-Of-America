@@ -1,3 +1,4 @@
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
   IconButton,
@@ -6,26 +7,14 @@ import {
   Paper,
   TextField,
 } from "@mui/material";
-import styles from "./ChangeEmail.module.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../auth/AuthProvider";
 import { logOut, updateUserEmail } from "../../../backend/AuthFunctions";
 import Loading from "../../../components/LoadingScreen/Loading";
-import { useNavigate } from "react-router-dom";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useAuth } from "../../../auth/AuthProvider";
+import styles from "./ChangeEmail.module.css";
 
-type Fields = {
-  email: string;
-  emailConfirm: string;
-  password: string;
-};
-type Status = {
-  loading: boolean;
-  error: boolean;
-  errorMessage: string;
-};
-
-const ChangeEmail = ({ open, handleClose }: any) => {
+const ChangeEmail = ({ open, handleClose }) => {
   const auth = useAuth();
   const navigate = useNavigate();
   const style = {
@@ -34,17 +23,17 @@ const ChangeEmail = ({ open, handleClose }: any) => {
     fontFamily: "'Inter', sans-serif",
     height: "14px !important",
   };
-  const [fields, setFields] = useState<Fields>({
+  const [fields, setFields] = useState({
     email: "",
     emailConfirm: "",
     password: "",
   });
-  const [status, setStatus] = useState<Status>({
+  const [status, setStatus] = useState({
     loading: false,
     error: false,
     errorMessage: "",
   });
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = () => {
     setStatus({ ...status, loading: true });
@@ -55,7 +44,7 @@ const ChangeEmail = ({ open, handleClose }: any) => {
         errorMessage: "Emails do not match",
       });
     } else {
-      updateUserEmail(auth.user.email!, fields.emailConfirm, fields.password)
+      updateUserEmail(auth.user.email, fields.emailConfirm, fields.password)
         .then(() =>
           setStatus({ ...status, loading: false, errorMessage: "none" })
         )
@@ -106,8 +95,8 @@ const ChangeEmail = ({ open, handleClose }: any) => {
               >
                 <TextField
                   required
-                  label="Email"
-                  placeholder="Enter Email"
+                  label="New Email"
+                  placeholder="Enter New Email"
                   type="email"
                   value={fields.email}
                   onChange={(event) => {
@@ -121,8 +110,8 @@ const ChangeEmail = ({ open, handleClose }: any) => {
                 />
                 <TextField
                   required
-                  label="Confirm Email"
-                  placeholder="Re-enter Email"
+                  label="Confirm New Email"
+                  placeholder="Re-enter New Email"
                   type="email"
                   value={fields.emailConfirm}
                   onChange={(event) => {

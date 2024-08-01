@@ -30,11 +30,11 @@
 }
 
 .submitButton {
-  background-color: #013b46 !important;
+  background-color: #08529e !important;
   color: white !important;
 }
 .submitButton:mui-focused {
-  background-color: #013b46 !important;
+  background-color: #08529e !important;
   color: white !important;
 }
 .passwordStyling {

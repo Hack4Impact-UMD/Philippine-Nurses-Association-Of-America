@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
@@ -80,9 +81,9 @@ const SignIn = () => {
             Show Password
           </label>
           <div className={styles.centerButton}>
-            <button onClick={handleSignIn} className={styles.loginButton}>
+            <Button onClick={handleSignIn} className={styles.loginButton}>
               {loading ? <Loading /> : "Login"}
-            </button>
+            </Button>
           </div>
 
           {error && <p className={styles.errorMessage}>{error}</p>}

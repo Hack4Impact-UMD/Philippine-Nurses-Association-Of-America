@@ -1,10 +1,16 @@
+import { Button } from "@mui/material";
 import { logOut } from "../../backend/AuthFunctions";
 import styles from "./SignOutButton.module.css";
 const SignOutButton = () => {
   return (
-    <button onClick={logOut} className={styles.signOutButton}>
+    <Button
+      type="submit"
+      variant="outlined"
+      className={styles.submitButton}
+      onClick={logOut}
+    >
       Sign Out
-    </button>
+    </Button>
   );
 };
 export default SignOutButton;

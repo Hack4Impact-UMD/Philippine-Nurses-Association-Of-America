@@ -125,20 +125,52 @@ export function deleteUser(auth_id) {
   });
 }
 
-export function updateUserEmail(oldEmail, currentEmail) {
+export function deleteSelf(auth_id) {
   return new Promise((resolve, reject) => {
+    const deleteUserCloudFunction = httpsCallable(functions, "deleteSelf");
+
+    deleteUserCloudFunction({ firebase_id: auth_id })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export function updateUserEmail(oldEmail, currentEmail, password) {
+  return new Promise((resolve, reject) => {
+    const auth = getAuth(app);
+    const user = auth.currentUser;
     const updateUserEmailCloudFunction = httpsCallable(
       functions,
       "updateUserEmail"
     );
-
-    updateUserEmailCloudFunction({ email: oldEmail, newEmail: currentEmail })
-      .then(async (res) => {
-        resolve();
+    const credential = EmailAuthProvider.credential(oldEmail, password);
+    reauthenticateWithCredential(user, credential)
+      .then(() => {
+        updateUserEmailCloudFunction({
+          email: oldEmail,
+          newEmail: currentEmail,
+        })
+          .then(() => {
+            resolve();
+          })
+          .catch(() => {
+            reject("Error while updating email. Please try again later.");
+          });
       })
       .catch((error) => {
-        console.log(error);
-        reject(error);
+        const code = error.code;
+        if (code === "auth/wrong-password") {
+          reject("Your original password is incorrect.");
+        } else if (code === "auth/too-many-request") {
+          reject(`Access to this account has been temporarily disabled due to many failed
+        login attempts or due to too many failed password resets. Please try again later`);
+        } else {
+          reject("Failed to authenticate user. Please log in again.");
+        }
       });
   });
 }

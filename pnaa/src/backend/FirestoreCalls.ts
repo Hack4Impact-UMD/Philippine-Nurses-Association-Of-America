@@ -11,17 +11,52 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { Event } from "../types/EventType";
+import { Fundraising } from "../types/FundraisingType";
 import { User } from "../types/UserType";
+
+let chapters: { [key: string]: string[] } = {};
+
+export const getChapters = async () => {
+  if (Object.keys(chapters).length === 0) {
+    await getChapterData();
+  }
+  const chapterNames: string[] = [];
+  Object.keys(chapters).forEach((region) => {
+    chapterNames.push(...chapters[region]);
+  });
+  return chapterNames;
+};
+
+export const getRegions = async () => {
+  if (Object.keys(chapters).length === 0) {
+    await getChapterData();
+  }
+  return Object.keys(chapters);
+};
+
+export const getChapterRegionData = async () => {
+  if (Object.keys(chapters).length === 0) {
+    await getChapterData();
+  }
+  return chapters;
+};
 
 export function getChapterData(): Promise<any[]> {
   const collectionRef = collection(db, "chapters");
   return new Promise((resolve, reject) => {
     getDocsFromCache(collectionRef)
       .then((snapshot: any) => {
-        const allDocuments: any = [];
+        const allDocuments: any[] = [];
+        const chapterRegions: { [key: string]: string[] } = {};
+        chapterRegions["National"] = ["National"];
         snapshot.docs.map((doc: any) => {
           const document = doc.data();
           const newChapter = { ...document, id: doc.id };
+          if (!chapterRegions[document.region]) {
+            chapterRegions[document.region] = [document.name];
+          } else {
+            chapterRegions[document.region].push(document.name);
+          }
           allDocuments.push(newChapter);
         });
         if (allDocuments.length == 0) {
@@ -31,15 +66,21 @@ export function getChapterData(): Promise<any[]> {
               snapshot.docs.map((doc: any) => {
                 const document = doc.data();
                 const newChapter = { ...document, id: doc.id };
+                if (!chapterRegions[document.region]) {
+                  chapterRegions[document.region] = [document.name];
+                } else {
+                  chapterRegions[document.region].push(document.name);
+                }
                 otherDocuments.push(newChapter);
               });
-
+              chapters = { ...chapterRegions };
               resolve(otherDocuments);
             })
             .catch((error: any) => {
               reject(error);
             });
         } else {
+          chapters = { ...chapterRegions };
           resolve(allDocuments);
         }
       })
@@ -49,41 +90,7 @@ export function getChapterData(): Promise<any[]> {
   });
 }
 
-export function getDashboardData(): Promise<any[]> {
-  const collectionRef = collection(db, "chapters");
-  return new Promise((resolve, reject) => {
-    getDocsFromCache(collectionRef)
-      .then((snapshot: any) => {
-        const allDocuments: any = [];
-        snapshot.docs.map((doc: any) => {
-          const document = doc.data();
-          const newChapter = { ...document, id: doc.id };
-          allDocuments.push(newChapter);
-        });
-        if (allDocuments.length == 0) {
-          getDocs(collectionRef)
-            .then((snapshot: any) => {
-              const otherDocuments: any = [];
-              snapshot.docs.map((doc: any) => {
-                const document = doc.data();
-                const newChapter = { ...document, id: doc.id };
-                otherDocuments.push(newChapter);
-              });
-
-              resolve(otherDocuments);
-            })
-            .catch((error: any) => {
-              reject(error);
-            });
-        } else {
-          resolve(allDocuments);
-        }
-      })
-      .catch((error: any) => {
-        reject(error);
-      });
-  });
-}
+export function getDashboardData() {}
 
 export function getEventsData(): Promise<{ event: Event; id: string }[]> {
   const collectionRef = collection(db, "events");
@@ -95,6 +102,27 @@ export function getEventsData(): Promise<{ event: Event; id: string }[]> {
           const document = doc.data();
           const newEvent = { event: document, id: doc.id };
           allDocuments.push(newEvent);
+        });
+        resolve(allDocuments);
+      })
+      .catch((error: any) => {
+        reject(error);
+      });
+  });
+}
+
+export function getFundraisingData(): Promise<
+  { fundraising: Fundraising; id: string }[]
+> {
+  const collectionRef = collection(db, "fundraisers");
+  return new Promise((resolve, reject) => {
+    getDocs(collectionRef)
+      .then((snapshot: any) => {
+        const allDocuments: { fundraising: Fundraising; id: string }[] = [];
+        const documents = snapshot.docs.map((doc: any) => {
+          const document = doc.data();
+          const newFundraiser = { fundraising: document, id: doc.id };
+          allDocuments.push(newFundraiser);
         });
         resolve(allDocuments);
       })

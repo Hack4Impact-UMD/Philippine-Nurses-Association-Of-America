@@ -17,3 +17,58 @@
 .innerGrid {
   width: 80%;
 }
+
+.mainPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 3px #05208bb2 solid;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.dateSelection {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-left: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.dateRange {
+  font-style: italic;
+}
+
+.dateButton {
+  text-transform: none !important;
+  background-color: #05208b !important;
+  color: white !important;
+}
+
+.dateButton:mui-focused {
+  text-transform: none !important;
+  background-color: #05208b !important;
+  color: white !important;
+}
+
+.displayInfo {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 50px;
+  row-gap: 30px;
+  margin-right: auto;
+}
+
+.selectionContainers {
+  display: flex;
+  flex-direction: row;
+}
+
+.locationContainer {
+  border: 3px #05208bb2 solid;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #e8e8e8;
+}

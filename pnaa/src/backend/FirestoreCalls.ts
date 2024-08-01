@@ -123,6 +123,46 @@ export function getUsersData(): Promise<{ user: User; id: string }[]> {
   });
 }
 
+export function getUserById(id: string): Promise<any[]> {
+  const collectionRef = query(
+    collection(db, "users"),
+    /* Toss in conditions here*/
+    where("auth_id", "==", id)
+  );
+  return new Promise((resolve, reject) => {
+    getDocs(collectionRef)
+      .then((snapshot: any) => {
+        const allDocuments: any = [];
+        const documents = snapshot.docs.map((doc: any) => {
+          const document = doc.data();
+          const newStudent = { ...document, id: doc.id };
+          allDocuments.push(newStudent);
+        });
+        resolve(allDocuments);
+      })
+      .catch((error: any) => {
+        reject(error);
+      });
+  });
+}
+
+export function updateUser(user: Partial<User>, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (id === "" || !id) {
+      reject(new Error("Invalid id"));
+      return;
+    }
+    const collectionRef = doc(db, "users", id);
+    updateDoc(collectionRef, { name: user.name, chapterName: user.chapterName })
+      .then(() => {
+        resolve();
+      })
+      .catch((error: any) => {
+        reject(error);
+      });
+  });
+}
+
 export function filteredGetter(): Promise<any[]> {
   // Add collectionName here
   const collectionName = "";

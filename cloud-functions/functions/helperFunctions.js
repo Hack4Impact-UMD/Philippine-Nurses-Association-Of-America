@@ -87,26 +87,6 @@ module.exports = {
   },
   processMembershipData: async function (db, data) {
     const chaptersData = {};
-    const tempDataCollection = db.collection("chapters");
-    const snapshot = await tempDataCollection.get();
-
-    if (snapshot.empty) {
-      throw new Error("No matching documents.");
-    }
-
-    const eventIDS = {};
-    snapshot.forEach((doc) => {
-      eventIDS[doc.id] = doc.data();
-    });
-
-    // Convert JSON object to string
-    const jsonString = JSON.stringify(eventIDS);
-
-    // Using TextEncoder to get the size in bytes
-    const encoder = new TextEncoder();
-    const byteSize = encoder.encode(jsonString).length;
-
-    console.log(`Size of JSON object in bytes: ${byteSize}`);
 
     data.forEach((contact) => {
       const chapterField = contact.FieldValues.find(
@@ -180,15 +160,17 @@ module.exports = {
         chaptersData[chapter].members.push(memberInfo);
       }
     });
-
     // console.log(JSON.stringify(chaptersData, null, 2));
     return chaptersData;
   },
   storeProcessedData: async function (db, processedData) {
+    const finishedProcess = await processedData;
+    console.log(finishedProcess);
     const tempDataCollection = db.collection("chapters");
     const batch = db.batch();
-
-    Object.entries(processedData).forEach(([key, data], index) => {
+    console.log("before loop");
+    Object.entries(finishedProcess).forEach(([key, data], index) => {
+      console.log(data);
       const safeKey = key.replace(/\//g, "_");
       const docRef = tempDataCollection.doc(safeKey); // Use chapter name or a unique key as the document ID
       batch.set(docRef, data);

@@ -13,7 +13,7 @@ const DeleteUser = ({ user, open, handleClose }) => {
   });
   const handleSubmit = () => {
     setStatus({ ...status, loading: true });
-    deleteUser(user.auth_id)
+    deleteUser(user?.auth_id)
       .then(() => {
         setStatus({ loading: false, error: false, submitted: true });
       })
@@ -29,6 +29,7 @@ const DeleteUser = ({ user, open, handleClose }) => {
       handleClose();
     }
   };
+  console.log(user);
   return (
     <>
       <Modal open={open} onClose={handleFullClose}>

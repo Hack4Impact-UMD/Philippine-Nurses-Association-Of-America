@@ -12,6 +12,7 @@ import {
 
 import { getUsersData } from "../../backend/FirestoreCalls";
 import AddUser from "./AddUser/AddUser";
+import EditUser from "./EditUser/EditUser";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -19,6 +20,10 @@ const Users = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState({
+    user: undefined,
+    open: false,
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,8 +42,23 @@ const Users = () => {
 
   return (
     <div>
-      <AddUser open={openAddModal} handleClose={() => setOpenAddModal(false)} />
-
+      <AddUser
+        open={openAddModal}
+        user={selectedUser}
+        handleClose={() => {
+          setOpenAddModal(false);
+          setSelectedUser(undefined);
+        }}
+      />
+      <EditUser
+        user={openEditModal.user}
+        open={openEditModal.open}
+        handleClose={() => setOpenEditModal({ ...openEditModal, open: false })}
+        handleOpenAdd={() => {
+          setOpenAddModal(true);
+          setSelectedUser(openEditModal.user);
+        }}
+      />
       <div className={styles.header}>
         <h1>Users</h1>
         <SignOutButton />
@@ -81,7 +101,7 @@ const Users = () => {
                   toolbar: QuickSearchToolbar,
                 }}
                 onRowClick={(row) => {
-                  setSelectedUser(row.row);
+                  setOpenEditModal({ user: row.row, open: true });
                 }}
                 sx={DataGridStyles}
               />

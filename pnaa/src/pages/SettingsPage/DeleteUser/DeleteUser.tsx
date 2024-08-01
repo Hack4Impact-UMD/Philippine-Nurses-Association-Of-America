@@ -1,11 +1,12 @@
 import { Button, Modal, Paper } from "@mui/material";
-import styles from "./ChangeRole.module.css";
 import { useState } from "react";
+import { useAuth } from "../../../auth/AuthProvider";
+import { deleteSelf } from "../../../backend/AuthFunctions";
+import Loading from "../../../components/LoadingScreen/Loading";
+import styles from "./DeleteUser.module.css";
 
-import { setUserRole } from "../../../../backend/AuthFunctions";
-import Loading from "../../../../components/LoadingScreen/Loading";
-
-const ChangeRole = ({ user, open, handleClose }: any) => {
+const DeleteUser = ({ open, handleClose }: any) => {
+  const auth = useAuth();
   const [status, setStatus] = useState<{
     loading: boolean;
     error: boolean;
@@ -13,13 +14,11 @@ const ChangeRole = ({ user, open, handleClose }: any) => {
   }>({ loading: false, error: false, submitted: false });
   const handleSubmit = () => {
     setStatus({ ...status, loading: true });
-    setUserRole(user.auth_id, "ADMIN")
+    deleteSelf(auth?.user.uid)
       .then(() => {
-        console.log(status);
         setStatus({ loading: false, error: false, submitted: true });
-        console.log(status);
       })
-      .catch((error) => {
+      .catch(() => {
         setStatus({ loading: false, error: true, submitted: true });
       });
   };
@@ -36,17 +35,16 @@ const ChangeRole = ({ user, open, handleClose }: any) => {
       <Modal open={open} onClose={handleFullClose}>
         <Paper className={styles.background}>
           <div className={styles.center}>
-            <p className={styles.header}>Edit Existing User</p>
+            <p className={styles.header}>Delete User</p>
             {status.submitted ? (
               <p className={styles.text}>
                 {status.error
-                  ? "Error promoting user. Please try again later."
-                  : "Successfully promoted user"}
+                  ? "Error deleting user. Please try again later."
+                  : "Successfully deleted user"}
               </p>
             ) : (
               <p className={styles.text}>
-                Are you sure you want to promote the user with the email&nbsp;
-                {user?.email} to an admin?
+                Are you sure you want to delete your account?
               </p>
             )}
 
@@ -61,7 +59,7 @@ const ChangeRole = ({ user, open, handleClose }: any) => {
                 className={styles.submitButton}
                 onClick={() => handleSubmit()}
               >
-                Promote User
+                Delete Account
               </Button>
             )}
           </div>
@@ -70,4 +68,4 @@ const ChangeRole = ({ user, open, handleClose }: any) => {
     </>
   );
 };
-export default ChangeRole;
+export default DeleteUser;

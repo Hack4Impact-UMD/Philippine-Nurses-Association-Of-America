@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PNAA_Logo from "../../assets/PNAA_Logo.png";
-import { authenticateUser } from "../../backend/AuthFunctions";
+import { authenticateUser, logOut } from "../../backend/AuthFunctions";
 import Loading from "../../components/LoadingScreen/Loading";
 import styles from "./SignIn.module.css";
 
 const SignIn = () => {
   const navigate = useNavigate();
-
+  useEffect(() => {
+    logOut();
+  }, []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

@@ -243,6 +243,85 @@ exports.createUser = onCall(
   }
 );
 
+/**
+ * Deletes the user
+ * Argument: firebase_id - the user's firebase_id
+ */
+
+exports.deleteUser = onCall(
+  { region: "us-east4", cors: true },
+  async ({ auth, data }) => {
+    return new Promise(async (resolve, reject) => {
+      const authorization = admin.auth();
+      if (
+        data.firebase_id != null &&
+        auth &&
+        auth.token &&
+        auth.token.role.toLowerCase() == "admin"
+      ) {
+        await authorization
+          .deleteUser(data.firebase_id)
+          .then(async () => {
+            const promises = [];
+            await db
+              .collection("users")
+              .where("auth_id", "==", data.firebase_id)
+              .get()
+              .then((querySnapshot) => {
+                if (querySnapshot.docs.length == 0) {
+                  throw new functions.https.HttpsError(
+                    "Unknown",
+                    "Unable to find user with that firebase id in the database"
+                  );
+                } else {
+                  querySnapshot.forEach((documentSnapshot) => {
+                    promises.push(documentSnapshot.ref.delete());
+                  });
+                }
+              })
+              .catch((error) => {
+                reject({
+                  reason: "Database Deletion Failed",
+                  text: "Unable to find user in the database. Make sure they exist.",
+                });
+                throw new functions.https.HttpsError("unknown", `${error}`);
+              });
+            await Promise.all(promises)
+              .then(() => {
+                resolve({ reason: "Success", text: "Success" });
+              })
+              .catch((error) => {
+                reject({
+                  reason: "Database Deletion Failed",
+                  text: "Unable to delete user from the database.",
+                });
+                throw new functions.https.HttpsError("unknown", `${error}`);
+              });
+          })
+          .catch((error) => {
+            reject({
+              reason: "Auth Deletion Failed",
+              text: "Unable to delete user from login system. Make sure they exist.",
+            });
+            throw new functions.https.HttpsError(
+              "Unknown",
+              "Unable to delete user."
+            );
+          });
+      } else {
+        reject({
+          reason: "Permissions",
+          text: "Only an admin user can delete users. If you are an admin, make sure the account exists.",
+        });
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "Only an admin user can delete users. If you are an admin, make sure the account exists."
+        );
+      }
+    });
+  }
+);
+
 // /**
 //  * Deletes the user
 //  * Argument: firebase_id - the user's firebase_id

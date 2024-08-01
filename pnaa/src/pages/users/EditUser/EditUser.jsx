@@ -1,27 +1,19 @@
 import { Button, Modal, Paper } from "@mui/material";
 import { useState } from "react";
-import ChangeRole from "./ChangeRole/ChangeRole";
 import DeleteUser from "./DeleteUser/DeleteUser";
 import styles from "./EditUser.module.css";
 
-const EditUser = ({ user, open, handleClose }) => {
-  const [openDeleteModal, setOpenDeleteModal] = useState < boolean > false;
-  const [openChangeRoleModal, setOpenChangeRoleModal] =
-    useState < boolean > false;
+const EditUser = ({ user, open, handleClose, handleOpenAdd }) => {
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openChangeRoleModal, setOpenChangeRoleModal] = useState(false);
 
   return (
     <>
       <DeleteUser
-        user={user}
+        user={user?.user}
         open={openDeleteModal}
         handleClose={() => setOpenDeleteModal(false)}
       />
-      <ChangeRole
-        user={user}
-        open={openChangeRoleModal}
-        handleClose={() => setOpenChangeRoleModal(false)}
-      />
-
       <Modal open={open} onClose={handleClose}>
         <Paper className={styles.background}>
           <div className={styles.center}>
@@ -32,11 +24,11 @@ const EditUser = ({ user, open, handleClose }) => {
               variant="outlined"
               className={styles.submitButton}
               onClick={() => {
-                setOpenChangeRoleModal(true);
                 handleClose();
+                handleOpenAdd();
               }}
             >
-              Make User an Admin
+              Edit User
             </Button>
             <Button
               type="submit"

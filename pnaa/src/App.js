@@ -11,6 +11,7 @@ import ForgotPassword from "./pages/forgotpassword/ForgotPassword";
 import AddFundraising from "./pages/fundraising/AddFundraising";
 import Fundraising from "./pages/fundraising/Fundraising";
 import FundraisingDetail from "./pages/fundraising/FundraisingDetails";
+import Settings from "./pages/SettingsPage/Settings";
 import SignIn from "./pages/signin/SignIn";
 import SignUp from "./pages/signup/SignUp";
 import Users from "./pages/users/Users";
@@ -101,6 +102,14 @@ function App() {
               <RequireAdminAuth>
                 <Users />
               </RequireAdminAuth>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <RequireAuth>
+                <Settings />
+              </RequireAuth>
             }
           />
         </Routes>

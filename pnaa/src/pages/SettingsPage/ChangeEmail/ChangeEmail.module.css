@@ -11,7 +11,7 @@
 .header {
   margin: 25px 0 35px 0;
   font-size: 1.5rem;
-  font-family: "Source-Serif 4", serif;
+  font-family: "DM Serif Text", serif;
   text-align: center;
 }
 .form {
@@ -20,27 +20,29 @@
   align-items: center;
   justify-content: center;
 }
+
 /* MUI Styling was breaking in the modal. Adding !important seemed to fix it. */
 .muInput {
   font-size: 1rem !important;
-  font-family: "Source-Serif 4", serif !important;
+  font-family: "Inter", sans-serif !important;
   margin: 0 0 40px 0 !important;
   height: 20px !important;
 }
 
-.select {
-  width: 150px !important;
-  margin-top: 10px !important;
-}
-
 .submitButton {
-  margin-top: 35px !important;
-  background-color: #05208b !important;
+  background-color: #013b46 !important;
   color: white !important;
 }
 .submitButton:mui-focused {
-  background-color: #05208b !important;
+  background-color: #013b46 !important;
   color: white !important;
+}
+.passwordStyling {
+  font-size: 1rem !important;
+  font-family: "Inter", sans-serif !important;
+  margin: 20px 0 40px 0 !important;
+  width: 270px !important;
+  height: 40px !important;
 }
 
 .center {

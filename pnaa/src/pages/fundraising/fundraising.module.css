@@ -10,10 +10,26 @@
   flex-direction: row;
   justify-content: center;
   width: 100%;
-  height: 500px;
+  height: 450px;
   margin-top: 30px;
 }
 
 .innerGrid {
   width: 80%;
+}
+
+.topRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.addButton {
+  background-color: green !important;
+  color: white !important;
+  font-family: "Source-Serif 4", serif !important;
+  font-size: 0.9rem !important;
+  height: 35px !important;
 }

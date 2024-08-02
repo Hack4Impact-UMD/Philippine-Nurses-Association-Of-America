@@ -4,4 +4,8 @@ export interface Fundraising {
   chapterName: string;
   amount: number;
   note: string;
+  archived: boolean;
+  lastUpdated: string;
+  lastUpdatedUser: string;
+  creationDate: string;
 }

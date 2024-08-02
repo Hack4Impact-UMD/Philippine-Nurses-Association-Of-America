@@ -8,7 +8,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import EventDetails from "./pages/events/EventDetails/EventDetails";
 import Events1 from "./pages/events/Events";
 import ForgotPassword from "./pages/forgotpassword/ForgotPassword";
-import AddFundraising from "./pages/fundraising/AddFundraising";
+import AddFundraising from "./pages/fundraising/AddFundraising/AddFundraising";
 import Fundraising from "./pages/fundraising/Fundraising";
 import FundraisingDetail from "./pages/fundraising/FundraisingDetails";
 import Settings from "./pages/SettingsPage/Settings";

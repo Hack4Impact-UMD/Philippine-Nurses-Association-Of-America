@@ -1,3 +1,4 @@
+import { Button, Checkbox, FormControlLabel } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -47,6 +48,23 @@ const Fundraising = () => {
           "Error fetching data"
         ) : (
           <div className={styles.innerGrid}>
+            <div className={styles.topRow}>
+              <FormControlLabel
+                control={<Checkbox defaultChecked />}
+                label="Show Archived Fundraisers"
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.875rem",
+                  },
+                }}
+              />
+              <Button
+                className={styles.addButton}
+                onClick={() => navigate("../add-fundraising")}
+              >
+                Add Fundraiser
+              </Button>
+            </div>
             <DataGrid
               rows={fundraisingData}
               columns={columns}

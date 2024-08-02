@@ -1,0 +1,48 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px; /* Add padding around the header */
+}
+
+.gridContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  height: 500px;
+  margin-top: 30px;
+}
+
+.paper {
+  width: 80%;
+  height: 500px;
+  border: 4px solid #2264e550;
+  overflow: auto;
+}
+
+.secondHeader {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 0 0 40px;
+  font-family: "Source-Serif 4", serif;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0 0 30px;
+}
+
+.muInput {
+  font-size: 1rem !important;
+  font-family: "Inter", sans-serif !important;
+  margin: 10px 0 40px 0 !important;
+  height: 20px !important;
+  width: 350px;
+}

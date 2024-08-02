@@ -1,13 +1,6 @@
 import { Box } from "@mui/material";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 
-/*
-  date: string;
-  fundraiserName: string;
-  chapterName: string;
-  amount: number;
-  note: string;
-*/
 // Specifies the columns of the datagrid
 export const columns = [
   {

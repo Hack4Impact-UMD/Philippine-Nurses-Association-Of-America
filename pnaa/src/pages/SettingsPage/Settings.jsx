@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Pencil from "../../assets/pencil.svg";
 import { useAuth } from "../../auth/AuthProvider";
 import { getUserById } from "../../backend/FirestoreCalls";
+import { Button } from "@mui/material";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import SignOutButton from "../../components/SignOutButton/SignOutButton";
 import ChangeEmail from "./ChangeEmail/ChangeEmail";
@@ -74,8 +75,7 @@ const Settings = () => {
                   className={styles.editButton}
                   onClick={() => {
                     setOpenChangeEmailModal(true);
-                  }}
-                >
+                  }}>
                   <img src={Pencil} className={styles.editImage}></img>
                 </button>
               </div>
@@ -93,21 +93,20 @@ const Settings = () => {
                   className={styles.editButton}
                   onClick={() => {
                     setOpenChangePasswordModal(true);
-                  }}
-                >
+                  }}>
                   <img src={Pencil} className={styles.editImage}></img>
                 </button>
               </div>
             </div>
             <div className={styles.buttonMargin}>
-              <button
+              <Button
+                variant="outlined"
                 className={styles.deleteButton}
                 onClick={() => {
                   setOpenDeleteModal(true);
-                }}
-              >
+                }}>
                 Delete Account
-              </button>
+              </Button>
             </div>
           </div>
         )}

@@ -1,4 +1,5 @@
 import { DataGrid } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
 import { collection, deleteDoc, doc } from "firebase/firestore";
 import Papa from "papaparse";
 import { useEffect, useState } from "react";
@@ -124,26 +125,24 @@ const Events = () => {
       <NavigationBar />
       <div className={styles["content"]}>
         <div className={styles["events-btns"]}>
-          <button
+          <Button
             onClick={handleExport}
-            className={styles["events-export-btn"]}
-          >
+            className={styles["events-export-btn"]}>
             Export Registration
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleDeleteEvent}
             className={`${styles["events-delete-btn"]} ${
               selectedRows.length === 0
                 ? styles["events-delete-btn-disabled"]
                 : ""
             }`}
-            disabled={selectedRows.length === 0}
-          >
+            disabled={selectedRows.length === 0}>
             Delete Events
-          </button>
-          <button onClick={handleAddEvent} className={styles["events-add-btn"]}>
+          </Button>
+          <Button onClick={handleAddEvent} className={styles["events-add-btn"]}>
             Add Event
-          </button>
+          </Button>
         </div>
         <div className={styles.gridContainer}>
           {loading ? (

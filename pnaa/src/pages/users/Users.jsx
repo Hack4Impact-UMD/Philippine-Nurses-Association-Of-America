@@ -1,6 +1,7 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import SignOutButton from "../../components/SignOutButton/SignOutButton";
 import styles from "./Users.module.css";
@@ -77,12 +78,11 @@ const Users = () => {
           >
             Delete User
           </button> */}
-          <button
+          <Button
             onClick={() => setOpenAddModal(true)}
-            className={styles.usersAddBtn}
-          >
+            className={styles.usersAddBtn}>
             Add User
-          </button>
+          </Button>
         </div>
         <div className={styles.gridContainer}>
           {loading ? (

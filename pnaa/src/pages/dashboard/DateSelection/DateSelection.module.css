@@ -36,13 +36,11 @@
 }
 
 .confirmButton {
-  text-transform: none !important;
   background-color: #05208b !important;
   color: white !important;
 }
 
 .confirmButton:mui-focused {
-  text-transform: none !important;
   background-color: #05208b !important;
   color: white !important;
 }

@@ -12,20 +12,21 @@
   width: 100%;
   height: 500px;
   margin-top: 30px;
+  margin-bottom: 20px;
 }
 
 .innerGrid {
   width: 80%;
 }
 
-.content{
+.content {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
 
-.events-btns{
+.events-btns {
   display: flex;
   justify-content: flex-end;
   gap: 20px;
@@ -33,30 +34,82 @@
   width: 80%;
 }
 
-.events-delete-btn {
-  background-color: #91201a;
-  color: white;
-  border: none;
-  padding: 8px 16px;
+.events-export-btn {
+  font-size: 1.1rem !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  text-transform: none !important;
+  background-color: green !important;
+  color: white !important;
+  font-family: "'Source Serif 4', serif" !important;
+}
+
+.events-export-btn:mui-focused {
+  font-size: 1.1rem !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  text-transform: none !important;
+  background-color: green !important;
+  color: white !important;
+  font-family: "'Source Serif 4', serif" !important;
 }
 
 .events-delete-btn-disabled {
-  background-color: #ccc;
-  color: #666;
-  cursor: default;
-  padding: 8px 16px;
+  font-size: 1.1rem !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  text-transform: none !important;
+  background-color: #ccc !important;
+  color: #666 !important;
+  font-family: "'Source Serif 4', serif" !important;
+}
+
+.events-delete-btn-disabled:mui-focused {
+  font-size: 1.1rem !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  text-transform: none !important;
+  background-color: #ccc !important;
+  color: #666 !important;
+  font-family: "'Source Serif 4', serif" !important;
+}
+
+.events-delete-btn {
+  font-size: 1.1rem !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  text-transform: none !important;
+  background-color: #91201a !important;
+  color: white !important;
+  font-family: "'Source Serif 4', serif" !important;
+}
+
+.events-delete-btn:mui-focused {
+  font-size: 1.1rem !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  text-transform: none !important;
+  background-color: #91201a !important;
+  color: white !important;
+  font-family: "'Source Serif 4', serif" !important;
 }
 
 .events-add-btn {
-  background-color: #05208b;
-  color: white;
-  border: none;
-  padding: 8px 16px;
+  font-size: 1.1rem !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  text-transform: none !important;
+  background-color: #05208b !important;
+  color: white !important;
+  font-family: "'Source Serif 4', serif" !important;
 }
 
-.events-export-btn {
-  background-color: green;
-  color: white;
-  border: none;
-  padding: 8px 16px;
+.events-add-btn:mui-focused {
+  font-size: 1.1rem !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  text-transform: none !important;
+  background-color: #05208b !important;
+  color: white !important;
+  font-family: "'Source Serif 4', serif" !important;
 }

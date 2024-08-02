@@ -45,12 +45,14 @@
   text-transform: none !important;
   background-color: #05208b !important;
   color: white !important;
+  font-family: "'Source Serif 4', serif" !important;
 }
 
 .dateButton:mui-focused {
   text-transform: none !important;
   background-color: #05208b !important;
   color: white !important;
+  font-family: "'Source Serif 4', serif" !important;
 }
 
 .displayInfo {
@@ -83,10 +85,12 @@
   text-transform: none !important;
   background-color: #ab2218 !important;
   color: white !important;
+  font-family: "'Source Serif 4', serif" !important;
 }
 
 .clearButton:mui-focused {
   text-transform: none !important;
   background-color: #ab2218 !important;
   color: white !important;
+  font-family: "'Source Serif 4', serif" !important;
 }

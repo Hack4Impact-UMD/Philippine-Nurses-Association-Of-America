@@ -144,8 +144,14 @@ const Dashboard = () => {
                   <FormControl
                     sx={{
                       width: "50%",
+                      fontFamily: "'Source Serif 4', serif",
                     }}>
-                    <InputLabel size="small" htmlFor="region-label">
+                    <InputLabel
+                      size="small"
+                      htmlFor="region-label"
+                      sx={{
+                        fontFamily: "'Source Serif 4', serif",
+                      }}>
                       Filter Region
                     </InputLabel>
                     <Select
@@ -275,7 +281,11 @@ const Dashboard = () => {
                 </div>
                 <Box
                   mt={2}
-                  style={{ height: "200px", overflow: "auto", marginTop: "0" }}>
+                  style={{
+                    height: "200px",
+                    overflow: "auto",
+                    marginTop: "0",
+                  }}>
                   <List
                     sx={{
                       paddingTop: "0",

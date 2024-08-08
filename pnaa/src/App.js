@@ -1,16 +1,20 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import { AuthProvider } from "./auth/AuthProvider";
 import RequireAdminAuth from "./auth/RequireAdminAuth/RequireAdminAuth";
 import RequireAuth from "./auth/RequireAuth/RequireAuth";
 import ChapterDetails from "./pages/chapter-details/AllChapterDetails/ChapterDetails";
 import SingleChapterDetails from "./pages/chapter-details/SingleChapterDetails/SingleChapterDetails";
 import Dashboard from "./pages/dashboard/Dashboard";
-import EventDetails from "./pages/events/EventDetails/EventDetails";
-import Events1 from "./pages/events/Events";
+import AddEvent from "./pages/events/AddEvent/AddEvent";
+import Events from "./pages/events/Events";
 import ForgotPassword from "./pages/forgotpassword/ForgotPassword";
 import AddFundraising from "./pages/fundraising/AddFundraising/AddFundraising";
 import Fundraising from "./pages/fundraising/Fundraising";
-import FundraisingDetail from "./pages/fundraising/FundraisingDetails";
 import Settings from "./pages/SettingsPage/Settings";
 import SignIn from "./pages/signin/SignIn";
 import SignUp from "./pages/signup/SignUp";
@@ -73,26 +77,18 @@ function App() {
             }
           />
           <Route
-            path="/fundraising-detail"
-            element={
-              <RequireAuth>
-                <FundraisingDetail />
-              </RequireAuth>
-            }
-          />
-          <Route
             path="/events"
             element={
               <RequireAuth>
-                <Events1 />
+                <Events />
               </RequireAuth>
             }
           />
           <Route
-            path="/event-details"
+            path="/add-event"
             element={
               <RequireAuth>
-                <EventDetails />
+                <AddEvent />
               </RequireAuth>
             }
           />
@@ -112,6 +108,7 @@ function App() {
               </RequireAuth>
             }
           />
+          <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </Router>
     </AuthProvider>

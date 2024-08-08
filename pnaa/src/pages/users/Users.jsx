@@ -1,7 +1,7 @@
+import { Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import SignOutButton from "../../components/SignOutButton/SignOutButton";
 import styles from "./Users.module.css";
@@ -67,20 +67,10 @@ const Users = () => {
       <NavigationBar />
       <div className={styles.content}>
         <div className={styles.usersBtns}>
-          {/* <button
-            onClick={() => {}}
-            className={`${styles["events-delete-btn"]} ${
-              selectedRows.length === 0
-                ? styles["events-delete-btn-disabled"]
-                : ""
-            }`}
-            disabled={selectedRows.length === 0}
-          >
-            Delete User
-          </button> */}
           <Button
             onClick={() => setOpenAddModal(true)}
-            className={styles.usersAddBtn}>
+            className={styles.usersAddBtn}
+          >
             Add User
           </Button>
         </div>

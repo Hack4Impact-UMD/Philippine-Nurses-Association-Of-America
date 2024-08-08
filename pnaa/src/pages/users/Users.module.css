@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 20px; /* Add padding around the header */
+  padding: 10px 20px; /* Add padding around the header */
 }
 
 .content {
@@ -15,26 +15,13 @@
 .usersBtns {
   display: flex;
   justify-content: flex-end;
-  gap: 20px;
   margin-top: 30px;
   width: 80%;
 }
 
 .usersAddBtn {
-  font-size: 1.1rem !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  text-transform: none !important;
-  background-color: #05208b !important;
-  color: white !important;
-  font-family: "'Source Serif 4', serif" !important;
-}
-
-.usersAddBtn:mui-focused {
-  font-size: 1.1rem !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  text-transform: none !important;
+  font-size: 1rem !important;
+  padding: 5px 15px !important;
   background-color: #05208b !important;
   color: white !important;
   font-family: "'Source Serif 4', serif" !important;
@@ -46,8 +33,7 @@
   justify-content: center;
   width: 100%;
   height: 450px;
-  margin-top: 30px;
-  margin-bottom: 20px;
+  margin-top: 15px;
 }
 
 .innerGrid {

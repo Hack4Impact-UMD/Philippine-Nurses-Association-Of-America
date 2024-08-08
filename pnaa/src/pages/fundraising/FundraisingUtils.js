@@ -5,68 +5,109 @@ import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 export const columns = [
   {
     // ValueGetter and Type are necessary for sorting
-    valueGetter: (params) => params.row?.fundraiserName || "N/A",
+    valueGetter: (params) => params.row?.fundraising?.fundraiserName || "N/A",
     type: "string",
     // Field and header both help display the column name
     field: "name",
     headerName: "NAME",
     width: 250,
-    renderCell: (params) => <div>{params.row?.fundraiserName || "N/A"}</div>,
+    renderCell: (params) => (
+      <div>{params.row?.fundraising?.fundraiserName || "N/A"}</div>
+    ),
   },
   {
-    valueGetter: (params) => parseInt(params.row?.amount) || 0,
+    valueGetter: (params) => parseInt(params.row?.fundraising?.amount) || 0,
     type: "number",
     field: "amount",
     headerName: "AMOUNT RAISED",
     width: 140,
 
     renderCell: (params) => (
-      <div>$&nbsp;{parseInt(params.row?.amount) || 0}</div>
+      <div>$&nbsp;{parseInt(params.row?.fundraising?.amount) || 0}</div>
     ),
     align: "center",
     headerAlign: "center",
   },
   {
-    valueGetter: (params) => params.row?.date || "N/A",
+    valueGetter: (params) => params.row?.fundraising?.date || "N/A",
     type: "string",
     field: "date",
     headerName: "DATE",
     width: 250,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{params.row?.date || "N/A"}</div>,
+    renderCell: (params) => <div>{params.row?.fundraising?.date || "N/A"}</div>,
   },
   {
-    valueGetter: (params) => params.row?.chapterName || "N/A",
+    valueGetter: (params) => params.row?.fundraising?.chapterName || "N/A",
     type: "string",
     field: "chapter name",
     headerName: "CHAPTER NAME",
     width: 250,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{params.row?.chapterName || "N/A"}</div>,
+    renderCell: (params) => (
+      <div>{params.row?.fundraising?.chapterName || "N/A"}</div>
+    ),
   },
   {
-    valueGetter: (params) => params.row?.note || "N/A",
+    valueGetter: (params) => params.row?.fundraising?.note || "N/A",
     type: "string",
     field: "note",
     headerName: "NOTE",
     width: 250,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{params.row?.note || "N/A"}</div>,
+    renderCell: (params) => <div>{params.row?.fundraising?.note || "N/A"}</div>,
+  },
+  {
+    valueGetter: (params) =>
+      params.row?.fundraising?.archived ? "Archived" : "Not Archived",
+    type: "boolean",
+    field: "archived",
+    headerName: "ARCHIVED",
+    width: 250,
+    align: "center",
+    headerAlign: "center",
+    renderCell: (params) => (
+      <div>
+        {params.row?.fundraising?.archived ? "Archived" : "Not Archived"}
+      </div>
+    ),
   },
 ];
 
-export const QuickSearchToolbar = () => {
+export const QuickSearchToolbar = (gridAPI) => {
+  let total = 0;
+  const visibleRowIds = gridAPI.current.state.visibleRowsLookup;
+  // Iterate over visible rows
+  Object.keys(visibleRowIds).forEach((rowId) => {
+    if (visibleRowIds[rowId] === false) return;
+    total += parseInt(gridAPI.current.getRow(rowId)?.fundraising?.amount || 0);
+  });
   return (
     <Box
       sx={{
         padding: "5px",
         backgroundColor: "rgba(224, 224, 224, 0.75)",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "end",
       }}
     >
       <GridToolbarQuickFilter />
+      <div
+        style={{
+          height: "30px",
+          fontFamily: `"Source-Serif 4", serif`,
+          fontSize: "1rem",
+          fontWeight: "600",
+          marginRight: "20px",
+        }}
+      >
+        Total: ${total}
+      </div>
     </Box>
   );
 };

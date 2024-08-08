@@ -16,13 +16,10 @@
 }
 
 .submitButton {
+  background-color: #08529e !important;
+  color: white !important;
+  font-family: "Source-Serif 4", serif !important;
   width: 200px;
-  background-color: #013b46 !important;
-  color: white !important;
-}
-.submitButton:mui-focused {
-  background-color: #013b46 !important;
-  color: white !important;
 }
 
 .center {

@@ -52,26 +52,24 @@ export const columns = [
     renderCell: (params) => <div>{parseInt(params.row.totalLapsed) || 0}</div>,
   },
   {
-    valueGetter: (params) => parseInt(params.row.totalEvents) || 0,
+    valueGetter: (params) => parseInt(params.row?.events) || 0,
     type: "number",
     field: "totalEvents",
     headerName: "EVENTS #",
     width: 140,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{parseInt(params.row.totalEvents) || 0}</div>,
+    renderCell: (params) => <div>{parseInt(params.row?.events) || 0}</div>,
   },
   {
-    valueGetter: (params) => parseInt(params.row.totalVolunteerHours) || 0,
+    valueGetter: (params) => parseInt(params.row?.fundraisers) || 0,
     type: "number",
-    field: "totalVolunteerHours",
-    headerName: "VOLUNTEER HOURS",
+    field: "fundraisers",
+    headerName: "FUNDRAISERS #",
     width: 190,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => (
-      <div>{parseInt(params.row.totalVolunteerHours) || 0}</div>
-    ),
+    renderCell: (params) => <div>{parseInt(params.row?.fundraisers) || 0}</div>,
   },
 ];
 

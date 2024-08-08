@@ -15,9 +15,8 @@ module.exports = {
           startTime: "",
           endTime: "",
           location: event.Location,
-          status: "NATIONAL",
-          chapter: "",
-          region: "",
+          chapter: "National",
+          region: "National",
           about: "",
           eventPoster: { name: "", ref: "", downloadURL: "" },
           attendees: 0,
@@ -27,6 +26,9 @@ module.exports = {
           volunteerHours: 0,
           otherDetails: 0,
           archived: false,
+          lastUpdated: new Date(),
+          creationDate: new Date(),
+          lastUpdatedUser: "WildApricot",
         };
       }
     });
@@ -43,10 +45,6 @@ module.exports = {
   storeEventData: async function (db, eventData) {
     const tempDataCollection = db.collection("events");
     const snapshot = await tempDataCollection.get();
-
-    if (snapshot.empty) {
-      throw new Error("No matching documents.");
-    }
 
     const eventIDS = {};
     snapshot.forEach((doc) => {
@@ -161,6 +159,73 @@ module.exports = {
         } else {
           chapterInfo[safeKey].members[index] = memberInfo;
         }
+      }
+    });
+    return chapterInfo;
+  },
+  processWeeklyMembershipData: async function (db, data) {
+    const chapterInfo = {};
+    data.forEach((contact) => {
+      const chapterField = contact.FieldValues.find(
+        (field) => field.FieldName === "Chapter (Active/Associate - 1 year)"
+      );
+      const renewalField = contact.FieldValues.find(
+        (field) => field.FieldName === "Renewal due"
+      );
+      const educationField = contact.FieldValues.find(
+        (field) => field.FieldName === "Highest Level of Education"
+      );
+      const memberIdField = contact.FieldValues.find(
+        (field) => field.FieldName === "Member ID"
+      );
+      const regionField = contact.FieldValues.find(
+        (field) => field.FieldName === "PNAA Region"
+      );
+
+      const currentDate = new Date(); // Get the current date
+      const renewalDate = renewalField ? new Date(renewalField.Value) : null;
+      const isActive = renewalDate ? renewalDate >= currentDate : false;
+      const membershipLevel = contact.MembershipLevel
+        ? contact.MembershipLevel.Name
+        : "Unknown";
+      const highestEducation =
+        educationField && educationField.Value
+          ? educationField.Value.Label
+          : "Unknown";
+      const memberId = memberIdField ? memberIdField.Value : "Unknown";
+      const regionValue =
+        regionField && regionField.Value ? regionField.Value.Label : "Unknown";
+
+      const memberInfo = {
+        name: `${contact.FirstName} ${contact.LastName}`,
+        email: contact.Email,
+        membershipLevel,
+        activeStatus: isActive ? "Active" : "Lapsed",
+        renewalDueDate: renewalDate
+          ? renewalDate.toISOString().substring(0, 10)
+          : "N/A",
+        chapterName:
+          chapterField && chapterField.Value && chapterField.Value.Label
+            ? chapterField.Value.Label
+            : "Unknown",
+        highestEducation,
+        memberId,
+      };
+
+      if (chapterField && chapterField.Value && chapterField.Value.Label) {
+        const chapter = chapterField.Value.Label;
+        const safeKey = chapter.replace(/\//g, "_");
+        if (!chapterInfo[safeKey]) {
+          chapterInfo[safeKey] = {
+            name: chapter,
+            totalActive: 0,
+            totalLapsed: 0,
+            region: regionValue,
+            members: [],
+          };
+        }
+
+        chapterInfo[safeKey].members.push(memberInfo);
       }
     });
     return chapterInfo;

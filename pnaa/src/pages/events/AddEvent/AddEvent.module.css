@@ -48,6 +48,10 @@
   width: 350px;
 }
 
+.dateTime {
+  margin-top: 10px !important;
+}
+
 .dateInput {
   width: 350px;
   border-radius: 5px;
@@ -56,6 +60,18 @@
   padding: 10px;
   border: 1px solid #bbb;
   outline: none;
+}
+
+.editButton {
+  font-size: 1.1rem;
+  font-family: "Source-Serif 4", serif;
+}
+.fileInput {
+  font-size: 0.9rem;
+  font-family: "Source-Serif 4", serif;
+}
+.uploadButton {
+  margin-right: 10px;
 }
 
 .submitButton {
@@ -100,4 +116,26 @@
 
 .editInfo {
   margin-top: 10px;
+}
+
+.informationText {
+  display: flex;
+  align-items: center;
+  font-family: "Source-Serif 4", serif;
+}
+
+.icon {
+  width: 25px;
+}
+
+.fileDeleteRow {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.xButton {
+  cursor: pointer;
+  background: none;
+  border: none;
 }

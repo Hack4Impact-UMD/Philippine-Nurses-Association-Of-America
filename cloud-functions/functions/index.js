@@ -45,16 +45,17 @@ async function fetchContactsData(accessToken) {
     .toISOString()
     .split("T")[0]; // Get the current date in the format YYYY-MM-DD
 
+  const url =
+    new Date().getDay() == 7
+      ? `https://api.wildapricot.com/v2.1/accounts/${accountId}/contacts`
+      : `https://api.wildapricot.com/v2.1/accounts/${accountId}/contacts?$filter=LastUpdated gt ${lastWeek}`;
   // Initial request to the contacts endpoint
-  let response = await axios.get(
-    `https://api.wildapricot.com/v2.1/accounts/${accountId}/contacts?$filter=LastUpdated gt ${lastWeek}`,
-    {
-      headers: {
-        "Accept": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
-      },
-    }
-  );
+  let response = await axios.get(url, {
+    headers: {
+      "Accept": "application/json",
+      "Authorization": `Bearer ${accessToken}`,
+    },
+  });
 
   // Poll the ResultUrl until the Contacts array is not empty
   while (!response.data.Contacts || response.data.Contacts.length === 0) {
@@ -85,10 +86,18 @@ exports.fetchChapterData = onSchedule(
       const contactsData = await fetchContactsData(accessToken);
       console.log("Fetched contact data");
       const cleanedData = helperFunctions.cleanData(contactsData);
-      const processedData = helperFunctions.processMembershipData(
-        db,
-        cleanedData
-      );
+      let processedData = null;
+      // Once a week, clear the entire chapters collection and fetch
+      // it all again in order to account for deleted contacts
+      if (new Date().getDay() == 7) {
+        processedData = helperFunctions.processWeeklyMembershipData(
+          db,
+          cleanedData
+        );
+      } else {
+        processedData = helperFunctions.processMembershipData(db, cleanedData);
+      }
+
       await helperFunctions.storeProcessedData(db, processedData);
       console.log("Stored contact data");
     } catch (error) {
@@ -172,6 +181,13 @@ exports.updateMembers = onSchedule(
         chapter.totalLapsed = totalLapsed;
         chapterInfo[key] = chapter;
       });
+      const batch = db.batch();
+      Object.entries(chapterInfo).forEach(([key, data], index) => {
+        const docRef = tempDataCollection.doc(key); // Use chapter name or a unique key as the document ID
+        batch.set(docRef, data);
+      });
+
+      await batch.commit();
     } catch (error) {
       functions.logger.log("Error while updating chapter data: ", error);
     }

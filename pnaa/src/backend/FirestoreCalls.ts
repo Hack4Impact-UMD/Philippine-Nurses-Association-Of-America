@@ -1,3 +1,4 @@
+import { deleteObject, getStorage, ref } from "@firebase/storage";
 import {
   addDoc,
   collection,
@@ -17,9 +18,8 @@ import { User } from "../types/UserType";
 let chapters: { [key: string]: string[] } = {};
 
 export const getChapters = async () => {
-  if (Object.keys(chapters).length === 0) {
-    await getChapterData();
-  }
+  await getChapterData();
+
   const chapterNames: string[] = [];
   Object.keys(chapters).forEach((region) => {
     chapterNames.push(...chapters[region]);
@@ -28,16 +28,14 @@ export const getChapters = async () => {
 };
 
 export const getRegions = async () => {
-  if (Object.keys(chapters).length === 0) {
-    await getChapterData();
-  }
+  await getChapterData();
+
   return Object.keys(chapters);
 };
 
 export const getChapterRegionData = async () => {
-  if (Object.keys(chapters).length === 0) {
-    await getChapterData();
-  }
+  await getChapterData();
+
   return chapters;
 };
 
@@ -163,8 +161,8 @@ export function getUserById(id: string): Promise<any[]> {
         const allDocuments: any = [];
         const documents = snapshot.docs.map((doc: any) => {
           const document = doc.data();
-          const newStudent = { ...document, id: doc.id };
-          allDocuments.push(newStudent);
+          const newUser = { ...document, id: doc.id };
+          allDocuments.push(newUser);
         });
         resolve(allDocuments);
       })
@@ -190,37 +188,9 @@ export function updateUser(user: Partial<User>, id: string): Promise<void> {
       });
   });
 }
-
-export function filteredGetter(): Promise<any[]> {
-  // Add collectionName here
-  const collectionName = "";
-  const collectionRef = query(
-    collection(db, collectionName),
-    /* Toss in conditions here*/
-    where("type", "!=", "ADMIN")
-  );
+export function addEvent(event: Event): Promise<string> {
   return new Promise((resolve, reject) => {
-    getDocs(collectionRef)
-      .then((snapshot: any) => {
-        const allDocuments: any = [];
-        const documents = snapshot.docs.map((doc: any) => {
-          const document = doc.data();
-          const newStudent = { ...document, id: doc.id };
-          allDocuments.push(newStudent);
-        });
-        resolve(allDocuments);
-      })
-      .catch((error: any) => {
-        reject(error);
-      });
-  });
-}
-
-export function basicSetter(docToAdd: any): Promise<any> {
-  return new Promise((resolve, reject) => {
-    // Add collectionName here
-    const collectionName = "";
-    addDoc(collection(db, collectionName), docToAdd)
+    addDoc(collection(db, "events"), event)
       .then((docRef: any) => {
         // return id of document added
         resolve(docRef.id);
@@ -231,11 +201,14 @@ export function basicSetter(docToAdd: any): Promise<any> {
   });
 }
 
-export function basicDeleter(id: string): Promise<void> {
+export function updateEvent(event: Partial<Event>, id: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    // Add collectionName here
-    const collectionName = "";
-    deleteDoc(doc(db, collectionName, id))
+    if (id === "" || !id) {
+      reject(new Error("Invalid id"));
+      return;
+    }
+    const collectionRef = doc(db, "events", id);
+    updateDoc(collectionRef, { ...event })
       .then(() => {
         resolve();
       })
@@ -245,16 +218,59 @@ export function basicDeleter(id: string): Promise<void> {
   });
 }
 
-export function basicUpdater(newDocument: any, id: string): Promise<void> {
+export function deleteEvent(fileRef: string, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    deleteDoc(doc(db, "events", id))
+      .then(async () => {
+        if (fileRef) {
+          const storage = getStorage();
+          const pathReference = ref(storage, fileRef);
+          await deleteObject(pathReference).catch((error) => {});
+        }
+        resolve();
+      })
+      .catch((error: any) => {
+        reject(error);
+      });
+  });
+}
+
+export function addFundraiser(fundraiser: any): Promise<string> {
+  return new Promise((resolve, reject) => {
+    addDoc(collection(db, "fundraisers"), fundraiser)
+      .then((docRef: any) => {
+        // return id of document added
+        resolve(docRef.id);
+      })
+      .catch((error: any) => {
+        reject(error);
+      });
+  });
+}
+
+export function updateFundraiser(
+  fundraiser: Partial<Fundraising>,
+  id: string
+): Promise<void> {
   return new Promise((resolve, reject) => {
     if (id === "" || !id) {
       reject(new Error("Invalid id"));
       return;
     }
-    /* Add collection name here */
-    const collectionName = "";
-    const collectionRef = doc(db, collectionName, id);
-    updateDoc(collectionRef, { ...newDocument })
+    const collectionRef = doc(db, "fundraisers", id);
+    updateDoc(collectionRef, { ...fundraiser })
+      .then(() => {
+        resolve();
+      })
+      .catch((error: any) => {
+        reject(error);
+      });
+  });
+}
+
+export function deleteFundraiser(id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    deleteDoc(doc(db, "fundraisers", id))
       .then(() => {
         resolve();
       })

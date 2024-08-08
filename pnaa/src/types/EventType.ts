@@ -4,7 +4,6 @@ export interface Event {
   startTime: string;
   endTime: string;
   location: string;
-  status: "NATIONAL" | "CHAPTER" | "NON-CHAPTER";
   chapter: string;
   region: string;
   about: string;
@@ -16,4 +15,8 @@ export interface Event {
   volunteerHours: number;
   otherDetails: string;
   archived: boolean;
+  lastUpdated: string;
+  lastUpdatedUser: string;
+  creationDate: string;
+  name: string;
 }

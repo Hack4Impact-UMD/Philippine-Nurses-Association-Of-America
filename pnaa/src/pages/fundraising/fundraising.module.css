@@ -34,3 +34,12 @@
   font-size: 0.9rem !important;
   height: 35px !important;
 }
+
+.deleteButton {
+  background-color: rgb(217, 2, 2) !important;
+  color: white !important;
+  font-family: "Source-Serif 4", serif !important;
+  font-size: 0.9rem !important;
+  height: 35px !important;
+  margin-right: 10px !important;
+}

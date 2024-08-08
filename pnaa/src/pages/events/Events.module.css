@@ -10,7 +10,7 @@
   flex-direction: row;
   justify-content: center;
   width: 100%;
-  height: 500px;
+  height: 450px;
   margin-top: 30px;
   margin-bottom: 20px;
 }
@@ -19,97 +19,31 @@
   width: 80%;
 }
 
-.content {
+.topRow {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  margin-bottom: 10px;
 }
 
-.events-btns {
-  display: flex;
-  justify-content: flex-end;
-  gap: 20px;
-  margin-top: 30px;
-  width: 80%;
-}
-
-.events-export-btn {
-  font-size: 1.1rem !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  text-transform: none !important;
+.addButton {
   background-color: green !important;
   color: white !important;
-  font-family: "'Source Serif 4', serif" !important;
+  font-family: "Source-Serif 4", serif !important;
+  font-size: 0.9rem !important;
+  height: 35px !important;
 }
-
-.events-export-btn:mui-focused {
-  font-size: 1.1rem !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  text-transform: none !important;
-  background-color: green !important;
+.exportButton,
+.deleteButton {
+  background-color: rgb(217, 2, 2) !important;
   color: white !important;
-  font-family: "'Source Serif 4', serif" !important;
+  font-family: "Source-Serif 4", serif !important;
+  font-size: 0.9rem !important;
+  height: 35px !important;
+  margin-right: 10px !important;
 }
 
-.events-delete-btn-disabled {
-  font-size: 1.1rem !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  text-transform: none !important;
-  background-color: #ccc !important;
-  color: #666 !important;
-  font-family: "'Source Serif 4', serif" !important;
-}
-
-.events-delete-btn-disabled:mui-focused {
-  font-size: 1.1rem !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  text-transform: none !important;
-  background-color: #ccc !important;
-  color: #666 !important;
-  font-family: "'Source Serif 4', serif" !important;
-}
-
-.events-delete-btn {
-  font-size: 1.1rem !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  text-transform: none !important;
-  background-color: #91201a !important;
-  color: white !important;
-  font-family: "'Source Serif 4', serif" !important;
-}
-
-.events-delete-btn:mui-focused {
-  font-size: 1.1rem !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  text-transform: none !important;
-  background-color: #91201a !important;
-  color: white !important;
-  font-family: "'Source Serif 4', serif" !important;
-}
-
-.events-add-btn {
-  font-size: 1.1rem !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  text-transform: none !important;
-  background-color: #05208b !important;
-  color: white !important;
-  font-family: "'Source Serif 4', serif" !important;
-}
-
-.events-add-btn:mui-focused {
-  font-size: 1.1rem !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  text-transform: none !important;
-  background-color: #05208b !important;
-  color: white !important;
-  font-family: "'Source Serif 4', serif" !important;
+.exportButton {
+  background-color: #f0ad4e !important;
 }

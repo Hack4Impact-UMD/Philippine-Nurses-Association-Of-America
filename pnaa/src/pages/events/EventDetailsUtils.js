@@ -1,141 +1,229 @@
 import { Box } from "@mui/material";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
+function getDaySuffix(day) {
+  if (day > 3 && day < 21) return "th"; // covers 11th through 19th
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+}
+
+function formatDateString(dateString) {
+  if (!dateString) return null;
+  // Parse the input string
+  const [year, month, day] = dateString.split("-").map(Number);
+
+  // Create a Date object
+  const date = new Date(year, month - 1, day);
+
+  // Get the month name
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const monthName = monthNames[date.getMonth()];
+
+  // Get the day suffix
+  const daySuffix = getDaySuffix(day);
+
+  // Format the date string
+  const formattedDate = `${monthName} ${day}${daySuffix}, ${year}`;
+
+  return formattedDate;
+}
+
+export function convertMilitaryTime(militaryTime) {
+  if (!militaryTime) {
+    return "N/A";
+  }
+  // Split the input time string to get hours, minutes, and seconds
+  const [hours, minutes] = militaryTime.split(":");
+
+  // Convert the hours part to an integer
+  let hoursInt = parseInt(hours, 10);
+
+  // Determine the period (AM or PM)
+  const period = hoursInt >= 12 ? "PM" : "AM";
+
+  // Convert hours from 24-hour to 12-hour format
+  hoursInt = hoursInt % 12;
+  hoursInt = hoursInt ? hoursInt : 12; // the hour '0' should be '12'
+
+  // Return the formatted time
+  return `${hoursInt}:${minutes} ${period}`;
+}
 
 // Specifies the columns of the datagrid
 export const columns = [
   {
     // ValueGetter and Type are necessary for sorting
-    valueGetter: (params) => params.row.name || "N/A",
+    valueGetter: (params) => params.row?.event?.name || "N/A",
     type: "string",
     // Field and header both help display the column name
     field: "name",
     headerName: "NAME",
-    width: 650,
-    renderCell: (params) => <div>{params.row.name || "N/A"}</div>,
+    width: 350,
+    renderCell: (params) => <div>{params.row?.event?.name || "N/A"}</div>,
   },
   {
-    valueGetter: (params) => params.row.chapter || "N/A",
+    valueGetter: (params) => params.row?.event?.chapter || "N/A",
     type: "string",
-    field: "status",
-    headerName: "STATUS",
-    width: 140,
-
-    renderCell: (params) => <div>{params.row.chapter || "N/A"}</div>,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    valueGetter: (params) => params.row.date || "N/A",
-    type: "string",
-    field: "date",
-    headerName: "DATE",
+    field: "chapter",
+    headerName: "CHAPTER",
     width: 200,
+    align: "center",
+    headerAlign: "center",
+    renderCell: (params) => <div>{params.row?.event?.chapter || "N/A"}</div>,
+  },
+  {
+    valueGetter: (params) =>
+      `${formatDateString(params.row?.event?.startDate) || "N/A"}  -  ${
+        formatDateString(params.row?.event?.endDate) || "N/A"
+      }`,
+    type: "string",
+    field: "dates",
+    headerName: "DATES",
+    width: 300,
 
-    renderCell: (params) => <div>{params.row.date || "N/A"}</div>,
+    renderCell: (params) => (
+      <div>
+        {`${formatDateString(params.row?.event?.startDate) || "N/A"}  -  ${
+          formatDateString(params.row?.event?.endDate) || "N/A"
+        }`}
+      </div>
+    ),
     align: "center",
     headerAlign: "center",
   },
   {
-    valueGetter: (params) => params.row.time || "N/A",
+    valueGetter: (params) =>
+      `${convertMilitaryTime(params.row?.event?.startTime) || "N/A"} - ${
+        convertMilitaryTime(params.row?.event?.endTime) || "N/A"
+      }`,
     type: "string",
     field: "time",
     headerName: "TIME",
-    width: 140,
+    width: 250,
 
-    renderCell: (params) => <div>{params.row.time || "N/A"}</div>,
+    renderCell: (params) => (
+      <div>{`${convertMilitaryTime(params.row?.event?.startTime) || "N/A"} - ${
+        convertMilitaryTime(params.row?.event?.endTime) || "N/A"
+      }`}</div>
+    ),
     align: "center",
     headerAlign: "center",
   },
   {
-    valueGetter: (params) => params.row.location || "N/A",
+    valueGetter: (params) => params.row?.event?.location || "N/A",
     type: "string",
     field: "location",
     headerName: "LOCATION",
     width: 600,
 
-    renderCell: (params) => <div>{params.row.location || "N/A"}</div>,
+    renderCell: (params) => <div>{params.row?.event?.location || "N/A"}</div>,
     align: "center",
     headerAlign: "center",
   },
   {
-    valueGetter: (params) => parseInt(params.row.contact_hrs) || 0,
+    valueGetter: (params) => parseInt(params.row?.event?.contactHours) || 0,
     type: "number",
-    field: "contact_hrs",
-    headerName: "TOTAL HOURS",
+    field: "contact hours",
+    headerName: "CONTACT HOURS",
     width: 140,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{parseInt(params.row.contact_hrs) || 0}</div>,
+    renderCell: (params) => (
+      <div>{parseInt(params.row?.event?.contactHours) || 0}</div>
+    ),
   },
   {
-    valueGetter: (params) => parseInt(params.row["attendee_#"]) || 0,
+    valueGetter: (params) => parseInt(params.row?.event?.attendees) || 0,
     type: "number",
-    field: "attendee_#",
-    headerName: "ATTENDEE #",
+    field: "attendees",
+    headerName: "ATTENDEES",
     width: 140,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{parseInt(params.row["attendee_#"]) || 0}</div>,
+    renderCell: (params) => (
+      <div>{parseInt(params.row?.event?.attendees) || 0}</div>
+    ),
   },
   {
-    valueGetter: (params) => parseInt(params.row.participants_served) || 0,
+    valueGetter: (params) =>
+      parseInt(params.row?.event?.participantsServed) || 0,
     type: "number",
     field: "participants_served",
     headerName: "PARTICIPANTS",
     width: 140,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{parseInt(params.row.participants_served) || 0}</div>,
+    renderCell: (params) => (
+      <div>{parseInt(params.row?.event?.participantsServed) || 0}</div>
+    ),
   },
   {
-    valueGetter: (params) => parseInt(params.row["volunteer_#"]) || 0,
+    valueGetter: (params) => parseInt(params.row?.event?.volunteers) || 0,
     type: "number",
-    field: "volunteer_#",
-    headerName: "VOLUNTEER #",
+    field: "volunteers",
+    headerName: "VOLUNTEERS",
     width: 140,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{parseInt(params.row["volunteer_#"]) || 0}</div>,
+    renderCell: (params) => (
+      <div>{parseInt(params.row?.event?.volunteers) || 0}</div>
+    ),
   },
   {
-    valueGetter: (params) => parseInt(params.row.total_volunteer_hours) || 0,
+    valueGetter: (params) => parseInt(params.row?.event?.volunteerHours) || 0,
     type: "number",
-    field: "total_volunteer_hours",
-    headerName: "TOTAL VOLUNTEER HOURS",
-    width: 300,
+    field: "volunteer hours",
+    headerName: "VOLUNTEER HOURS",
+    width: 200,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{parseInt(params.row.total_volunteer_hours) || 0}</div>,
+    renderCell: (params) => (
+      <div>{parseInt(params.row?.event?.volunteerHours) || 0}</div>
+    ),
   },
   {
-    valueGetter: (params) => parseInt(params.row.region) || "N/A",
+    valueGetter: (params) => params.row?.event?.region || "N/A",
     type: "string",
     field: "region",
     headerName: "REGION",
     width: 300,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{parseInt(params.row.region) || "N/A"}</div>,
+    renderCell: (params) => <div>{params.row?.event?.region || "N/A"}</div>,
   },
+
   {
-    valueGetter: (params) => parseInt(params.row.about) || "N/A",
+    valueGetter: (params) =>
+      params.row?.event?.archived ? "Archived" : "Not Archived",
     type: "string",
-    field: "about",
-    headerName: "ABOUT",
-    width: 200,
-    align: "center",
-    headerAlign: "center",
-    renderCell: (params) => <div>{parseInt(params.row.about) || "N/A"}</div>,
-  },
-  {
-    valueGetter: (params) => parseInt(params.row.other_details) || "N/A",
-    type: "string",
-    field: "other_details",
-    headerName: "OTHER DETAILS",
+    field: "archived",
+    headerName: "ARCHIVED",
     width: 300,
     align: "center",
     headerAlign: "center",
-    renderCell: (params) => <div>{parseInt(params.row.other_details) || "N/A"}</div>,
+    renderCell: (params) => (
+      <div>{params.row?.event?.archived ? "Archived" : "Not Archived"}</div>
+    ),
   },
 ];
 

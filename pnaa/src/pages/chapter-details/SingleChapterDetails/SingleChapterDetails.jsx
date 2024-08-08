@@ -57,30 +57,6 @@ const SingleChapterDetails = () => {
                   {parseInt(chapterDetails?.totalLapsed) || 0}
                 </p>
               </div>
-              <div className={styles.statistic}>
-                <p className={styles.statHeader}>Events Held</p>
-                <p className={styles.value}>
-                  {parseInt(chapterDetails?.totalEvents) || 0}
-                </p>
-              </div>
-              <div className={styles.statistic}>
-                <p className={styles.statHeader}>Total Volunteers</p>
-                <p className={styles.value}>
-                  {parseInt(chapterDetails?.totalVolunteerNum) || 0}
-                </p>
-              </div>
-              <div className={styles.statistic}>
-                <p className={styles.statHeader}>Total Volunteer Hours</p>
-                <p className={styles.value}>
-                  {parseInt(chapterDetails?.totalVolunteerHours) || 0}
-                </p>
-              </div>
-              <div className={styles.statistic}>
-                <p className={styles.statHeader}>Participants Served</p>
-                <p className={styles.value}>
-                  {parseInt(chapterDetails?.totalParticipantsServed) || 0}
-                </p>
-              </div>
             </div>
             <div className={styles.members}>
               {chapterDetails?.members ? (

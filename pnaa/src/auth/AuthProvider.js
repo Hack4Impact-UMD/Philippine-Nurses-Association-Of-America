@@ -1,4 +1,9 @@
-import { getAuth, onIdTokenChanged } from "@firebase/auth";
+import {
+  browserSessionPersistence,
+  getAuth,
+  onIdTokenChanged,
+  setPersistence,
+} from "@firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import app from "../config/firebase";
 
@@ -16,6 +21,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const auth = getAuth(app);
     onIdTokenChanged(auth, async (newUser) => {
+      await setPersistence(auth, browserSessionPersistence);
       setUser(newUser);
       if (newUser != null) {
         await newUser

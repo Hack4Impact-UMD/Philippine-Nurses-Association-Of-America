@@ -38,7 +38,6 @@ export const getChapterRegionData = async () => {
 
   return chapters;
 };
-
 export function getChapterData(): Promise<any[]> {
   const collectionRef = collection(db, "chapters");
   return new Promise((resolve, reject) => {
@@ -47,17 +46,25 @@ export function getChapterData(): Promise<any[]> {
         const allDocuments: any[] = [];
         const chapterRegions: { [key: string]: string[] } = {};
         chapterRegions["National"] = ["National"];
-        snapshot.docs.map((doc: any) => {
-          const document = doc.data();
-          const newChapter = { ...document, id: doc.id };
-          if (!chapterRegions[document.region]) {
-            chapterRegions[document.region] = [document.name];
-          } else {
-            chapterRegions[document.region].push(document.name);
-          }
-          allDocuments.push(newChapter);
-        });
-        if (allDocuments.length == 0) {
+        if (
+          snapshot.docs.length != 0 &&
+          new Date().getTime() / 1000 -
+            snapshot.docs[0]._document.readTime.timestamp.seconds <=
+            1800
+        ) {
+          snapshot.docs.map((doc: any) => {
+            const document = doc.data();
+            const newChapter = { ...document, id: doc.id };
+            if (!chapterRegions[document.region]) {
+              chapterRegions[document.region] = [document.name];
+            } else {
+              chapterRegions[document.region].push(document.name);
+            }
+            allDocuments.push(newChapter);
+          });
+          chapters = { ...chapterRegions };
+          resolve(allDocuments);
+        } else {
           getDocs(collectionRef)
             .then((snapshot: any) => {
               const otherDocuments: any = [];
@@ -77,9 +84,6 @@ export function getChapterData(): Promise<any[]> {
             .catch((error: any) => {
               reject(error);
             });
-        } else {
-          chapters = { ...chapterRegions };
-          resolve(allDocuments);
         }
       })
       .catch((error: any) => {

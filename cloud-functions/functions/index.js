@@ -1,11 +1,9 @@
 const cors = require("cors")({ origin: true });
 const crypto = require("crypto");
 const functions = require("firebase-functions");
-const axios = require("axios");
 const { onCall } = require("firebase-functions/v2/https");
 const { onSchedule } = require("firebase-functions/v2/scheduler");
 const admin = require("firebase-admin");
-const helperFunctions = require("./helperFunctions");
 const serviceAccount = require("./serviceAccount.json");
 require("dotenv").config();
 
@@ -13,134 +11,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 const db = admin.firestore();
-
-const apiKey = process.env.APIKEY;
-const body = process.env.BODY;
-const accountId = process.env.ACCOUNTID;
-
-async function getAccessToken() {
-  const url = "https://oauth.wildapricot.org/auth/token";
-
-  const response = await axios
-    .post(url, body, {
-      headers: {
-        "Authorization": `Basic ${apiKey}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-
-  if (response.status !== 200) {
-    throw new Error("Failed to get access token");
-  }
-
-  return response.data.access_token;
-}
-
-async function fetchContactsData(accessToken) {
-  // Get the date from a week ago
-  const lastWeek = new Date(new Date().getTime() - 1000 * 3600 * 24 * 7)
-    .toISOString()
-    .split("T")[0]; // Get the current date in the format YYYY-MM-DD
-
-  const url =
-    new Date().getDay() == 7
-      ? `https://api.wildapricot.com/v2.1/accounts/${accountId}/contacts`
-      : `https://api.wildapricot.com/v2.1/accounts/${accountId}/contacts?$filter=LastUpdated gt ${lastWeek}`;
-  // Initial request to the contacts endpoint
-  let response = await axios.get(url, {
-    headers: {
-      "Accept": "application/json",
-      "Authorization": `Bearer ${accessToken}`,
-    },
-  });
-
-  // Poll the ResultUrl until the Contacts array is not empty
-  while (!response.data.Contacts || response.data.Contacts.length === 0) {
-    await new Promise((resolve) => setTimeout(resolve, 5001)); // Wait for 5 seconds before retrying
-    response = await axios.get(response.data.ResultUrl, {
-      headers: {
-        "Accept": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
-      },
-    });
-  }
-
-  return response.data.Contacts; //Returns only the contacts
-}
-
-exports.fetchChapterData = onSchedule(
-  {
-    schedule: "every day 00:00",
-    region: "us-east4",
-    timeoutSeconds: 1200, // Increase timeout to 9 minutes
-    memory: "2GiB", // Optionally increase the memory allocation if needed
-    timeZone: "America/New_York",
-  },
-  async (event) => {
-    try {
-      const accessToken = await getAccessToken();
-      console.log("Obtained access token");
-      const contactsData = await fetchContactsData(accessToken);
-      console.log("Fetched contact data");
-      const cleanedData = helperFunctions.cleanData(contactsData);
-      let processedData = null;
-      // Once a week, clear the entire chapters collection and fetch
-      // it all again in order to account for deleted contacts
-      if (new Date().getDay() == 7) {
-        processedData = helperFunctions.processWeeklyMembershipData(
-          db,
-          cleanedData
-        );
-      } else {
-        processedData = helperFunctions.processMembershipData(db, cleanedData);
-      }
-
-      await helperFunctions.storeProcessedData(db, processedData);
-      console.log("Stored contact data");
-    } catch (error) {
-      functions.logger.log("Error while fetching chapter data: ", error);
-    }
-  }
-);
-
-async function fetchEvents(accessToken) {
-  let response = await axios.get(
-    `https://api.wildapricot.com/v2.1/accounts/${accountId}/events`,
-    {
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  return response.data.Events; //Returns only the contacts
-}
-
-exports.fetchEventData = onSchedule(
-  {
-    schedule: "every day 00:00",
-    region: "us-east4",
-    timeoutSeconds: 1200, // Increase timeout to 9 minutes
-    memory: "2GB", // Optionally increase the memory allocation if needed
-    timeZone: "America/New_York",
-  },
-  async (event) => {
-    try {
-      const accessToken = await getAccessToken();
-      const eventData = await fetchEvents(accessToken);
-      const cleanedData = helperFunctions.cleanEventData(eventData);
-
-      const processedData = helperFunctions.processEventData(cleanedData);
-
-      await helperFunctions.storeEventData(db, processedData);
-    } catch (error) {
-      console.error("Error while fetching event data:", error);
-    }
-  }
-);
 
 exports.updateMembers = onSchedule(
   {

@@ -50,7 +50,7 @@ const NavigationBar = () => {
             Fundraising
           </NavLink>
         </li>
-        {auth.token?.claims?.role.toLowerCase() === "admin" && (
+        {auth.token?.claims?.role?.toLowerCase() === "admin" && (
           <li className={styles.tabItem}>
             <NavLink
               to="../users"

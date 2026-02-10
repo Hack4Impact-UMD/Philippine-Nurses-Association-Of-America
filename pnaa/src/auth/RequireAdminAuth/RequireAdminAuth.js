@@ -5,13 +5,15 @@ import styles from "./RequireAdminAuth.module.css";
 
 const RequireAdminAuth = ({ children }) => {
   const authContext = useAuth();
+  const role = authContext.token?.claims?.role;
+  const normalizedRole = typeof role === "string" ? role.toLowerCase() : "";
   if (authContext.loading) {
     return <Loading />;
   } else if (!authContext.user) {
     return (
       <Navigate to="/signin" state={{ redir: window.location.pathname }} />
     );
-  } else if (authContext.token?.claims?.role.toLowerCase() != "admin") {
+  } else if (normalizedRole != "admin") {
     return (
       <div className={styles.loadingContainer}>
         <p className={styles.errorMessage}>

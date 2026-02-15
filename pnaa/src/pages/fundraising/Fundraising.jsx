@@ -6,7 +6,7 @@ import { getFundraisingData } from "../../backend/FirestoreCalls";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import SignOutButton from "../../components/SignOutButton/SignOutButton";
 import FundraisingPopup from "./AddFundraising/FundraisingPopup/FundraisingPopup";
-import styles from "./Fundraising.module.css";
+import styles from "./fundraising.module.css";
 import {
   DataGridStyles,
   QuickSearchToolbar,

@@ -44,14 +44,15 @@ const SignUp = () => {
           if (!err) {
             navigate("/");
             window.alert(
-              "An account has successfully been created! You may now sign in after resetting your password"
+              "An account has successfully been created! You may now sign in after resetting your password",
             );
           }
           err = false;
         });
     }
+  };
 
-    const handleChangeType = (userType) => {
+  const handleChangeType = (userType) => {
       setUserChapter(!userChapter);
       setAccountType(userType);
     };
@@ -116,6 +117,5 @@ const SignUp = () => {
         <img src={PNAA_Logo} alt="PNAA Logo" id={styles["logo"]} />
       </div>
     );
-  };
 };
 export default SignUp;
